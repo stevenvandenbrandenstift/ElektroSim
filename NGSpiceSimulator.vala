@@ -107,7 +107,7 @@ public class NGSpiceSimulator : GLib.Object {
 		string standard_error;
 		
 		try{
-		Process.spawn_sync (null,
+		Process.spawn_sync (```null,
 			                                spawn_args,
 			                                spawn_env,
 			                                SpawnFlags.SEARCH_PATH,

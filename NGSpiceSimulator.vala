@@ -100,14 +100,14 @@ public class NGSpiceSimulator : GLib.Object {
 		//send_to_ngspice("source /home/steven/test/netlist.txt\n");
 		//send_to_ngspice("run\n");
 		
-		string[] spawn_args = {"/usr/local/bin/ngspice","-a","-p","/home/steven/test/netlist.txt"};
+		string[] spawn_args = {"/usr/local/bin/ngspice","-a","-p","./netlist.txt"};
 		string[] spawn_env = Environ.get ();
 		Pid child_pid;
 		string standard_output;
 		string standard_error;
 		
 		try{
-		Process.spawn_sync ("/home/steven/test/",
+		Process.spawn_sync (null,
 			                                spawn_args,
 			                                spawn_env,
 			                                SpawnFlags.SEARCH_PATH,

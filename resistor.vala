@@ -17,7 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  using Gtk;
- using Rsvg;
+ //using Rsvg;
 namespace ElektroSim{
 	
 public class Resistor : Component {
@@ -67,6 +67,7 @@ public class Resistor : Component {
 		context.close_path();
 		context.fill();
 		
+		/*
 		contect.new_patch();
 		Handle handle;
         try {
@@ -78,7 +79,7 @@ public class Resistor : Component {
         
         handle.render_cairo( context );
         context.close_path();
-    
+    	*/
 		
 	}
 	public override Component clone(Component component,int x ,int y){

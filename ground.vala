@@ -24,21 +24,32 @@ public class Ground : Component {
 		public Ground () {
 			base("ground");
 			this.width=100;
+			this.height=50;
+			setupSurface();
 	}
 
-	public override void draw_symbol(Cairo.Context context){
-		context.new_path ();
-		context.set_source_rgb (3, 3, 3);
-		
-		context.rectangle (connections.nth_data(0).x,connections.nth_data(0).y,-this.width,2);
-		context.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-		context.set_font_size (20);
-		context.rel_move_to (-this.width,0);
-		context.text_path ("Ground");
-		context.fill();
-		context.stroke ();
-		context.close_path ();
+	
+	public override void update_image(){
+
 	}
+	
+	public override void make_image(){
+		
+		imageContext.new_path ();
+		imageContext.move_to (0, height/2);
+		imageContext.line_to (width, height/2);
+		imageContext.close_path ();
+		imageContext.stroke ();
+		
+		imageContext.new_path ();
+		imageContext.set_font_size (height*0.4);
+		imageContext.move_to (width*0.2, height/2-5);
+		imageContext.text_path ("Ground");
+		imageContext.fill();
+		imageContext.close_path ();
+	
+	}
+	
 	public override Component clone(Component component,int x, int y){
 			Ground newc=new Ground();
 			newc.connections.append(new Point.with_net (x,y,0));

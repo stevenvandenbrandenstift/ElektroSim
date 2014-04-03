@@ -81,20 +81,5 @@ class MainWindow : Window  {
 
 	}
 
-
-	
-	public void messagebox_show(string title, string message)
-	{
-		var dialog = new Gtk.MessageDialog(
-		                                   null,
-		                                   Gtk.DialogFlags.MODAL,
-		                                   Gtk.MessageType.INFO,
-		                                   Gtk.ButtonsType.OK,
-		                                   message);
-
-		dialog.set_title(title);
-		dialog.run();
-		dialog.destroy();
-	}
 }
 }

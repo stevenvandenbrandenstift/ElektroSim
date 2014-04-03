@@ -21,17 +21,13 @@ namespace ElektroSim{
 public class NGSpiceSimulator : GLib.Object {
 
 	// Constructor
-	private FileStream input;
 	private string currentComponent;
 	public signal void data_ready (string currentComponent, string data);
-	public AsyncQueue<string> outputbuffer;
+	//public AsyncQueue<string> outputbuffer;
 
 	public NGSpiceSimulator () {
-		
 		currentComponent="";
-		outputbuffer = new AsyncQueue<string> ();
-		
-	
+		//outputbuffer = new AsyncQueue<string> ();	
 	
 	}
 	
@@ -59,7 +55,7 @@ public class NGSpiceSimulator : GLib.Object {
 
 	public string generate_file(List<Component> items){
 		try {
-		File file = File.new_for_path ("/home/steven/test/netlist.txt");
+		File file = File.new_for_path ("./netlist.txt");
 		if (file.query_exists ()) {
 			file.delete ();
 		}
@@ -89,11 +85,6 @@ public class NGSpiceSimulator : GLib.Object {
 	}
 	
 
-	private bool send_to_ngspice(string command){
-	stdout.printf ("write to ngpspice %s\n",command); //debug line
-		input.write (command.data);
-		return true;
-	}
 
 	public void run_simulation(List<Component> items){
 	
@@ -102,12 +93,11 @@ public class NGSpiceSimulator : GLib.Object {
 		
 		string[] spawn_args = {"/usr/local/bin/ngspice","-a","-p","./netlist.txt"};
 		string[] spawn_env = Environ.get ();
-		Pid child_pid;
 		string standard_output;
 		string standard_error;
 		
 		try{
-		Process.spawn_sync (```null,
+		Process.spawn_sync (null,
 			                                spawn_args,
 			                                spawn_env,
 			                                SpawnFlags.SEARCH_PATH,

@@ -31,23 +31,32 @@ public class PowerSource : Component {
 			base("PowerSource");
 			addParameterWidget("V","10",out voltageLabel,out voltageEntry);
 			this.width=100;
+			this.height=50;
+			setupSurface();
 			this.voltage=voltage;
 
 	}
 
-
-	public override void draw_symbol(Cairo.Context context){
-		context.new_path ();
-		context.set_source_rgb (3, 3, 3);
+	public override void update_image(){
 		
-		context.rectangle (connections.nth_data(0).x,connections.nth_data(0).y,this.width,2);
-		context.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-		context.set_font_size (20);
-		context.text_path ("         %.0f V".printf(voltage));
-		context.fill();
-		
-		context.close_path ();
 	}
+	
+	public override void make_image(){
+		
+		imageContext.new_path ();
+		imageContext.move_to (0, height/2);
+		imageContext.line_to (width, height/2);
+		imageContext.close_path ();
+		imageContext.stroke ();
+		
+		imageContext.new_path ();
+		imageContext.set_font_size (height*0.4);
+		imageContext.move_to (0, height/2-5);
+		imageContext.text_path (name);
+		imageContext.fill();
+		imageContext.close_path ();
+	}
+	
 	public override Component clone(Component component,int x,int y){
 			PowerSource newc=new PowerSource(double.parse(voltageEntry.get_text ()));
 			counter++;

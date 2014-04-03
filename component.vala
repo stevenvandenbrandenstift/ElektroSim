@@ -94,9 +94,13 @@ public abstract class Component : ListBoxRow {
 	public Zone zone{get;set;default=Zone.UNKNOWN;}
 	public Orientation orientation{get;set;default=Orientation.UNKNOWN;}
 	private Label label;
-	public string name {get;set;}
 	public List<Point> connections;
+	public Point topLeft;
 	private Box box;
+	public Cairo.Surface imageSurface;
+	public Cairo.Context imageContext;
+	public Cairo.Surface emoticonSurface;
+	public Cairo.Context emoticonContext;
 
 	public Component(string name){
 		this.name=name;
@@ -105,7 +109,20 @@ public abstract class Component : ListBoxRow {
 		box.add(label);
 		(this as ListBoxRow).add(box);
 		connections=new List<Point>();
+		
 
+	}
+	
+	protected void setupSurface(){
+		imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+		imageContext=new Cairo.Context(imageSurface);
+		imageContext.set_source_rgb (3, 3, 3);
+		imageContext.set_line_width (3);
+		imageContext.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+		
+		emoticonSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 110, 110);
+		emoticonContext=new Cairo.Context(emoticonSurface);
+		
 	}
 	
 	protected void addWidget(Widget widget){
@@ -124,7 +141,99 @@ public abstract class Component : ListBoxRow {
 	public abstract Component clone(Component component, int x, int y);
 	public abstract int snap(List<Component> list,int range,int netAmount);
 
-	public abstract void draw_symbol(Cairo.Context context);
+	public void update_emoticon(){
+		
+		emoticonContext=new Cairo.Context(emoticonSurface);
+		
+		if(activity!=Activity.UNKNOWN){
+		string emoticon;
+		if(activity==Activity.INACTIVE){
+		emoticon="./emoticons/deepSleepAlien.svg";
+		}else if(activity==Activity.SUBACTIVE){
+		
+			switch(zone){
+		
+				case Zone.DESTRUCTIVE: 
+					emoticon="./emoticons/angstigSleepyAlien.svg";
+					break;
+				case Zone.OUTOFRANGE:
+					emoticon="./emoticons/stressesSleepyAlien.svg";
+					break;
+				case Zone.OPTIMAL:
+					emoticon="./emoticons/sleepyAlien.svg";
+					break;
+				case Zone.SUBOPTIMAL:
+					emoticon="./emoticons/sleepyAlien.svg";
+					break;
+				default:
+					emoticon="./";
+					break;
+			}
+		}
+		else if(activity==Activity.ACTIVE){
+		
+			switch(zone){
+		
+				case Zone.DESTRUCTIVE: 
+					emoticon="./emoticons/stressedAlien.svg";
+					break;
+				case Zone.OUTOFRANGE:
+					emoticon="./emoticons/stressedSadAlien.svg";
+					break;
+				case Zone.OPTIMAL:
+					emoticon="./emoticons/HappyAlien.svg";
+					break;
+				case Zone.SUBOPTIMAL:
+					emoticon="./emoticons/NerveusAlien.svg";
+					break;
+				default:
+					emoticon="./";
+					break;
+			}
+		}else if(activity==Activity.OVERACTIVE){
+		
+			switch(zone){
+		
+				case Zone.DESTRUCTIVE: 
+					emoticon="./emoticons/ScaredAlien.svg";
+					break;
+				case Zone.OUTOFRANGE:
+					emoticon="./emoticons/depresiveAlien.svg";
+					break;
+				case Zone.OPTIMAL:
+					emoticon="./emoticons/ExcitedAlien.svg";
+					break;
+				case Zone.SUBOPTIMAL:
+					emoticon="./emoticons/FrustratedAlien.svg";
+					break;
+				default:
+					emoticon="./";
+					break;
+			}
+		}else{
+		emoticon=null;
+		}
+		
+		if(emoticon!=null){
+		Rsvg.Handle handle;
+			
+       	try {
+            handle = new Rsvg.Handle.from_file(emoticon);
+        	} catch( Error e ) {
+            stderr.printf( "can not open svg file\n" );
+            handle=null;
+        	}
+        	emoticonContext.new_path ();
+        	emoticonContext.scale (1.5, 1.5);
+        	handle.render_cairo( emoticonContext );
+        	emoticonContext.close_path();
+        	
+        	}
+		}
+	}
+	public abstract void update_image();
+	public abstract void make_image();
+	
 	public abstract string getNetlistLine();
 	public abstract void insertSimulationData(string data);
 

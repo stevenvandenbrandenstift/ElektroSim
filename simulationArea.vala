@@ -58,20 +58,21 @@ public class SimulationArea : Gtk.DrawingArea {
 		//print("redrawing\n");
 		//print("will print %u components \n",items.length ());
 		foreach (Component component in items){
-			component.draw_symbol(cr);
+			component.update_image();
+			component.update_emoticon();
+			cr.set_source_surface(component.imageContext.get_target(),component.connections.nth_data(0).x,component.connections.nth_data(0).y-component.height/2);
+			cr.paint();
+			cr.set_source_surface(component.emoticonContext.get_target(),component.connections.nth_data(0).x+component.width/2-35,component.connections.nth_data(0).y-75-component.height);
+			cr.paint();
 		}
-		cr.restore ();
-		return false;
-	}
-
-	private Component get_component(int index){
-		return (Component)list.get_row_at_index(index);
+		return true;
 	}
 
 	private void insert_component (int x , int y, Component component){
 		Component newComponent=component.clone(component,x,y);
 		netAmount=newComponent.snap(items,20,netAmount);
 		items.append(newComponent);
+		newComponent.make_image();
 		redraw_canvas();
 	}
 

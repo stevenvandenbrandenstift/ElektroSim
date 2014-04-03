@@ -17,7 +17,6 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  using Gtk;
- //using Rsvg;
 namespace ElektroSim{
 	
 public class Resistor : Component {
@@ -39,49 +38,45 @@ public class Resistor : Component {
 	// Constructor
 	public Resistor (double resistance,double maxPower) {
 		base("resistor");
+		this.width=250;
+		this.height=50;
+		setupSurface();
 		addParameterWidget("R","5",out resLabel,out resEntry);
 		addParameterWidget("Max Power","1",out maxPowerLabel, out maxPowerEntry);
-		this.width=250;
 		this.resistance=resistance;
 		this.maxPower=maxPower;
-	}
 
-	public override void draw_symbol(Cairo.Context context){
-		context.save();
-		context.new_path ();
-		context.set_source_rgb (3, 3, 3);
-		context.rectangle (connections.nth_data(0).x,connections.nth_data(0).y,this.width/5,2);
-		context.rectangle (connections.nth_data(0).x+this.width/5,connections.nth_data(0).y-this.width/10,(this.width/5)*3,this.width/5);
-		context.rectangle (connections.nth_data(1).x-(this.width/5),connections.nth_data(1).y,this.width/5,2);
-		
-		
-		context.close_path ();
-		context.stroke ();
-		
-		context.new_path ();
-		context.set_source_rgb (3, 3, 3);
-		context.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-		context.set_font_size (20);
-		context.move_to (connections.nth_data(0).x+this.width/5+5,connections.nth_data(0).y);
-		context.text_path (name);
-		context.close_path();
-		context.fill();
-		
-		/*
-		contect.new_patch();
-		Handle handle;
-        try {
-            handle = new Handle.from_file("./svg.svg");
-        } catch( Error e ) {
-            stderr.printf( "can not open svg file\n" );
-            return;
-        }
-        
-        handle.render_cairo( context );
-        context.close_path();
-    	*/
-		
 	}
+	
+	public override void update_image(){
+	
+	}
+	
+	public override void make_image(){
+		
+		
+		imageContext.new_path ();	
+		imageContext.move_to (0, height/2);
+		imageContext.line_to (width/5, height/2);
+		imageContext.rectangle (width/5,0,width/5*3,height);
+		imageContext.close_path ();
+		imageContext.stroke ();
+		
+		imageContext.new_path ();
+		imageContext.move_to (width*4/5, height/2);
+		imageContext.line_to (width, height/2);
+		imageContext.close_path ();
+		imageContext.stroke ();
+		
+		imageContext.new_path ();
+		imageContext.set_font_size (height*0.9);
+		imageContext.move_to (width/5+5,height/1.2);
+		imageContext.text_path (name);
+		imageContext.close_path();
+		imageContext.fill();
+
+	}
+	
 	public override Component clone(Component component,int x ,int y){
 		Resistor newc=new Resistor(double.parse(resEntry.get_text ()),double.parse(maxPowerEntry.get_text ()));
 		counter++;

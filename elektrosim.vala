@@ -72,6 +72,9 @@ class MainWindow : Window  {
 		Button sim_button=new Button.with_label ("Simulation") ;
 		sim_button.clicked.connect(simArea.simulate);
 		headerBar.add(sim_button); 
+		Button clear_button=new Button.with_label ("Clear") ;
+		clear_button.clicked.connect(simArea.clear);
+		headerBar.add(clear_button); 
 		Grid grid = new Grid();
 		
 		grid.add(list);

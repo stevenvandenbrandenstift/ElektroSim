@@ -77,6 +77,10 @@ public class Resistor : Component {
 
 	}
 	
+	public override void clearCounter(){
+	counter=0;
+	}
+	
 	public override Component clone(Component component,int x ,int y){
 		Resistor newc=new Resistor(double.parse(resEntry.get_text ()),double.parse(maxPowerEntry.get_text ()));
 		counter++;

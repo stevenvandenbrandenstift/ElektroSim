@@ -53,7 +53,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		set_size_request(500,500);
 
 	}
-
+	
 	public override bool draw (Cairo.Context cr) {
 		//print("redrawing\n");
 		//print("will print %u components \n",items.length ());
@@ -67,7 +67,17 @@ public class SimulationArea : Gtk.DrawingArea {
 		}
 		return true;
 	}
-
+	
+	
+	public void clear(){
+		
+		foreach(Component component in items){
+				component.clearCounter();
+				items.remove(component);
+		}
+		//items=new List<Component>();
+	}
+	
 	private void insert_component (int x , int y, Component component){
 		Component newComponent=component.clone(component,x,y);
 		netAmount=newComponent.snap(items,20,netAmount);

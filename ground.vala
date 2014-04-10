@@ -33,6 +33,9 @@ public class Ground : Component {
 
 	}
 	
+	public override void clearCounter(){
+	}
+	
 	public override void make_image(){
 		
 		imageContext.new_path ();

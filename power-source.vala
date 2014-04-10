@@ -57,6 +57,10 @@ public class PowerSource : Component {
 		imageContext.close_path ();
 	}
 	
+	public override void clearCounter(){
+	counter=0;
+	}
+	
 	public override Component clone(Component component,int x,int y){
 			PowerSource newc=new PowerSource(double.parse(voltageEntry.get_text ()));
 			counter++;

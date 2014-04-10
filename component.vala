@@ -199,7 +199,7 @@ public abstract class Component : ListBoxRow {
 					break;
 				case Zone.OUTOFRANGE:
 					emoticon="./emoticons/depresiveAlien.svg";
-					break;
+						break;
 				case Zone.OPTIMAL:
 					emoticon="./emoticons/ExcitedAlien.svg";
 					break;
@@ -233,6 +233,8 @@ public abstract class Component : ListBoxRow {
 	}
 	public abstract void update_image();
 	public abstract void make_image();
+	
+	public abstract void clearCounter();
 	
 	public abstract string getNetlistLine();
 	public abstract void insertSimulationData(string data);

@@ -97,7 +97,6 @@ public abstract class Component : ListBoxRow {
 	public List<Point> connections;
 	public Point topLeft;
 	private Box grid;
-	public FlowBox flowBox;
 	public Cairo.Surface imageSurface;
 	public Cairo.Context imageContext;
 	public Cairo.Surface emoticonSurface;
@@ -107,12 +106,8 @@ public abstract class Component : ListBoxRow {
 		this.name=name;
 		grid = new Box (Gtk.Orientation.VERTICAL,0);
 		grid.set_can_focus(false);
-		grid.set_sensitive(false);
 		label= new Label (name);
 		grid.add(label);
-		flowBox=new FlowBox();
-		flowBox.set_can_focus(false);
-		grid.add(flowBox);
 		(this as ListBoxRow).add(grid);
 		connections=new List<Point>();
 		
@@ -143,7 +138,7 @@ public abstract class Component : ListBoxRow {
 		entry.set_text (parameterValue);
 		entry.set_width_chars(5);
 		box.add(entry);
-		flowBox.add(box);
+		grid.add(box);
 	}
 
 	public abstract Component clone(Component component, int x, int y);

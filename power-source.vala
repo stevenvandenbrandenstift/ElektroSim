@@ -32,7 +32,6 @@ public class PowerSource : Component {
 			addParameterWidget("V","10",out voltageLabel,out voltageEntry);
 			this.width=100;
 			this.height=50;
-			setupSurface();
 			this.voltage=voltage;
 
 	}
@@ -42,6 +41,9 @@ public class PowerSource : Component {
 	}
 	
 	public override void make_image(){
+		
+		orientation=connections[0].GetComponentConnection(this);
+		setupSurface(orientation);
 		
 		imageContext.new_path ();
 		imageContext.move_to (0, height/2);
@@ -73,7 +75,7 @@ public class PowerSource : Component {
 		point=new Point(x,y);
 		point=point.pointNearby(range);
 		point.connectComponent(this);
-		connections.insert(point,0);
+		connections.add(point);
 	}
 
 	public override void insertSimulationData(string dataLine){
@@ -95,7 +97,7 @@ public class PowerSource : Component {
 
 	public override string getNetlistLine(){
 		string line;
-		line=name+" "+connections.nth_data(0).net.to_string()+" 0 "+voltage.to_string()+voltageUnit+"\n";
+		line=name+" "+connections[0].net.to_string()+" 0 "+voltage.to_string()+voltageUnit+"\n";
 		return line;
 	}
 

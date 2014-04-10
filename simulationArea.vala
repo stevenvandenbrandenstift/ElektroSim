@@ -59,9 +59,36 @@ public class SimulationArea : Gtk.DrawingArea {
 		foreach (Component component in items){
 			component.update_image();
 			component.update_emoticon();
-			cr.set_source_surface(component.imageContext.get_target(),component.connections.nth_data(0).x,component.connections.nth_data(0).y-component.height/2);
+			
+			int x,y;
+			x=0;
+			y=0;
+			switch (component.orientation){
+		
+			case ElektroSim.Orientation.RIGHT:
+				x=component.connections[0].x;
+				y=component.connections[0].y-component.height/2;
+				break;
+			case ElektroSim.Orientation.LEFT:
+				x=component.connections[0].x-component.width;
+				y=component.connections[0].y-component.height/2;
+				break;
+			case ElektroSim.Orientation.UP:
+				x=component.connections[0].x-component.height/2;
+				y=component.connections[0].y;
+				break;
+			case ElektroSim.Orientation.DOWN:
+				x=component.connections[0].x-component.height/2;
+				y=component.connections[0].y;
+				break;
+			case ElektroSim.Orientation.NONE:
+				x=component.connections[0].x;
+				y=component.connections[0].y-component.height/2;
+				break;
+			}	
+			cr.set_source_surface(component.imageContext.get_target(),x,y);
 			cr.paint();
-			cr.set_source_surface(component.emoticonContext.get_target(),component.connections.nth_data(0).x+component.width/2-35,component.connections.nth_data(0).y-75-component.height);
+			cr.set_source_surface(component.emoticonContext.get_target(),x+component.width/2-35,y-75-component.height);
 			cr.paint();
 		}
 		return true;

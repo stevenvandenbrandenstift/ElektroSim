@@ -18,6 +18,7 @@
  */
 
 using Gtk;
+using Gee;
 
 namespace ElektroSim{
 
@@ -27,7 +28,7 @@ public enum Orientation{
 
 public class Point{
 	public static int netAmount=0;
-	public static List<Point> points=new List<Point>();
+	public static ArrayList<Point> points=new ArrayList<Point>();
 	public int x{get;set;default=0;}
 	public int y{get;set;default=0;}
 	public int net{get;set;default=1000;}
@@ -61,18 +62,14 @@ public class Point{
 					}
 				}
 			}
-		points.append(this);
+		points.add(this);
 		print("added point %i,%i \n",this.x,this.y);
-		print("points in points \n");
-		foreach(Point point in points){
-		print("point %i,%i \n",point.x,point.y);
-		}
 		return this;
 	}
 	
 	public static void clear(){
 		netAmount=0;
-		points=new List<Point>();
+		points.clear();
 	}
 	
 	public Orientation GetComponentConnection(Component component){
@@ -101,6 +98,7 @@ public class Point{
 	
 	public void connectComponent(Component component){
 		
+		if(component.connections.is_empty){
 		if(connections.right==null){
 			connections.right=component;
 			//print("connected %s on right of point",component.name);
@@ -114,6 +112,27 @@ public class Point{
 			connections.up=component;
 			//print("connected %s on up of point",component.name);
 		}
+		}else{
+			switch (component.connections[0].GetComponentConnection(component)){
+			case ElektroSim.Orientation.RIGHT:
+				connections.left=component;
+				break;
+			case ElektroSim.Orientation.LEFT:
+				connections.right=component;
+				break;
+			case ElektroSim.Orientation.UP:
+				connections.down=component;
+				break;
+			case ElektroSim.Orientation.DOWN:
+				connections.up=component;
+				break;
+			case ElektroSim.Orientation.NONE:
+				connections.left=component;
+				break;
+			}	
+		}
+		
+		
 	}
 	
 	

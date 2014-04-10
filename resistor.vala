@@ -40,7 +40,6 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		setupSurface();
 		addParameterWidget("R","5",out resLabel,out resEntry);
 		addParameterWidget("Max Power","1",out maxPowerLabel, out maxPowerEntry);
 		this.resistance=resistance;
@@ -54,6 +53,8 @@ public class Resistor : Component {
 	
 	public override void make_image(){
 		
+		orientation=connections[0].GetComponentConnection(this);
+		setupSurface(orientation);
 		
 		imageContext.new_path ();	
 		imageContext.move_to (0, height/2);
@@ -93,10 +94,11 @@ public class Resistor : Component {
 		point=new Point(x,y);
 		point=point.pointNearby(range);
 		point.connectComponent(this);
-		connections.insert(point,0);
+		connections.add(point);
 		point2=new Point(point.x+width,point.y);
 		point2=point2.pointNearby(range);
-		connections.insert(point2,1);
+		point2.connectComponent(this);
+		connections.add(point2);
 	}
 	public override void insertSimulationData(string dataLine){
 		DataPair pair=lineToDataPair(dataLine);
@@ -143,7 +145,7 @@ public class Resistor : Component {
 
 	public override string getNetlistLine(){
 		string line;
-		line=name+" "+connections.nth_data(0).net.to_string()+" "+connections.nth_data(1).net.to_string()+" "+resistance.to_string()+resistanceUnit+" max_power="+maxPower.to_string()+"\n";
+		line=name+" "+connections[0].net.to_string()+" "+connections[0].net.to_string()+" "+resistance.to_string()+resistanceUnit+" max_power="+maxPower.to_string()+"\n";
 		return line;
 	}
 }

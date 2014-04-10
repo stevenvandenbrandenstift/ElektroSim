@@ -18,7 +18,7 @@
  */
 
 using Gtk;
-
+using Gee;
 namespace ElektroSim{
 
 public struct DataPair{
@@ -38,13 +38,14 @@ public abstract class Component : ListBoxRow {
 	// Constructor
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
+	public Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
 	
 	public double i{get;set;default=0;}
 	public double p{get;set;default=0;}	
 	public Activity activity{get;set;default=Activity.UNKNOWN;}
 	public Zone zone{get;set;default=Zone.UNKNOWN;}
 	private Label label;
-	public List<Point> connections;
+	public ArrayList<Point> connections;
 	public Point topLeft;
 	private Box grid;
 	public Cairo.Surface imageSurface;
@@ -52,8 +53,6 @@ public abstract class Component : ListBoxRow {
 	public Cairo.Surface emoticonSurface;
 	public Cairo.Context emoticonContext;
 	
-	public Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
-
 	public Component(string name){
 		this.name=name;
 		grid = new Box (Gtk.Orientation.VERTICAL,0);
@@ -61,13 +60,28 @@ public abstract class Component : ListBoxRow {
 		label= new Label (name);
 		grid.add(label);
 		(this as ListBoxRow).add(grid);
-		connections=new List<Point>();
+		connections=new ArrayList<Point>();
 		
 
 	}
 	
-	protected void setupSurface(){
-		imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+	protected void setupSurface(Orientation orientation){
+		
+		switch (orientation){
+		
+			case Orientation.RIGHT:
+				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+				break;
+			case Orientation.LEFT:
+				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+				break;
+			case Orientation.UP:
+				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
+				break;
+			case Orientation.DOWN:
+				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
+				break;
+		}		
 		imageContext=new Cairo.Context(imageSurface);
 		imageContext.set_source_rgb (3, 3, 3);
 		imageContext.set_line_width (3);

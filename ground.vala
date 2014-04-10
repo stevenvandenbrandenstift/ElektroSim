@@ -22,10 +22,9 @@ namespace ElektroSim{
 public class Ground : Component {
 	
 	public Ground () {
-			base("ground");
+			base("Ground");
 			this.width=100;
 			this.height=50;
-			setupSurface();
 	}
 
 	
@@ -38,11 +37,11 @@ public class Ground : Component {
 	
 	public override void make_image(){
 		
-		Orientation orientation;
-		orientation=connections.nth_data(0).GetComponentConnection(this);
+		orientation=connections[0].GetComponentConnection(this);
 		stdout.printf ("make image ground value= '%i'\n", orientation);
+		setupSurface(orientation);
 		
-		if(orientation==ElektroSim.Orientation.RIGHT){
+		
 		imageContext.new_path ();
 		imageContext.move_to (0, height/2);
 		imageContext.line_to (width, height/2);
@@ -51,29 +50,20 @@ public class Ground : Component {
 		
 		imageContext.new_path ();
 		imageContext.set_font_size (height*0.4);
+		
+		if(orientation==ElektroSim.Orientation.RIGHT){
+
 		imageContext.move_to (width*0.2, height/2-5);
-		imageContext.text_path ("Ground");
-		imageContext.fill();
-		imageContext.close_path ();
-		}else{
 		
-		imageContext.new_path ();
-		imageContext.move_to (-width, height/2);
-		imageContext.line_to (0, height/2);
-		imageContext.close_path ();
-		imageContext.stroke ();
+		}else if(orientation==ElektroSim.Orientation.LEFT){
 		
-		imageContext.new_path ();
-		imageContext.set_font_size (height*0.4);
-		imageContext.move_to (-width+width*0.2, height/2-5);
-		imageContext.text_path ("Ground");
-		imageContext.fill();
-		imageContext.close_path ();
-		
-		
-		
-		
+		imageContext.move_to (0, height/2-5);
+
 		}
+		
+		imageContext.text_path ("Ground");
+		imageContext.fill();
+		imageContext.close_path ();
 	
 	}
 	
@@ -90,11 +80,11 @@ public class Ground : Component {
 		point=point.pointNearby(range);
 		point.connectComponent(this);
 		point.net=0;
-		connections.insert(point,0);
+		connections.add(point);
 	}
 	public override string getNetlistLine(){
 		string line;
-		line=name+" "+connections.nth_data(0).net.to_string();
+		line=name+" "+connections[0].net.to_string();
 		return "";//line+"\n";
 	}
 }

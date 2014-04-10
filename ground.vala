@@ -37,11 +37,8 @@ public class Ground : Component {
 	
 	public override void make_image(){
 		
-		orientation=connections[0].GetComponentConnection(this);
-		stdout.printf ("make image ground value= '%i'\n", orientation);
 		setupSurface(orientation);
-		
-		
+
 		imageContext.new_path ();
 		imageContext.move_to (0, height/2);
 		imageContext.line_to (width, height/2);
@@ -78,8 +75,8 @@ public class Ground : Component {
 		Point point;
 		point=new Point(x,y);
 		point=point.pointNearby(range);
-		point.connectComponent(this);
 		point.net=0;
+		orientation=point.connectComponent(this);
 		connections.add(point);
 	}
 	public override string getNetlistLine(){

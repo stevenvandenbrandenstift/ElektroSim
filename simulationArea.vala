@@ -63,6 +63,7 @@ public class SimulationArea : Gtk.DrawingArea {
 			int x,y;
 			x=0;
 			y=0;
+			if(component.orientation!=ElektroSim.Orientation.NONE){
 			switch (component.orientation){
 		
 			case ElektroSim.Orientation.RIGHT:
@@ -88,8 +89,9 @@ public class SimulationArea : Gtk.DrawingArea {
 			}	
 			cr.set_source_surface(component.imageContext.get_target(),x,y);
 			cr.paint();
-			cr.set_source_surface(component.emoticonContext.get_target(),x+component.width/2-35,y-75-component.height);
+			cr.set_source_surface(component.emoticonContext.get_target(),x+component.width/2-35,y-component.height-35);
 			cr.paint();
+			}
 		}
 		return true;
 	}

@@ -42,7 +42,6 @@ public class PowerSource : Component {
 	
 	public override void make_image(){
 		
-		orientation=connections[0].GetComponentConnection(this);
 		setupSurface(orientation);
 		
 		imageContext.new_path ();
@@ -53,7 +52,17 @@ public class PowerSource : Component {
 		
 		imageContext.new_path ();
 		imageContext.set_font_size (height*0.4);
+		
+		
+		if(orientation==ElektroSim.Orientation.RIGHT){
+
+		imageContext.move_to (width*0.6, height/2-5);
+		
+		}else if(orientation==ElektroSim.Orientation.LEFT){
+		
 		imageContext.move_to (0, height/2-5);
+
+		}
 		imageContext.text_path (name);
 		imageContext.fill();
 		imageContext.close_path ();
@@ -74,7 +83,7 @@ public class PowerSource : Component {
 		Point point;
 		point=new Point(x,y);
 		point=point.pointNearby(range);
-		point.connectComponent(this);
+		orientation=point.connectComponent(this);
 		connections.add(point);
 	}
 
@@ -88,7 +97,7 @@ public class PowerSource : Component {
 		}
 		else if(name=="p"){
 			p=double.parse(data);
-			stdout.printf ("inserted i= '%f'\n", p);
+			stdout.printf ("inserted p= '%f'\n", p);
 		}
 		
 

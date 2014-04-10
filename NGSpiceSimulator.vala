@@ -36,7 +36,7 @@ public class NGSpiceSimulator : GLib.Object {
 			string[]dataList = data.split("\n");
 			foreach (string line in dataList) {
 			line=line.strip ();
-            stdout.printf ("%s\n", line);
+           		//stdout.printf ("%s\n", line);
 			if(currentComponent!=null&&currentComponent!=""&&(!line.has_prefix ("device"))){
 				data_ready(currentComponent,line);
 			}
@@ -68,7 +68,7 @@ public class NGSpiceSimulator : GLib.Object {
 		dos.put_string (".control\n");
 		dos.put_string ("OP\n");
 			foreach(Component component in items){
-			if(component.name!="ground"){
+			if(component.name!="Ground"){
 			dos.put_string("show "+component.name+"\n");
 		}
 			}
@@ -105,7 +105,7 @@ public class NGSpiceSimulator : GLib.Object {
 			                                out standard_output,
 			                                out standard_error,
 			                                null);
-		stdout.printf ("output= %s\n",standard_output); //debug line
+		//stdout.printf ("output= %s\n",standard_output); //debug line
 		//data_ready(standard_output);	                 
        	processor(standard_output);
        	}

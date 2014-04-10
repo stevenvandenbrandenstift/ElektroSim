@@ -58,13 +58,18 @@ public class Point{
 			foreach(Point snapPoint in points){
 				if((x>snapPoint.x-range)&&(x<snapPoint.x+range)&&(y>snapPoint.y-range)&&(y<snapPoint.y+range)){
 					if(connections.right==null||connections.left==null||connections.up==null||connections.left==null){
-					return snapPoint;
+						return snapPoint;
 					}
 				}
 			}
-		points.add(this);
-		print("added point %i,%i \n",this.x,this.y);
-		return this;
+		//point does not yet exist in list
+		Point point;
+		point=new Point(x,y);
+		netAmount++;
+		point.net=netAmount;
+		points.add(point);
+		print("added point %i,%i \n",point.x,point.y);
+		return point;
 	}
 	
 	public static void clear(){
@@ -72,48 +77,25 @@ public class Point{
 		points.clear();
 	}
 	
-	public Orientation GetComponentConnection(Component component){
-		if(component==connections.right){
-			return Orientation.RIGHT;
-		}else if(component==connections.left){
-			return Orientation.LEFT;
-		}else if(component==connections.up){
-			return Orientation.UP;
-		}else if(component==connections.down){
-			return Orientation.DOWN;
-		}else{
-			return Orientation.NONE;
-		}
-		
-	}
-
-	public int checkNetName(int netCount){
-				print("net from point %i,%i : %i %i\n",x,y,net,netCount);
-				if(net==1000){
-					net=netCount;
-					return netCount+1;
-				}
-			return netCount;
-	}
 	
-	public void connectComponent(Component component){
+	public ElektroSim.Orientation connectComponent(Component component){
 		
-		if(component.connections.is_empty){
-		if(connections.right==null){
-			connections.right=component;
-			//print("connected %s on right of point",component.name);
-		}else if(connections.left==null){
-			connections.left=component;
-			//print("connected %s on left of point",component.name);
-		}else if(connections.down==null){
-			connections.down=component;
-			//print("connected %s on down of point",component.name);
-		}else if(connections.up==null){
-			connections.up=component;
-			//print("connected %s on up of point",component.name);
-		}
+		if(component.orientation==ElektroSim.Orientation.NONE){	// empty list means first point
+			if(connections.right==null){
+				connections.right=component;
+				return ElektroSim.Orientation.RIGHT;
+			}else if(connections.left==null){
+				connections.left=component;
+				return ElektroSim.Orientation.LEFT;
+			}else if(connections.down==null){
+				connections.down=component;
+				return ElektroSim.Orientation.DOWN;
+			}else if(connections.up==null){
+				connections.up=component;
+				return ElektroSim.Orientation.UP;
+			}
 		}else{
-			switch (component.connections[0].GetComponentConnection(component)){
+			switch (component.orientation){
 			case ElektroSim.Orientation.RIGHT:
 				connections.left=component;
 				break;
@@ -128,10 +110,12 @@ public class Point{
 				break;
 			case ElektroSim.Orientation.NONE:
 				connections.left=component;
+				print("error found orientation NONE \n");
 				break;
 			}	
 		}
 		
+		return component.orientation;
 		
 	}
 	

@@ -38,14 +38,14 @@ public abstract class Component : ListBoxRow {
 	// Constructor
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
-	public Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
+	public ElektroSim.Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
 	
 	public double i{get;set;default=0;}
 	public double p{get;set;default=0;}	
 	public Activity activity{get;set;default=Activity.UNKNOWN;}
 	public Zone zone{get;set;default=Zone.UNKNOWN;}
 	private Label label;
-	public ArrayList<Point> connections;
+	public ArrayList<Point> connections=new ArrayList<Point>();
 	public Point topLeft;
 	private Box grid;
 	public Cairo.Surface imageSurface;
@@ -60,25 +60,22 @@ public abstract class Component : ListBoxRow {
 		label= new Label (name);
 		grid.add(label);
 		(this as ListBoxRow).add(grid);
-		connections=new ArrayList<Point>();
-		
-
 	}
 	
-	protected void setupSurface(Orientation orientation){
+	protected void setupSurface(ElektroSim.Orientation orientation){
 		
 		switch (orientation){
 		
-			case Orientation.RIGHT:
+			case ElektroSim.Orientation.RIGHT:
 				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
 				break;
-			case Orientation.LEFT:
+			case ElektroSim.Orientation.LEFT:
 				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
 				break;
-			case Orientation.UP:
+			case ElektroSim.Orientation.UP:
 				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
 				break;
-			case Orientation.DOWN:
+			case ElektroSim.Orientation.DOWN:
 				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
 				break;
 		}		

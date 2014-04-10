@@ -53,7 +53,6 @@ public class Resistor : Component {
 	
 	public override void make_image(){
 		
-		orientation=connections[0].GetComponentConnection(this);
 		setupSurface(orientation);
 		
 		imageContext.new_path ();	
@@ -93,12 +92,19 @@ public class Resistor : Component {
 		Point point,point2;
 		point=new Point(x,y);
 		point=point.pointNearby(range);
-		point.connectComponent(this);
 		connections.add(point);
-		point2=new Point(point.x+width,point.y);
+		orientation=point.connectComponent(this);
+		if(orientation==ElektroSim.Orientation.RIGHT){
+			point2=new Point(point.x+width,point.y);
+		} else if (orientation==ElektroSim.Orientation.LEFT){
+		 	point2=new Point(point.x-width,point.y);
+		}else{
+		point2=new Point(point.x-width,point.y);
+		}
 		point2=point2.pointNearby(range);
-		point2.connectComponent(this);
 		connections.add(point2);
+		point2.connectComponent(this);
+		
 	}
 	public override void insertSimulationData(string dataLine){
 		DataPair pair=lineToDataPair(dataLine);
@@ -145,7 +151,7 @@ public class Resistor : Component {
 
 	public override string getNetlistLine(){
 		string line;
-		line=name+" "+connections[0].net.to_string()+" "+connections[0].net.to_string()+" "+resistance.to_string()+resistanceUnit+" max_power="+maxPower.to_string()+"\n";
+		line=name+" "+connections[0].net.to_string()+" "+connections[1].net.to_string()+" "+resistance.to_string()+resistanceUnit+" max_power="+maxPower.to_string()+"\n";
 		return line;
 	}
 }

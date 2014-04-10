@@ -141,7 +141,7 @@ public class Resistor : Component {
 		}
 		else if(name=="p"){
 			p=double.parse(data);
-			stdout.printf ("inserted i= '%f'\n", p);
+			stdout.printf ("inserted p= '%f'\n", p);
 		}
 		
 

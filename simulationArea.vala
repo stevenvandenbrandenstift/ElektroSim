@@ -73,9 +73,11 @@ public class SimulationArea : Gtk.DrawingArea {
 		
 		foreach(Component component in items){
 				component.clearCounter();
-				items.remove(component);
+				
 		}
-		//items=new List<Component>();
+		//items.clear(); //will not work?
+		items=new List<Component>();
+		redraw_canvas();
 	}
 	
 	private void insert_component (int x , int y, Component component){
@@ -105,6 +107,7 @@ public class SimulationArea : Gtk.DrawingArea {
 				stdout.printf ("component: '%s' \n", component.name); 
 		}
 		gen.run_simulation(items);
+		redraw_canvas();
 		
 	}
 

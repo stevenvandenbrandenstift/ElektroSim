@@ -65,14 +65,15 @@ public class PowerSource : Component {
 			PowerSource newc=new PowerSource(double.parse(voltageEntry.get_text ()));
 			counter++;
 			newc.name="v"+counter.to_string();
-			newc.connections.append(new Point(x,y));
 			return newc;
 	}
 
-	public override int snap(List<Component> list,int range,int netCount){
-		connections.nth_data(0).pointNearby(range,list);
-		int newNetCount=connections.nth_data(0).checkNetName(netCount);
-		return newNetCount;
+	public override void snap(int range,int x, int y){
+		Point point;
+		point=new Point(x,y);
+		point=point.pointNearby(range);
+		point.connectComponent(this);
+		connections.insert(point,0);
 	}
 
 	public override void insertSimulationData(string dataLine){

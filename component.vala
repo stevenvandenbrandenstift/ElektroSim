@@ -26,61 +26,12 @@ public struct DataPair{
 	string dataValue;
 }
 
-public class Point{
-	public int x{get;set;default=0;}
-	public int y{get;set;default=0;}
-	public int net{get;set;default=1000;}
-
-	public Point(int x,int y){
-		this.x=x;
-		this.y=y;
-	}
-	
-	public Point.with_net(int x, int y,int net){
-		this.x=x;
-		this.y=y;
-		this.net=net;
-	}
-	
-	public bool pointNearby(int range, List<Component> items){
-		foreach(Component component in items){
-			foreach(Point snapPoint in component.connections){
-				if((x>snapPoint.x-range)&&(x<snapPoint.x+range)&&(y>snapPoint.y-range)&&(y<snapPoint.y+range)){
-					this.x=snapPoint.x;
-					this.y=snapPoint.y;
-					if(this.net==0){
-					snapPoint.net=0;
-					}else{
-					this.net=snapPoint.net;
-					}
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public int checkNetName(int netCount){
-				print("net from point %i,%i : %i %i\n",x,y,net,netCount);
-				if(net==1000){
-					net=netCount;
-					return netCount+1;
-				}
-			return netCount;
-	}
-	
-}
-
 public enum Activity {
 	UNKNOWN,INACTIVE, SUBACTIVE, ACTIVE, OVERACTIVE;
 }
 public enum Zone {
 	UNKNOWN,SUBOPTIMAL, OPTIMAL, OUTOFRANGE, DESTRUCTIVE;
 }
-
-	public enum Orientation {
-		UNKNOWN, LEFT, RIGHT, UP, DOWN;
-	}
 
 public abstract class Component : ListBoxRow {
 
@@ -92,7 +43,6 @@ public abstract class Component : ListBoxRow {
 	public double p{get;set;default=0;}	
 	public Activity activity{get;set;default=Activity.UNKNOWN;}
 	public Zone zone{get;set;default=Zone.UNKNOWN;}
-	public Orientation orientation{get;set;default=Orientation.UNKNOWN;}
 	private Label label;
 	public List<Point> connections;
 	public Point topLeft;
@@ -101,6 +51,8 @@ public abstract class Component : ListBoxRow {
 	public Cairo.Context imageContext;
 	public Cairo.Surface emoticonSurface;
 	public Cairo.Context emoticonContext;
+	
+	public Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
 
 	public Component(string name){
 		this.name=name;
@@ -142,7 +94,7 @@ public abstract class Component : ListBoxRow {
 	}
 
 	public abstract Component clone(Component component, int x, int y);
-	public abstract int snap(List<Component> list,int range,int netAmount);
+	public abstract void snap(int range,int x, int y);
 
 	public void update_emoticon(){
 		
@@ -254,10 +206,7 @@ public abstract class Component : ListBoxRow {
 		pair.dataName=line.slice(0,position);
 		return pair;
 	}
-
-
-
-
+	
 }
 
 }

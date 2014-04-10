@@ -26,7 +26,6 @@ public class SimulationArea : Gtk.DrawingArea {
 
 	private ListBox list;
 	public List<Component> items;
-	private static int netAmount=0;
 	public NGSpiceSimulator gen;
 
 
@@ -38,13 +37,12 @@ public class SimulationArea : Gtk.DrawingArea {
 		add_events (EventMask.BUTTON_PRESS_MASK);
    		
    		this.button_press_event.connect((event)=>{
-   			stdout.printf ("buton pressed= x %f y %f\n",event.y,event.x); //debug line
+   			stdout.printf ("buton pressed= x %i y %i\n",(int)event.x,(int)event.y); //debug line
    			insert_component((int)event.x,(int)event.y,(list.get_selected_row()as Component));
    			return true;
    		});
    		
 		items= new List<Component>();
-		netAmount=1;
 		gen= new NGSpiceSimulator();
 		gen.data_ready.connect (insertSimulationData);
 
@@ -74,8 +72,8 @@ public class SimulationArea : Gtk.DrawingArea {
 		
 		foreach(Component component in items){
 				component.clearCounter();
-				
 		}
+		Point.clear();
 		//items.clear(); //will not work?
 		items=new List<Component>();
 		redraw_canvas();
@@ -83,7 +81,7 @@ public class SimulationArea : Gtk.DrawingArea {
 	
 	private void insert_component (int x , int y, Component component){
 		Component newComponent=component.clone(component,x,y);
-		netAmount=newComponent.snap(items,20,netAmount);
+		newComponent.snap(20,x,y);
 		items.append(newComponent);
 		newComponent.make_image();
 		redraw_canvas();

@@ -20,8 +20,8 @@
 namespace ElektroSim{
 	
 public class Ground : Component {
-
-		public Ground () {
+	
+	public Ground () {
 			base("ground");
 			this.width=100;
 			this.height=50;
@@ -38,6 +38,11 @@ public class Ground : Component {
 	
 	public override void make_image(){
 		
+		Orientation orientation;
+		orientation=connections.nth_data(0).GetComponentConnection(this);
+		stdout.printf ("make image ground value= '%i'\n", orientation);
+		
+		if(orientation==ElektroSim.Orientation.RIGHT){
 		imageContext.new_path ();
 		imageContext.move_to (0, height/2);
 		imageContext.line_to (width, height/2);
@@ -50,21 +55,42 @@ public class Ground : Component {
 		imageContext.text_path ("Ground");
 		imageContext.fill();
 		imageContext.close_path ();
+		}else{
+		
+		imageContext.new_path ();
+		imageContext.move_to (-width, height/2);
+		imageContext.line_to (0, height/2);
+		imageContext.close_path ();
+		imageContext.stroke ();
+		
+		imageContext.new_path ();
+		imageContext.set_font_size (height*0.4);
+		imageContext.move_to (-width+width*0.2, height/2-5);
+		imageContext.text_path ("Ground");
+		imageContext.fill();
+		imageContext.close_path ();
+		
+		
+		
+		
+		}
 	
 	}
 	
 	public override Component clone(Component component,int x, int y){
 			Ground newc=new Ground();
-			newc.connections.append(new Point.with_net (x,y,0));
 			return newc;
 	}
 		public override void insertSimulationData(string data){
 	}
 
-	public override int snap(List<Component> list,int range,int netAmount){
-		connections.nth_data(0).pointNearby(range,list);
-		int newNetCount=connections.nth_data(0).checkNetName(netAmount);
-		return newNetCount;
+	public override void snap(int range,int x ,int y){
+		Point point;
+		point=new Point(x,y);
+		point=point.pointNearby(range);
+		point.connectComponent(this);
+		point.net=0;
+		connections.insert(point,0);
 	}
 	public override string getNetlistLine(){
 		string line;

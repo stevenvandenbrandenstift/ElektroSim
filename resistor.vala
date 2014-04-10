@@ -85,25 +85,18 @@ public class Resistor : Component {
 		Resistor newc=new Resistor(double.parse(resEntry.get_text ()),double.parse(maxPowerEntry.get_text ()));
 		counter++;
 		newc.name="r"+counter.to_string();
-		newc.connections.append (new Point(x,y));
-		newc.connections.append(new Point(x+width,y));
 		return newc;
 	}
 
-	public override int snap(List<Component> list,int range,int netCount){
-		if(connections.nth_data(0).pointNearby(range,list)){
-			connections.nth_data(1).x=connections.nth_data (0).x+width;
-			connections.nth_data(1).y=connections.nth_data(0).y;
-			netCount=connections.nth_data(1).checkNetName(netCount);
-			return netCount;
-		}
-		else{
-			netCount=connections.nth_data(0).checkNetName(netCount);
-			netCount=connections.nth_data(1).checkNetName(netCount);
-			return netCount;
-		}
-
-
+	public override void snap(int range,int x, int y){
+		Point point,point2;
+		point=new Point(x,y);
+		point=point.pointNearby(range);
+		point.connectComponent(this);
+		connections.insert(point,0);
+		point2=new Point(point.x+width,point.y);
+		point2=point2.pointNearby(range);
+		connections.insert(point2,1);
 	}
 	public override void insertSimulationData(string dataLine){
 		DataPair pair=lineToDataPair(dataLine);

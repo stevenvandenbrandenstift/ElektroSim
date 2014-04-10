@@ -33,6 +33,7 @@ public class SimulationArea : Gtk.DrawingArea {
 	// Constructor
 	public SimulationArea (ListBox list) {
 		this.list=list;
+		list.set_selection_mode(SelectionMode.SINGLE);
 		
 		add_events (EventMask.BUTTON_PRESS_MASK);
    		

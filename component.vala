@@ -96,7 +96,8 @@ public abstract class Component : ListBoxRow {
 	private Label label;
 	public List<Point> connections;
 	public Point topLeft;
-	private Box box;
+	private Box grid;
+	public FlowBox flowBox;
 	public Cairo.Surface imageSurface;
 	public Cairo.Context imageContext;
 	public Cairo.Surface emoticonSurface;
@@ -104,10 +105,15 @@ public abstract class Component : ListBoxRow {
 
 	public Component(string name){
 		this.name=name;
-		box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+		grid = new Box (Gtk.Orientation.VERTICAL,0);
+		grid.set_can_focus(false);
+		grid.set_sensitive(false);
 		label= new Label (name);
-		box.add(label);
-		(this as ListBoxRow).add(box);
+		grid.add(label);
+		flowBox=new FlowBox();
+		flowBox.set_can_focus(false);
+		grid.add(flowBox);
+		(this as ListBoxRow).add(grid);
 		connections=new List<Point>();
 		
 
@@ -125,17 +131,19 @@ public abstract class Component : ListBoxRow {
 		
 	}
 	
-	protected void addWidget(Widget widget){
-		box.add(widget);
-	}
-	
 	protected void addParameterWidget(string parameter,string parameterValue, out Label label,out Entry entry){
+		Box box;
+		box= new Box(Gtk.Orientation.HORIZONTAL,0);
+		box.set_can_focus(false);
 		label= new Label.with_mnemonic (parameter+":");
-		addWidget(label);
+		label.set_can_focus(false);
+		label.selectable=false;
+		box.add(label);
 		entry= new Entry();
 		entry.set_text (parameterValue);
 		entry.set_width_chars(5);
-		addWidget(entry);
+		box.add(entry);
+		flowBox.add(box);
 	}
 
 	public abstract Component clone(Component component, int x, int y);

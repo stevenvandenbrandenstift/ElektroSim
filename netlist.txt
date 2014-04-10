@@ -1,9 +1,13 @@
 netlist by ElektroSim2
-r1 15 0 100 max_power=1
-v1 15 0 5
+r1 1 0 5 max_power=1
+r2 0 3 4 max_power=5
+v1 1 0 10
+v2 3 0 10
 .control
 OP
 show r1
+show r2
 show v1
+show v2
 exit.endc
 .END

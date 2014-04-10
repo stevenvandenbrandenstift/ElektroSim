@@ -37,7 +37,7 @@ public class Resistor : Component {
 	
 	// Constructor
 	public Resistor (double resistance,double maxPower) {
-		base("resistor");
+		base("Resistor");
 		this.width=250;
 		this.height=50;
 		setupSurface();

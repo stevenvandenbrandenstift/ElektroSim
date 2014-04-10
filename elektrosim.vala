@@ -50,10 +50,10 @@ class MainWindow : Window  {
 
 		setup_layout();
 		
-		Resistor test=new Resistor(5,1);
-		list.prepend(test);
-		Ground test2=new Ground();
-		list.add(test2);
+		Resistor resistor=new Resistor(5,1);
+		list.prepend(resistor);
+		Ground ground=new Ground();
+		list.add(ground);
 		PowerSource powerSource=new PowerSource(10);
 		list.add(powerSource);
 

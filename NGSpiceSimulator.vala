@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+using Gee;
 namespace ElektroSim{
 public class NGSpiceSimulator : GLib.Object {
 
@@ -53,7 +53,7 @@ public class NGSpiceSimulator : GLib.Object {
 	}
 	
 
-	public string generate_file(List<Component> items){
+	public string generate_file(ArrayList<Component> items){
 		try {
 		File file = File.new_for_path ("./netlist.txt");
 		if (file.query_exists ()) {
@@ -86,7 +86,7 @@ public class NGSpiceSimulator : GLib.Object {
 	
 
 
-	public void run_simulation(List<Component> items){
+	public void run_simulation(ArrayList<Component> items){
 	
 		//send_to_ngspice("source /home/steven/test/netlist.txt\n");
 		//send_to_ngspice("run\n");

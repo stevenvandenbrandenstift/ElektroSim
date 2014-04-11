@@ -47,10 +47,6 @@ public class Resistor : Component {
 
 	}
 	
-	public override void update_image(){
-	
-	}
-	
 	public override void make_image(){
 		
 		setupSurface(orientation);
@@ -78,10 +74,10 @@ public class Resistor : Component {
 	}
 	
 	public override void clearCounter(){
-	counter=0;
+		counter=0;
 	}
 	
-	public override Component clone(Component component,int x ,int y){
+	public override Component clone(Component component){
 		Resistor newc=new Resistor(double.parse(resEntry.get_text ()),double.parse(maxPowerEntry.get_text ()));
 		counter++;
 		newc.name="r"+counter.to_string();
@@ -106,47 +102,35 @@ public class Resistor : Component {
 		point2.connectComponent(this);
 		
 	}
-	public override void insertSimulationData(string dataLine){
-		DataPair pair=lineToDataPair(dataLine);
-		string name=pair.dataName;
-		string data=pair.dataValue;
-		if(name=="activity"){
-			if(data.contains("inactive")){
+	public override void insertSimulationData(DataPair pair){
+		base.insertSimulationData(pair);
+		if(pair.dataName=="activity"){
+			if(pair.dataValue.contains("inactive")){
 				activity=Activity.INACTIVE;
-			}else if(data.contains("subactive")){
+			}else if(pair.dataValue.contains("subactive")){
 				activity=Activity.SUBACTIVE;
-			}else if(data.contains("overactive")){
+			}else if(pair.dataValue.contains("overactive")){
 				activity=Activity.OVERACTIVE;
-			}else if(data.contains("active")){
+			}else if(pair.dataValue.contains("active")){
 				activity=Activity.ACTIVE;
 			}else {
 				activity=Activity.UNKNOWN;
 			}
 			stdout.printf ("inserted activity= '%i'\n", activity);
-		}else if(name=="work_zone"){
-			if(data.contains("suboptimal")){
+		}else if(pair.dataName=="work_zone"){
+			if(pair.dataValue.contains("suboptimal")){
 				zone=Zone.SUBOPTIMAL;
-			}else if(data.contains("optimal")){
+			}else if(pair.dataValue.contains("optimal")){
 				zone=Zone.OPTIMAL;
-			}else if(data.contains("outofrange")){
+			}else if(pair.dataValue.contains("outofrange")){
 				zone=Zone.OUTOFRANGE;
-			}else if(data.contains("destructive")){
+			}else if(pair.dataValue.contains("destructive")){
 				zone=Zone.DESTRUCTIVE;
 			}else {
 				zone=Zone.UNKNOWN;
 			}
 			stdout.printf ("inserted zone= '%i'\n", zone);
-		}else if(name=="i"){
-			i=double.parse(data);
-			stdout.printf ("inserted i= '%f'\n", i);
-		}
-		else if(name=="p"){
-			p=double.parse(data);
-			stdout.printf ("inserted p= '%f'\n", p);
-		}
-		
-
-		
+		}	
 	}
 
 	public override string getNetlistLine(){

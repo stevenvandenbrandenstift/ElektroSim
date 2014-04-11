@@ -77,6 +77,9 @@ public abstract class Component : ListBoxRow {
 				break;
 			case ElektroSim.Orientation.DOWN:
 				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
+				break;	
+			case ElektroSim.Orientation.NONE:
+				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1,1);
 				break;
 		}		
 		imageContext=new Cairo.Context(imageSurface);
@@ -104,7 +107,10 @@ public abstract class Component : ListBoxRow {
 		grid.add(box);
 	}
 
-	public abstract Component clone(Component component, int x, int y);
+	public virtual Component clone(Component component){
+			return component;
+	}
+	
 	public abstract void snap(int range,int x, int y);
 
 	public void update_emoticon(){
@@ -197,26 +203,32 @@ public abstract class Component : ListBoxRow {
         	}
 		}
 	}
-	public abstract void update_image();
-	public abstract void make_image();
-	
-	public abstract void clearCounter();
-	
-	public abstract string getNetlistLine();
-	public abstract void insertSimulationData(string data);
-
-
-	protected DataPair lineToDataPair(string line){
-		DataPair pair;
-		pair= DataPair();
-		int position,position2,end;
-		end=line.char_count ();
-		position=line.index_of_char (' ');
-		position2=line.last_index_of_char (' ')+1;
-		pair.dataValue=line.slice(position2,end);
-		pair.dataName=line.slice(0,position);
-		return pair;
+	public virtual void update_image(){
 	}
+	public virtual void make_image(){
+	
+	}
+	
+	public virtual void clearCounter(){
+	}
+	
+	public virtual string getNetlistLine(){
+		return "";
+	}
+	
+	public virtual void insertSimulationData(DataPair pair){
+		if(pair.dataName=="i"){
+			i=double.parse(pair.dataValue);
+			stdout.printf ("inserted i= '%f'\n", i);
+		}
+		else if(pair.dataName=="p"){
+			p=double.parse(pair.dataValue);
+			stdout.printf ("inserted p= '%f'\n", p);
+		}
+		
+	}
+
+
 	
 }
 

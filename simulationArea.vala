@@ -19,13 +19,14 @@
  */
 using Gtk;
 using Gdk;
+using Gee;
 
 namespace ElektroSim{
 
 public class SimulationArea : Gtk.DrawingArea {
 
 	private ListBox list;
-	public List<Component> items;
+	public ArrayList<Component> items;
 	public NGSpiceSimulator gen;
 
 
@@ -42,7 +43,7 @@ public class SimulationArea : Gtk.DrawingArea {
    			return true;
    		});
    		
-		items= new List<Component>();
+		items= new ArrayList<Component>();
 		gen= new NGSpiceSimulator();
 		gen.data_ready.connect (insertSimulationData);
 
@@ -103,15 +104,28 @@ public class SimulationArea : Gtk.DrawingArea {
 				component.clearCounter();
 		}
 		Point.clear();
-		//items.clear(); //will not work?
-		items=new List<Component>();
+		items.clear(); //will not work?
 		redraw_canvas();
 	}
 	
 	private void insert_component (int x , int y, Component component){
-		Component newComponent=component.clone(component,x,y);
+		Component newComponent=null;
+		
+		//add line check for 2 points
+		if(component.name=="Line"){
+			foreach(Component component2 in items){
+				if(component2.name=="Line"&&!(component2 as Line).secondPoint){
+				newComponent=component2;
+				}
+			}
+		}
+		if(newComponent==null){
+		newComponent=component.clone(component);
+		}
 		newComponent.snap(20,x,y);
-		items.append(newComponent);
+		if(!items.contains(newComponent)){
+			items.add(newComponent);
+		}
 		newComponent.make_image();
 		redraw_canvas();
 	}
@@ -143,12 +157,24 @@ public class SimulationArea : Gtk.DrawingArea {
 		if(componentName!=null&&componentName!=""){
 		foreach(Component component in items){
 					if(component.name.contains(componentName)){
-						component.insertSimulationData(data);
+						component.insertSimulationData(lineToDataPair(data));
 						continue;
 					}
 		}
 		}
 
+	}
+	
+	protected DataPair lineToDataPair(string line){
+		DataPair pair;
+		pair= DataPair();
+		int position,position2,end;
+		end=line.char_count ();
+		position=line.index_of_char (' ');
+		position2=line.last_index_of_char (' ')+1;
+		pair.dataValue=line.slice(position2,end);
+		pair.dataName=line.slice(0,position);
+		return pair;
 	}
 		
 	

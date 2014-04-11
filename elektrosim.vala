@@ -56,6 +56,8 @@ class MainWindow : Window  {
 		list.add(ground);
 		PowerSource powerSource=new PowerSource(10);
 		list.add(powerSource);
+		Line line= new Line();
+		list.add(line);
 
 		this.show ();
 	}

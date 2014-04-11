@@ -35,10 +35,6 @@ public class PowerSource : Component {
 			this.voltage=voltage;
 
 	}
-
-	public override void update_image(){
-		
-	}
 	
 	public override void make_image(){
 		
@@ -72,7 +68,7 @@ public class PowerSource : Component {
 	counter=0;
 	}
 	
-	public override Component clone(Component component,int x,int y){
+	public override Component clone(Component component){
 			PowerSource newc=new PowerSource(double.parse(voltageEntry.get_text ()));
 			counter++;
 			newc.name="v"+counter.to_string();
@@ -85,23 +81,6 @@ public class PowerSource : Component {
 		point=point.pointNearby(range);
 		orientation=point.connectComponent(this);
 		connections.add(point);
-	}
-
-	public override void insertSimulationData(string dataLine){
-		DataPair pair=lineToDataPair(dataLine);
-		string name=pair.dataName;
-		string data=pair.dataValue;
-		if(name=="i"){
-			i=double.parse(data);
-			stdout.printf ("inserted i= '%f'\n", i);
-		}
-		else if(name=="p"){
-			p=double.parse(data);
-			stdout.printf ("inserted p= '%f'\n", p);
-		}
-		
-
-		
 	}
 
 	public override string getNetlistLine(){

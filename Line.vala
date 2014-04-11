@@ -1,6 +1,6 @@
 /* -*- Mode: vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
- * ground.vala
+ * line.vala
  * Copyright (C) 2014 Steven Vanden Branden <Stevenvandenbrandenstift@gmail.com>
  *
  * ElektroSim is free software: you can redistribute it and/or modify it
@@ -19,57 +19,53 @@
 
 namespace ElektroSim{
 	
-public class Ground : Component {
+public class Line : Component {
+
+	public bool secondPoint{get;set;default=false;}
 	
-	public Ground () {
-			base("Ground");
+	public Line () {
+			base("Line");
 			this.width=100;
 			this.height=50;
 	}
 	
 	public override void make_image(){
 		
+		setupSurface(ElektroSim.Orientation.NONE);
+		
+		if(secondPoint){
 		setupSurface(orientation);
-
 		imageContext.new_path ();
-		imageContext.move_to (0, height/2);
-		imageContext.line_to (width, height/2);
+		imageContext.move_to (0, 0);
+		imageContext.line_to (connections[1].x-connections[0].x, 0);
 		imageContext.close_path ();
 		imageContext.stroke ();
 		
 		imageContext.new_path ();
-		imageContext.set_font_size (height*0.4);
-		
-		if(orientation==ElektroSim.Orientation.RIGHT){
-
-		imageContext.move_to (width*0.2, height/2-5);
-		
-		}else if(orientation==ElektroSim.Orientation.LEFT){
-		
-		imageContext.move_to (0, height/2-5);
-
-		}
-		
-		imageContext.text_path ("Ground");
-		imageContext.fill();
+		imageContext.move_to (connections[1].x-connections[0].x, 0);
+		imageContext.line_to (connections[1].x-connections[0].x, connections[1].y-connections[0].y);
 		imageContext.close_path ();
+		imageContext.stroke ();
+		}
 	
 	}
 	
 	public override Component clone(Component component){
-			Ground newc=new Ground();
+			Line newc=new Line();
 			return newc;
 	}
 	
-	public virtual void insertSimulationData(DataPair pair){
+	public override void insertSimulationData(DataPair pair){
 	}
-	
+
 	public override void snap(int range,int x ,int y){
 		Point point;
 		point=new Point(x,y);
 		point=point.pointNearby(range);
-		point.net=0;
 		orientation=point.connectComponent(this);
+		if(!connections.is_empty){
+			secondPoint=true;
+		}
 		connections.add(point);
 	}
 }

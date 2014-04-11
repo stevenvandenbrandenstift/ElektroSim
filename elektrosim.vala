@@ -23,7 +23,7 @@ namespace ElektroSim{
 class MainWindow : Window  {
 
 	private ListBox list;
-	private SimulationArea simArea;
+	private SimulationArea sim_area;
 	
 
 	public static int main (string[] args)
@@ -54,35 +54,35 @@ class MainWindow : Window  {
 		list.prepend(resistor);
 		Ground ground=new Ground();
 		list.add(ground);
-		PowerSource powerSource=new PowerSource(10);
-		list.add(powerSource);
+		PowerSource power_source=new PowerSource(10);
+		list.add(power_source);
 		Line line= new Line();
 		list.add(line);
-
+		sim_area.set_list_adjustable();
 		this.show ();
 	}
 
 	private void setup_layout(){
-		Gtk.HeaderBar headerBar= new HeaderBar();
+		Gtk.HeaderBar header_bar= new HeaderBar();
 		list = new Gtk.ListBox();
 
 		list.set_selection_mode (SelectionMode.SINGLE);
 
-		headerBar.set_halign (Align.FILL);
-		headerBar.add(new Button.with_label ("Design"));
-		simArea=new SimulationArea(list);
+		header_bar.set_halign (Align.FILL);
+		header_bar.add(new Button.with_label ("Design"));
+		sim_area=new SimulationArea(list);
 		Button sim_button=new Button.with_label ("Simulation") ;
-		sim_button.clicked.connect(simArea.simulate);
-		headerBar.add(sim_button); 
+		sim_button.clicked.connect(sim_area.simulate);
+		header_bar.add(sim_button); 
 		Button clear_button=new Button.with_label ("Clear") ;
-		clear_button.clicked.connect(simArea.clear);
-		headerBar.add(clear_button); 
+		clear_button.clicked.connect(sim_area.clear);
+		header_bar.add(clear_button); 
 		Grid grid = new Grid();
 		
 		grid.add(list);
-		grid.add (simArea);
+		grid.add (sim_area);
 		add(grid);
-		this.set_titlebar (headerBar);
+		this.set_titlebar (header_bar);
 
 	}
 

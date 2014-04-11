@@ -21,16 +21,14 @@ using Gtk;
 using Gee;
 namespace ElektroSim{
 
-public struct DataPair{
-	string dataName;
-	string dataValue;
-}
-
 public enum Activity {
 	UNKNOWN,INACTIVE, SUBACTIVE, ACTIVE, OVERACTIVE;
 }
 public enum Zone {
 	UNKNOWN,SUBOPTIMAL, OPTIMAL, OUTOFRANGE, DESTRUCTIVE;
+}
+public enum Orientation{
+		NONE,RIGHT,LEFT,DOWN,UP;
 }
 
 public abstract class Component : ListBoxRow {
@@ -40,82 +38,95 @@ public abstract class Component : ListBoxRow {
 	public int width {get;set;default=0;}
 	public ElektroSim.Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
 	
-	public double i{get;set;default=0;}
-	public double p{get;set;default=0;}	
-	public Activity activity{get;set;default=Activity.UNKNOWN;}
-	public Zone zone{get;set;default=Zone.UNKNOWN;}
-	private Label label;
+	public ArrayList<Parameter> parameters =new ArrayList<Parameter>();
+	private Label name_label;
+	
 	public ArrayList<Point> connections=new ArrayList<Point>();
-	public Point topLeft;
 	private Box grid;
-	public Cairo.Surface imageSurface;
-	public Cairo.Context imageContext;
-	public Cairo.Surface emoticonSurface;
-	public Cairo.Context emoticonContext;
+	
+	public Cairo.Surface image_surface;
+	public Cairo.Context image_context;
+	public Cairo.Surface emoticon_surface;
+	public Cairo.Context emoticon_context;
 	
 	public Component(string name){
+		parameters.add(new Parameter("i",0));
+		parameters.add(new Parameter("p",0));
+		parameters.add(new Parameter("activity",Activity.UNKNOWN));
+		parameters.add(new Parameter("work_zone",Zone.UNKNOWN));
+		
 		this.name=name;
+	
 		grid = new Box (Gtk.Orientation.VERTICAL,0);
 		grid.set_can_focus(false);
-		label= new Label (name);
-		grid.add(label);
+		
+		name_label= new Label (name);
+		grid.add(name_label);
 		(this as ListBoxRow).add(grid);
 	}
 	
-	protected void setupSurface(ElektroSim.Orientation orientation){
+	public void set_adjustable(){	
+		foreach(Parameter par in parameters){
+			if(par.editable){
+				grid.add(par);	
+			}
+		}
+	}
+	
+	protected void setup_surface(ElektroSim.Orientation orientation){
 		
 		switch (orientation){
 		
 			case ElektroSim.Orientation.RIGHT:
-				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
 				break;
 			case ElektroSim.Orientation.LEFT:
-				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
+				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
 				break;
 			case ElektroSim.Orientation.UP:
-				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
+				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
 				break;
 			case ElektroSim.Orientation.DOWN:
-				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
+				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
 				break;	
 			case ElektroSim.Orientation.NONE:
-				imageSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1,1);
+				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1,1);
 				break;
 		}		
-		imageContext=new Cairo.Context(imageSurface);
-		imageContext.set_source_rgb (3, 3, 3);
-		imageContext.set_line_width (3);
-		imageContext.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+		image_context=new Cairo.Context(image_surface);
+		image_context.set_source_rgb (3, 3, 3);
+		image_context.set_line_width (3);
+		image_context.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
 		
-		emoticonSurface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 110, 110);
-		emoticonContext=new Cairo.Context(emoticonSurface);
+		emoticon_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 110, 110);
+		emoticon_context=new Cairo.Context(emoticon_surface);
+		
+		
 		
 	}
 	
-	protected void addParameterWidget(string parameter,string parameterValue, out Label label,out Entry entry){
-		Box box;
-		box= new Box(Gtk.Orientation.HORIZONTAL,0);
-		box.set_can_focus(false);
-		label= new Label.with_mnemonic (parameter+":");
-		label.set_can_focus(false);
-		label.selectable=false;
-		box.add(label);
-		entry= new Entry();
-		entry.set_text (parameterValue);
-		entry.set_width_chars(5);
-		box.add(entry);
-		grid.add(box);
+	
+	protected Parameter? get_parameter(string name){
+		//stdout.printf ("searching parameter %s\n",name);
+		foreach(Parameter par in parameters){
+			//stdout.printf ("parameter %s:%i\n",par.name,par.val);
+			if(par.name==name){
+				//stdout.printf ("found parameter %s:%i\n",par.name,par.val);
+				return par;
+			}
+		}
+		return null;
 	}
+	
 
-	public virtual Component clone(Component component){
-			return component;
-	}
-	
+	public abstract Component clone(Component component);
 	public abstract void snap(int range,int x, int y);
 
 	public void update_emoticon(){
 		
-		emoticonContext=new Cairo.Context(emoticonSurface);
+		emoticon_context=new Cairo.Context(emoticon_surface);
+		int activity= get_parameter("activity").val;
+		int zone=get_parameter("work_zone").val;
 		
 		if(activity!=Activity.UNKNOWN){
 		string emoticon;
@@ -195,10 +206,10 @@ public abstract class Component : ListBoxRow {
             stderr.printf( "can not open svg file\n" );
             handle=null;
         	}
-        	emoticonContext.new_path ();
-        	emoticonContext.scale (1.5, 1.5);
-        	handle.render_cairo( emoticonContext );
-        	emoticonContext.close_path();
+        	emoticon_context.new_path ();
+        	emoticon_context.scale (1.5, 1.5);
+        	handle.render_cairo( emoticon_context );
+        	emoticon_context.close_path();
         	
         	}
 		}
@@ -209,26 +220,60 @@ public abstract class Component : ListBoxRow {
 	
 	}
 	
-	public virtual void clearCounter(){
+	public virtual void clear_counter(){
 	}
 	
-	public virtual string getNetlistLine(){
+	public virtual string get_netlist_line(){
 		return "";
 	}
 	
-	public virtual void insertSimulationData(DataPair pair){
-		if(pair.dataName=="i"){
-			i=double.parse(pair.dataValue);
-			stdout.printf ("inserted i= '%f'\n", i);
-		}
-		else if(pair.dataName=="p"){
-			p=double.parse(pair.dataValue);
-			stdout.printf ("inserted p= '%f'\n", p);
-		}
+	public void insert_simulation_data(string line){
+	
+		int position,position2,end;
+		end=line.char_count ();
+		position=line.index_of_char (' ');
+		position2=line.last_index_of_char (' ')+1;
+		string val=line.slice(position2,end);
+		string name=line.slice(0,position);
+		Parameter par=get_parameter(name);
 		
+		if(par!=null){
+			
+			if(name!="activity"&&name!="work_zone"){
+			par.val=(int)double.parse(val);
+			}else{ //activity and zone
+				if(name=="activity"){
+					if(val.contains("inactive")){
+						par.val=Activity.INACTIVE;
+					}else if(val.contains("subactive")){
+						par.val=Activity.SUBACTIVE;
+					}else if(val.contains("overactive")){
+						par.val=Activity.OVERACTIVE;
+					}else if(val.contains("active")){
+						par.val=Activity.ACTIVE;
+					}else {
+						par.val=Activity.UNKNOWN;
+					}
+				}else if(name=="work_zone"){
+			
+					if(val.contains("suboptimal")){
+						par.val=Zone.SUBOPTIMAL;
+					}else if(val.contains("optimal")){
+						par.val=Zone.OPTIMAL;
+					}else if(val.contains("outofrange")){
+						par.val=Zone.OUTOFRANGE;
+					}else if(val.contains("destructive")){
+						par.val=Zone.DESTRUCTIVE;
+					}else {
+						par.val=Zone.UNKNOWN;
+					}
+				}
+				
+			}
+			stdout.printf ("added %s:%s:%s-%i\n",this.name,name,val,par.val);
+			
+		}
 	}
-
-
 	
 }
 

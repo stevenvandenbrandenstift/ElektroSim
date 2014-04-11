@@ -29,30 +29,30 @@ public class Ground : Component {
 	
 	public override void make_image(){
 		
-		setupSurface(orientation);
+		setup_surface(orientation);
 
-		imageContext.new_path ();
-		imageContext.move_to (0, height/2);
-		imageContext.line_to (width, height/2);
-		imageContext.close_path ();
-		imageContext.stroke ();
+		image_context.new_path ();
+		image_context.move_to (0, height/2);
+		image_context.line_to (width, height/2);
+		image_context.close_path ();
+		image_context.stroke ();
 		
-		imageContext.new_path ();
-		imageContext.set_font_size (height*0.4);
+		image_context.new_path ();
+		image_context.set_font_size (height*0.4);
 		
 		if(orientation==ElektroSim.Orientation.RIGHT){
 
-		imageContext.move_to (width*0.2, height/2-5);
+		image_context.move_to (width*0.2, height/2-5);
 		
 		}else if(orientation==ElektroSim.Orientation.LEFT){
 		
-		imageContext.move_to (0, height/2-5);
+		image_context.move_to (0, height/2-5);
 
 		}
 		
-		imageContext.text_path ("Ground");
-		imageContext.fill();
-		imageContext.close_path ();
+		image_context.text_path ("Ground");
+		image_context.fill();
+		image_context.close_path ();
 	
 	}
 	
@@ -61,15 +61,12 @@ public class Ground : Component {
 			return newc;
 	}
 	
-	public virtual void insertSimulationData(DataPair pair){
-	}
-	
 	public override void snap(int range,int x ,int y){
 		Point point;
 		point=new Point(x,y);
-		point=point.pointNearby(range);
+		point=point.point_nearby(range);
 		point.net=0;
-		orientation=point.connectComponent(this);
+		orientation=point.connect_component(this);
 		connections.add(point);
 	}
 }

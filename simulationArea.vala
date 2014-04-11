@@ -45,7 +45,7 @@ public class SimulationArea : Gtk.DrawingArea {
    		
 		items= new ArrayList<Component>();
 		gen= new NGSpiceSimulator();
-		gen.data_ready.connect (insertSimulationData);
+		gen.data_ready.connect (insert_simulation_data);
 
 		destroy.connect (Gtk.main_quit);
 		set_vexpand(true);
@@ -54,11 +54,22 @@ public class SimulationArea : Gtk.DrawingArea {
 
 	}
 	
+	public void set_list_adjustable(){
+		int i=0;
+		Component component;
+		component=(list.get_row_at_index(i) as Component);
+		while(component!=null){
+			component.set_adjustable();
+			i++;
+			component=(list.get_row_at_index(i) as Component);
+		}	
+	}
+	
 	public override bool draw (Cairo.Context cr) {
 		//print("redrawing\n");
 		//print("will print %u components \n",items.length ());
 		foreach (Component component in items){
-			component.update_image();
+			//component.update_image();
 			component.update_emoticon();
 			
 			int x,y;
@@ -87,11 +98,17 @@ public class SimulationArea : Gtk.DrawingArea {
 				x=component.connections[0].x;
 				y=component.connections[0].y-component.height/2;
 				break;
-			}	
-			cr.set_source_surface(component.imageContext.get_target(),x,y);
+			}
+			if(component.image_context!=null){
+			stdout.printf ("drawing component image %s\n",component.name);
+			cr.set_source_surface(component.image_context.get_target(),x,y);
 			cr.paint();
-			cr.set_source_surface(component.emoticonContext.get_target(),x+component.width/2-35,y-component.height-35);
+			}
+			if(component.emoticon_context!=null){
+			stdout.printf ("drawing emoticon image %s\n",component.name);
+			cr.set_source_surface(component.emoticon_context.get_target(),x+component.width/2-35,y-component.height-35);
 			cr.paint();
+			}
 			}
 		}
 		return true;
@@ -101,7 +118,7 @@ public class SimulationArea : Gtk.DrawingArea {
 	public void clear(){
 		
 		foreach(Component component in items){
-				component.clearCounter();
+				component.clear_counter();
 		}
 		Point.clear();
 		items.clear(); //will not work?
@@ -109,24 +126,24 @@ public class SimulationArea : Gtk.DrawingArea {
 	}
 	
 	private void insert_component (int x , int y, Component component){
-		Component newComponent=null;
+		Component? new_component=null;
 		
 		//add line check for 2 points
 		if(component.name=="Line"){
 			foreach(Component component2 in items){
-				if(component2.name=="Line"&&!(component2 as Line).secondPoint){
-				newComponent=component2;
+				if(component2.name=="Line"&&!(component2 as Line).second_point){
+				new_component=component2;
 				}
 			}
 		}
-		if(newComponent==null){
-		newComponent=component.clone(component);
+		if(new_component==null){
+		new_component=component.clone(component);
 		}
-		newComponent.snap(20,x,y);
-		if(!items.contains(newComponent)){
-			items.add(newComponent);
+		new_component.snap(20,x,y);
+		if(!items.contains(new_component)){
+			items.add(new_component);
 		}
-		newComponent.make_image();
+		new_component.make_image();
 		redraw_canvas();
 	}
 
@@ -153,32 +170,14 @@ public class SimulationArea : Gtk.DrawingArea {
 		
 	}
 
-	public void insertSimulationData(string componentName,string data){
-		if(componentName!=null&&componentName!=""){
+	public void insert_simulation_data(string component_name,string data){
 		foreach(Component component in items){
-					if(component.name.contains(componentName)){
-						component.insertSimulationData(lineToDataPair(data));
+					if(component.name.contains(component_name)){
+						component.insert_simulation_data(data);
 						continue;
 					}
 		}
-		}
-
-	}
-	
-	protected DataPair lineToDataPair(string line){
-		DataPair pair;
-		pair= DataPair();
-		int position,position2,end;
-		end=line.char_count ();
-		position=line.index_of_char (' ');
-		position2=line.last_index_of_char (' ')+1;
-		pair.dataValue=line.slice(position2,end);
-		pair.dataName=line.slice(0,position);
-		return pair;
-	}
-		
-	
-		
+	}		
 }
 }
 

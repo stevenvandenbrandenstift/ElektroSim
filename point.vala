@@ -22,12 +22,8 @@ using Gee;
 
 namespace ElektroSim{
 
-public enum Orientation{
-		NONE,RIGHT,LEFT,DOWN,UP;
-}
-
 public class Point{
-	public static int netAmount=0;
+	public static int net_amount=0;
 	public static ArrayList<Point> points=new ArrayList<Point>();
 	public int x{get;set;default=0;}
 	public int y{get;set;default=0;}
@@ -54,31 +50,31 @@ public class Point{
 	}
 		
 	//searches a nearby point or adds this one to the list of points
-	public Point pointNearby(int range){
-			foreach(Point snapPoint in points){
-				if((x>snapPoint.x-range)&&(x<snapPoint.x+range)&&(y>snapPoint.y-range)&&(y<snapPoint.y+range)){
+	public Point point_nearby(int range){
+			foreach(Point snap_point in points){
+				if((x>snap_point.x-range)&&(x<snap_point.x+range)&&(y>snap_point.y-range)&&(y<snap_point.y+range)){
 					if(connections.right==null||connections.left==null||connections.up==null||connections.left==null){
-						return snapPoint;
+						return snap_point;
 					}
 				}
 			}
 		//point does not yet exist in list
 		Point point;
 		point=new Point(x,y);
-		netAmount++;
-		point.net=netAmount;
+		net_amount++;
+		point.net=net_amount;
 		points.add(point);
 		print("added point %i,%i \n",point.x,point.y);
 		return point;
 	}
 	
 	public static void clear(){
-		netAmount=0;
+		net_amount=0;
 		points.clear();
 	}
 	
 	
-	public ElektroSim.Orientation connectComponent(Component component){
+	public ElektroSim.Orientation connect_component(Component component){
 		
 		if(component.orientation==ElektroSim.Orientation.NONE){	// empty list means first point
 			if(connections.right==null){

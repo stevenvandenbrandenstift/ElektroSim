@@ -21,7 +21,7 @@ namespace ElektroSim{
 	
 public class Line : Component {
 
-	public bool secondPoint{get;set;default=false;}
+	public bool second_point{get;set;default=false;}
 	
 	public Line () {
 			base("Line");
@@ -31,40 +31,39 @@ public class Line : Component {
 	
 	public override void make_image(){
 		
-		setupSurface(ElektroSim.Orientation.NONE);
+		setup_surface(ElektroSim.Orientation.NONE);
 		
-		if(secondPoint){
-		setupSurface(orientation);
-		imageContext.new_path ();
-		imageContext.move_to (0, 0);
-		imageContext.line_to (connections[1].x-connections[0].x, 0);
-		imageContext.close_path ();
-		imageContext.stroke ();
+		if(second_point){
+		width=-1;
 		
-		imageContext.new_path ();
-		imageContext.move_to (connections[1].x-connections[0].x, 0);
-		imageContext.line_to (connections[1].x-connections[0].x, connections[1].y-connections[0].y);
-		imageContext.close_path ();
-		imageContext.stroke ();
+		setup_surface(orientation);
+		image_context.new_path ();
+		image_context.move_to (0, 0);
+		image_context.line_to (connections[1].x-connections[0].x, 0);
+		image_context.close_path ();
+		image_context.stroke ();
+		
+		image_context.new_path ();
+		image_context.move_to (connections[1].x-connections[0].x, 0);
+		image_context.line_to (connections[1].x-connections[0].x, connections[1].y-connections[0].y);
+		image_context.close_path ();
+		image_context.stroke ();
 		}
 	
 	}
 	
 	public override Component clone(Component component){
-			Line newc=new Line();
-			return newc;
-	}
-	
-	public override void insertSimulationData(DataPair pair){
+			Line new_c=new Line();
+			return new_c;
 	}
 
 	public override void snap(int range,int x ,int y){
 		Point point;
 		point=new Point(x,y);
-		point=point.pointNearby(range);
-		orientation=point.connectComponent(this);
+		point=point.point_nearby(range);
+		orientation=point.connect_component(this);
 		if(!connections.is_empty){
-			secondPoint=true;
+			second_point=true;
 		}
 		connections.add(point);
 	}

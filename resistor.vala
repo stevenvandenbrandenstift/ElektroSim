@@ -22,63 +22,55 @@ namespace ElektroSim{
 public class Resistor : Component {
 
 	public static int counter=0;
-	public double resistance{get;set;default=0;}
-	public string resistanceUnit{get;set;default="";}
-	public double maxPower{get;set;default=100;}
-	//extra return values from simulation
-	public double ac{get;set;default=0;}
-	public double dtemp{get;set;default=0;}  
-	public double bv_max{get;set;default=0;}  
-	public double noisy{get;set;default=0;}
-	private Label resLabel;
-	private Entry resEntry;
-	private Label maxPowerLabel;
-	private Entry maxPowerEntry;
 	
 	// Constructor
-	public Resistor (double resistance,double maxPower) {
+	public Resistor (int resistance,int max_power) {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		addParameterWidget("R","5",out resLabel,out resEntry);
-		addParameterWidget("Max Power","1",out maxPowerLabel, out maxPowerEntry);
-		this.resistance=resistance;
-		this.maxPower=maxPower;
-
+		parameters.add(new Parameter.adjustable("R",resistance));
+		parameters.add(new Parameter.adjustable("Max Power",max_power));
+		
+		
+		//parameters returned from simulation
+		parameters.add(new Parameter("ac",0));
+		parameters.add(new Parameter("dtemp",0));
+		parameters.add(new Parameter("bv_max",0));
+		parameters.add(new Parameter("noisy",0));
 	}
 	
 	public override void make_image(){
 		
-		setupSurface(orientation);
+		setup_surface(orientation);
 		
-		imageContext.new_path ();	
-		imageContext.move_to (0, height/2);
-		imageContext.line_to (width/5, height/2);
-		imageContext.rectangle (width/5,0,width/5*3,height);
-		imageContext.close_path ();
-		imageContext.stroke ();
+		image_context.new_path ();	
+		image_context.move_to (0, height/2);
+		image_context.line_to (width/5, height/2);
+		image_context.rectangle (width/5,0,width/5*3,height);
+		image_context.close_path ();
+		image_context.stroke ();
 		
-		imageContext.new_path ();
-		imageContext.move_to (width*4/5, height/2);
-		imageContext.line_to (width, height/2);
-		imageContext.close_path ();
-		imageContext.stroke ();
+		image_context.new_path ();
+		image_context.move_to (width*4/5, height/2);
+		image_context.line_to (width, height/2);
+		image_context.close_path ();
+		image_context.stroke ();
 		
-		imageContext.new_path ();
-		imageContext.set_font_size (height*0.9);
-		imageContext.move_to (width/5+5,height/1.2);
-		imageContext.text_path (name);
-		imageContext.close_path();
-		imageContext.fill();
+		image_context.new_path ();
+		image_context.set_font_size (height*0.9);
+		image_context.move_to (width/5+5,height/1.2);
+		image_context.text_path (name);
+		image_context.close_path();
+		image_context.fill();
 
 	}
 	
-	public override void clearCounter(){
+	public override void clear_counter(){
 		counter=0;
 	}
 	
 	public override Component clone(Component component){
-		Resistor newc=new Resistor(double.parse(resEntry.get_text ()),double.parse(maxPowerEntry.get_text ()));
+		Resistor newc=new Resistor(get_parameter("R").get_input(),get_parameter("Max Power").get_input());
 		counter++;
 		newc.name="r"+counter.to_string();
 		return newc;
@@ -87,9 +79,9 @@ public class Resistor : Component {
 	public override void snap(int range,int x, int y){
 		Point point,point2;
 		point=new Point(x,y);
-		point=point.pointNearby(range);
+		point=point.point_nearby(range);
 		connections.add(point);
-		orientation=point.connectComponent(this);
+		orientation=point.connect_component(this);
 		if(orientation==ElektroSim.Orientation.RIGHT){
 			point2=new Point(point.x+width,point.y);
 		} else if (orientation==ElektroSim.Orientation.LEFT){
@@ -97,45 +89,15 @@ public class Resistor : Component {
 		}else{
 		point2=new Point(point.x-width,point.y);
 		}
-		point2=point2.pointNearby(range);
+		point2=point2.point_nearby(range);
 		connections.add(point2);
-		point2.connectComponent(this);
+		point2.connect_component(this);
 		
 	}
-	public override void insertSimulationData(DataPair pair){
-		base.insertSimulationData(pair);
-		if(pair.dataName=="activity"){
-			if(pair.dataValue.contains("inactive")){
-				activity=Activity.INACTIVE;
-			}else if(pair.dataValue.contains("subactive")){
-				activity=Activity.SUBACTIVE;
-			}else if(pair.dataValue.contains("overactive")){
-				activity=Activity.OVERACTIVE;
-			}else if(pair.dataValue.contains("active")){
-				activity=Activity.ACTIVE;
-			}else {
-				activity=Activity.UNKNOWN;
-			}
-			stdout.printf ("inserted activity= '%i'\n", activity);
-		}else if(pair.dataName=="work_zone"){
-			if(pair.dataValue.contains("suboptimal")){
-				zone=Zone.SUBOPTIMAL;
-			}else if(pair.dataValue.contains("optimal")){
-				zone=Zone.OPTIMAL;
-			}else if(pair.dataValue.contains("outofrange")){
-				zone=Zone.OUTOFRANGE;
-			}else if(pair.dataValue.contains("destructive")){
-				zone=Zone.DESTRUCTIVE;
-			}else {
-				zone=Zone.UNKNOWN;
-			}
-			stdout.printf ("inserted zone= '%i'\n", zone);
-		}	
-	}
 
-	public override string getNetlistLine(){
+	public override string get_netlist_line(){
 		string line;
-		line=name+" "+connections[0].net.to_string()+" "+connections[1].net.to_string()+" "+resistance.to_string()+resistanceUnit+" max_power="+maxPower.to_string()+"\n";
+		line=name+" "+connections[0].net.to_string()+" "+connections[1].net.to_string()+" "+get_parameter("R").val.to_string()+" max_power="+get_parameter("Max Power").val.to_string()+"\n";
 		return line;
 	}
 }

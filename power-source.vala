@@ -22,54 +22,48 @@ namespace ElektroSim{
 public class PowerSource : Component {
 
 	public static int counter;
-	public double voltage{get;set;default=0;}
-	public string voltageUnit{get;set;default="";}
-	private Label voltageLabel;
-	private Entry voltageEntry;
 
-	public PowerSource (double voltage) {
+	public PowerSource (int voltage) {
 			base("PowerSource");
-			addParameterWidget("V","10",out voltageLabel,out voltageEntry);
+			parameters.add(new Parameter.adjustable("V",10));
 			this.width=100;
 			this.height=50;
-			this.voltage=voltage;
-
 	}
 	
 	public override void make_image(){
 		
-		setupSurface(orientation);
+		setup_surface(orientation);
 		
-		imageContext.new_path ();
-		imageContext.move_to (0, height/2);
-		imageContext.line_to (width, height/2);
-		imageContext.close_path ();
-		imageContext.stroke ();
+		image_context.new_path ();
+		image_context.move_to (0, height/2);
+		image_context.line_to (width, height/2);
+		image_context.close_path ();
+		image_context.stroke ();
 		
-		imageContext.new_path ();
-		imageContext.set_font_size (height*0.4);
+		image_context.new_path ();
+		image_context.set_font_size (height*0.4);
 		
 		
 		if(orientation==ElektroSim.Orientation.RIGHT){
 
-		imageContext.move_to (width*0.6, height/2-5);
+		image_context.move_to (width*0.6, height/2-5);
 		
 		}else if(orientation==ElektroSim.Orientation.LEFT){
 		
-		imageContext.move_to (0, height/2-5);
+		image_context.move_to (0, height/2-5);
 
 		}
-		imageContext.text_path (name);
-		imageContext.fill();
-		imageContext.close_path ();
+		image_context.text_path (name);
+		image_context.fill();
+		image_context.close_path ();
 	}
 	
-	public override void clearCounter(){
+	public override void clear_counter(){
 	counter=0;
 	}
 	
 	public override Component clone(Component component){
-			PowerSource newc=new PowerSource(double.parse(voltageEntry.get_text ()));
+			PowerSource newc=new PowerSource(get_parameter("V").get_input());
 			counter++;
 			newc.name="v"+counter.to_string();
 			return newc;
@@ -78,14 +72,14 @@ public class PowerSource : Component {
 	public override void snap(int range,int x, int y){
 		Point point;
 		point=new Point(x,y);
-		point=point.pointNearby(range);
-		orientation=point.connectComponent(this);
+		point=point.point_nearby(range);
+		orientation=point.connect_component(this);
 		connections.add(point);
 	}
 
-	public override string getNetlistLine(){
+	public override string get_netlist_line(){
 		string line;
-		line=name+" "+connections[0].net.to_string()+" 0 "+voltage.to_string()+voltageUnit+"\n";
+		line=name+" "+connections[0].net.to_string()+" 0 "+get_parameter("V").val.to_string()+"\n";
 		return line;
 	}
 

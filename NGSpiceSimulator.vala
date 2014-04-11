@@ -21,12 +21,12 @@ namespace ElektroSim{
 public class NGSpiceSimulator : GLib.Object {
 
 	// Constructor
-	private string currentComponent;
-	public signal void data_ready (string currentComponent, string data);
+	private string current_component;
+	public signal void data_ready (string current_component, string data);
 	//public AsyncQueue<string> outputbuffer;
 
 	public NGSpiceSimulator () {
-		currentComponent="";
+		current_component="";
 		//outputbuffer = new AsyncQueue<string> ();	
 	
 	}
@@ -37,8 +37,8 @@ public class NGSpiceSimulator : GLib.Object {
 			foreach (string line in dataList) {
 			line=line.strip ();
            		//stdout.printf ("%s\n", line);
-			if(currentComponent!=null&&currentComponent!=""&&(!line.has_prefix ("device"))){
-				data_ready(currentComponent,line);
+			if(current_component!=null&&current_component!=""&&(!line.has_prefix ("device"))){
+				data_ready(current_component,line);
 			}
 			else if(line.has_prefix ("device")){
 				int position,end;
@@ -46,7 +46,7 @@ public class NGSpiceSimulator : GLib.Object {
 				position=line.last_index_of_char (' ')+1;
 				line=line.slice(position,end);
 				stdout.printf ("deviceline: '%s'\n", line); //debug line
-				currentComponent=line;
+				current_component=line;
 			}
 			}
 		return true;
@@ -62,8 +62,8 @@ public class NGSpiceSimulator : GLib.Object {
 		var dos = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
 		dos.put_string ("netlist by ElektroSim2\n");
 		foreach(Component component in items){
-			dos.put_string (component.getNetlistLine());
-			print("%s" ,component.getNetlistLine());
+			dos.put_string (component.get_netlist_line());
+			print("%s" ,component.get_netlist_line());
 		}
 		dos.put_string (".control\n");
 		dos.put_string ("OP\n");

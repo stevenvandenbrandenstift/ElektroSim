@@ -43,6 +43,7 @@ public abstract class Component : ListBoxRow {
 	
 	public ArrayList<Point> connections=new ArrayList<Point>();
 	private Box grid;
+	private string emoticons;
 	
 	public Cairo.Surface image_surface;
 	public Cairo.Context image_context;
@@ -50,6 +51,7 @@ public abstract class Component : ListBoxRow {
 	public Cairo.Context emoticon_context;
 	
 	public Component(string name){
+		emoticons="./emoticons/";
 		parameters.add(new Parameter("i",0));
 		parameters.add(new Parameter("p",0));
 		parameters.add(new Parameter("activity",Activity.UNKNOWN));
@@ -131,25 +133,25 @@ public abstract class Component : ListBoxRow {
 		if(activity!=Activity.UNKNOWN){
 		string emoticon;
 		if(activity==Activity.INACTIVE){
-		emoticon="./emoticons/deepSleepAlien.svg";
+		emoticon=emoticons+"deepSleepAlien.svg";
 		}else if(activity==Activity.SUBACTIVE){
 		
 			switch(zone){
 		
 				case Zone.DESTRUCTIVE: 
-					emoticon="./emoticons/angstigSleepyAlien.svg";
+					emoticon=emoticons+"angstigSleepyAlien.svg";
 					break;
 				case Zone.OUTOFRANGE:
-					emoticon="./emoticons/stressesSleepyAlien.svg";
+					emoticon=emoticons+"stressesSleepyAlien.svg";
 					break;
 				case Zone.OPTIMAL:
-					emoticon="./emoticons/sleepyAlien.svg";
+					emoticon=emoticons+"sleepyAlien.svg";
 					break;
 				case Zone.SUBOPTIMAL:
-					emoticon="./emoticons/sleepyAlien.svg";
+					emoticon=emoticons+"sleepyAlien.svg";
 					break;
 				default:
-					emoticon="./";
+					emoticon=emoticons;
 					break;
 			}
 		}
@@ -158,19 +160,19 @@ public abstract class Component : ListBoxRow {
 			switch(zone){
 		
 				case Zone.DESTRUCTIVE: 
-					emoticon="./emoticons/stressedAlien.svg";
+					emoticon=emoticons+"stressedAlien.svg";
 					break;
 				case Zone.OUTOFRANGE:
-					emoticon="./emoticons/stressedSadAlien.svg";
+					emoticon=emoticons+"stressedSadAlien.svg";
 					break;
 				case Zone.OPTIMAL:
-					emoticon="./emoticons/HappyAlien.svg";
+					emoticon=emoticons+"HappyAlien.svg";
 					break;
 				case Zone.SUBOPTIMAL:
-					emoticon="./emoticons/NerveusAlien.svg";
+					emoticon=emoticons+"NerveusAlien.svg";
 					break;
 				default:
-					emoticon="./";
+					emoticon=emoticons;
 					break;
 			}
 		}else if(activity==Activity.OVERACTIVE){
@@ -178,19 +180,19 @@ public abstract class Component : ListBoxRow {
 			switch(zone){
 		
 				case Zone.DESTRUCTIVE: 
-					emoticon="./emoticons/ScaredAlien.svg";
+					emoticon=emoticons+"ScaredAlien.svg";
 					break;
 				case Zone.OUTOFRANGE:
-					emoticon="./emoticons/depresiveAlien.svg";
+					emoticon=emoticons+"depresiveAlien.svg";
 						break;
 				case Zone.OPTIMAL:
-					emoticon="./emoticons/ExcitedAlien.svg";
+					emoticon=emoticons+"ExcitedAlien.svg";
 					break;
 				case Zone.SUBOPTIMAL:
-					emoticon="./emoticons/FrustratedAlien.svg";
+					emoticon=emoticons+"FrustratedAlien.svg";
 					break;
 				default:
-					emoticon="./";
+					emoticon=emoticons;
 					break;
 			}
 		}else{

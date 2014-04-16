@@ -25,25 +25,27 @@ namespace ElektroSim{
 
 public class SimulationArea : Gtk.DrawingArea {
 
-	private ListBox list;
+	public signal void list_update (ArrayList<Component> list);
+	public signal Component get_selected_row ();
 	public ArrayList<Component> items;
+	public ArrayList<Component> templates;
 	public NGSpiceSimulator gen;
 
-
+	
 	// Constructor
-	public SimulationArea (ListBox list) {
-		this.list=list;
-		list.set_selection_mode(SelectionMode.SINGLE);
-		
+	public SimulationArea () {
 		add_events (EventMask.BUTTON_PRESS_MASK);
    		
    		this.button_press_event.connect((event)=>{
-   			stdout.printf ("buton pressed= x %i y %i\n",(int)event.x,(int)event.y); //debug line
-   			insert_component((int)event.x,(int)event.y,(list.get_selected_row()as Component));
+   			//stdout.printf ("buton pressed= x %i y %i\n",(int)event.x,(int)event.y); //debug line
+   			insert_component((int)event.x,(int)event.y,get_selected_row ());
    			return true;
    		});
    		
 		items= new ArrayList<Component>();
+		templates= new ArrayList<Component>();
+		
+		
 		gen= new NGSpiceSimulator();
 		gen.data_ready.connect (insert_simulation_data);
 
@@ -53,17 +55,37 @@ public class SimulationArea : Gtk.DrawingArea {
 		set_size_request(500,500);
 
 	}
+	public void init(){
 	
-	public void set_list_adjustable(){
-		int i=0;
-		Component component;
-		component=(list.get_row_at_index(i) as Component);
-		while(component!=null){
-			component.set_adjustable();
-			i++;
-			component=(list.get_row_at_index(i) as Component);
-		}	
+		fill_templates();
+		set_list_adjustable(templates,true);
+		switch_list(templates);
 	}
+	
+	private void fill_templates(){
+		Resistor resistor=new Resistor(5,1);
+		templates.add(resistor);
+		PowerSource power_source=new PowerSource(10);
+		templates.add(power_source);
+		Ground ground=new Ground();
+		templates.add(ground);
+		
+		Line line= new Line();
+		templates.add(line);
+	}
+	
+	public void switch_list(ArrayList<Component> arraylist){
+		list_update(arraylist);
+	}
+	
+	public void set_list_adjustable(ArrayList<Component> items,bool adj){
+		foreach(Component component in items){
+			component.set_display_parameter(adj);
+		}
+	}
+	
+	
+	
 	
 	public override bool draw (Cairo.Context cr) {
 		//print("redrawing\n");
@@ -121,7 +143,7 @@ public class SimulationArea : Gtk.DrawingArea {
 				component.clear_counter();
 		}
 		Point.clear();
-		items.clear(); //will not work?
+		items.clear();
 		redraw_canvas();
 	}
 	
@@ -166,6 +188,8 @@ public class SimulationArea : Gtk.DrawingArea {
 				stdout.printf ("component: '%s' \n", component.name); 
 		}
 		gen.run_simulation(items);
+		set_list_adjustable(items,false);
+		switch_list(items);
 		redraw_canvas();
 		
 	}

@@ -27,6 +27,7 @@ public class Parameter : Box{
 	public int val{get;set;default=0;}
 	public bool editable{get;set;default=false;}
 	public string name{get;set;default="";}
+	public bool display{get;set;default=false;}
 	
 	private Label label{get;set;}
 	private Entry entry{get;set;}
@@ -47,14 +48,13 @@ public class Parameter : Box{
 		add(label);
 		add(entry);	
 	}		
-	
-	public Parameter.adjustable(string name,int val){
-		this(name,val);
-		editable=true;
-	}
-	
 	public int get_input(){
 		return int.parse(entry.get_text ());
 	}
-}
+	
+	public void set_value(int temp){
+		entry.set_text (temp.to_string());
+		val=temp;
+	}
+	}
 }

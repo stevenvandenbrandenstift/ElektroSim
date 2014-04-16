@@ -52,28 +52,65 @@ public abstract class Component : ListBoxRow {
 	
 	public Component(string name){
 		emoticons="./emoticons/";
-		parameters.add(new Parameter("i",0));
-		parameters.add(new Parameter("p",0));
-		parameters.add(new Parameter("activity",Activity.UNKNOWN));
-		parameters.add(new Parameter("work_zone",Zone.UNKNOWN));
 		
-		this.name=name;
-	
-		grid = new Box (Gtk.Orientation.VERTICAL,0);
+		grid= new Box(Gtk.Orientation.VERTICAL,0);
+		
+		add_parameter("i",0,false);
+		add_parameter("p",0,false);
+		add_parameter("activity",Activity.UNKNOWN,false);
+		add_parameter("work_zone",Zone.UNKNOWN,false);
+		name_label= new Label(name);
+		set_name( name);
+		
 		grid.set_can_focus(false);
-		
-		name_label= new Label (name);
-		grid.add(name_label);
 		(this as ListBoxRow).add(grid);
 	}
 	
-	public void set_adjustable(){	
+	public void set_display_parameter(bool adj){
 		foreach(Parameter par in parameters){
-			if(par.editable){
-				grid.add(par);	
+			if(adj){ //par is adjustable
+				if(par.editable){
+					par.display=true;
+					}
+				else{
+					par.display=false;
+					}
+			}else{
+					par.display=true;
 			}
 		}
 	}
+	
+	public void set_name(string name){
+		name_label.name=name;
+		this.name=name;
+	}
+	
+	public void pack(){
+		//grid.dispose();
+		//grid=new Box(Gtk.Orientation.VERTICAL,0);
+		grid.remove(name_label);
+		grid.add(name_label);
+		foreach(Parameter par in parameters){
+			if(par.display){
+				grid.add(par);
+			}
+		}
+	}
+	
+	public void add_parameter(string name, int val, bool adjustable){
+		Parameter par=get_parameter(name);
+		if(par!=null){  //parameter exists -- update
+			par.val=val;
+			par.editable=adjustable;
+		}else{  //does not exist add
+			par=new Parameter(name,val);
+			par.editable=adjustable;
+			parameters.add(par);
+		}
+	}
+	
+	
 	
 	protected void setup_surface(ElektroSim.Orientation orientation){
 		
@@ -242,32 +279,32 @@ public abstract class Component : ListBoxRow {
 		if(par!=null){
 			
 			if(name!="activity"&&name!="work_zone"){
-			par.val=(int)double.parse(val);
+			par.set_value((int)double.parse(val));
 			}else{ //activity and zone
 				if(name=="activity"){
 					if(val.contains("inactive")){
-						par.val=Activity.INACTIVE;
+						par.set_value(Activity.INACTIVE);
 					}else if(val.contains("subactive")){
-						par.val=Activity.SUBACTIVE;
+						par.set_value(Activity.SUBACTIVE);
 					}else if(val.contains("overactive")){
-						par.val=Activity.OVERACTIVE;
+						par.set_value(Activity.OVERACTIVE);
 					}else if(val.contains("active")){
-						par.val=Activity.ACTIVE;
+						par.set_value(Activity.ACTIVE);
 					}else {
-						par.val=Activity.UNKNOWN;
+						par.set_value(Activity.UNKNOWN);
 					}
 				}else if(name=="work_zone"){
 			
 					if(val.contains("suboptimal")){
-						par.val=Zone.SUBOPTIMAL;
+						par.set_value(Zone.SUBOPTIMAL);
 					}else if(val.contains("optimal")){
-						par.val=Zone.OPTIMAL;
+						par.set_value(Zone.OPTIMAL);
 					}else if(val.contains("outofrange")){
-						par.val=Zone.OUTOFRANGE;
+						par.set_value(Zone.OUTOFRANGE);
 					}else if(val.contains("destructive")){
-						par.val=Zone.DESTRUCTIVE;
+						par.set_value(Zone.DESTRUCTIVE);
 					}else {
-						par.val=Zone.UNKNOWN;
+						par.set_value(Zone.UNKNOWN);
 					}
 				}
 				

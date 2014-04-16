@@ -28,15 +28,13 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		parameters.add(new Parameter.adjustable("R",resistance));
-		parameters.add(new Parameter.adjustable("Max Power",max_power));
-		
-		
+		add_parameter("R",resistance,true);
+		add_parameter("Max Power",max_power,true);
 		//parameters returned from simulation
-		parameters.add(new Parameter("ac",0));
-		parameters.add(new Parameter("dtemp",0));
-		parameters.add(new Parameter("bv_max",0));
-		parameters.add(new Parameter("noisy",0));
+		add_parameter("ac",0,false);
+		add_parameter("dtemp",0,false);
+		add_parameter("bv_max",0,false);
+		add_parameter("noisy",0,false);
 	}
 	
 	public override void make_image(){
@@ -72,7 +70,7 @@ public class Resistor : Component {
 	public override Component clone(){
 		Resistor newc=new Resistor(get_parameter("R").get_input(),get_parameter("Max Power").get_input());
 		counter++;
-		newc.name="r"+counter.to_string();
+		newc.set_name("r"+counter.to_string());
 		return newc;
 	}
 

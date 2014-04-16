@@ -1,4 +1,3 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
  * main.c
  * Copyright (C) 2014 Steven Vanden Branden <StevenVandenBrandenStift@gmail.com>
@@ -18,13 +17,14 @@
  */
 
 using Gtk;
+using Gee;
 namespace ElektroSim{
 	
-class MainWindow : Window  {
-
-	private ListBox list;
-	private SimulationArea sim_area;
+public class MainWindow : Window  {
 	
+	public ListBox list{get;set;}
+	public SimulationArea sim_area;
+	public Grid grid{get;set;}
 
 	public static int main (string[] args)
 	{
@@ -42,47 +42,57 @@ class MainWindow : Window  {
 	public MainWindow()
 	{
 		this.title = "ElektronSim";
+		list= new ListBox();
+		grid = new Grid();
+		this.border_width = 1;
 		this.set_default_size (1920, 1000);
-		this.maximize ();
+		this.maximize();
 		this.window_position = WindowPosition.CENTER;
 		this.destroy.connect(Gtk.main_quit);
-
-
 		setup_layout();
-		
-		Resistor resistor=new Resistor(5,1);
-		list.prepend(resistor);
-		PowerSource power_source=new PowerSource(10);
-		list.add(power_source);
-		Ground ground=new Ground();
-		list.add(ground);
-		
-		Line line= new Line();
-		list.add(line);
-		sim_area.set_list_adjustable();
 		this.show ();
+		
+	}
+	
+	private void update_list(ArrayList<Component> new_list){
+			grid.remove(list);
+			grid.remove(sim_area);
+			list.dispose();
+			list=new ListBox();
+			foreach(Component component in new_list){
+				component.pack();
+				list.add(component);
+			}
+			grid.add(list);
+			grid.add(sim_area);
+			this.show_all();
+			print("OKOKOKOKOKOK\n");
+	}
+	
+	private Component get_selected_row(){
+		return (list.get_selected_row() as Component);
 	}
 
 	private void setup_layout(){
 		Gtk.HeaderBar header_bar= new HeaderBar();
-		list = new Gtk.ListBox();
-
-		list.set_selection_mode (SelectionMode.SINGLE);
-
+		
+		add(grid);
+		
 		header_bar.set_halign (Align.FILL);
 		header_bar.add(new Button.with_label ("Design"));
-		sim_area=new SimulationArea(list);
+		sim_area=new SimulationArea();
+		sim_area.list_update.connect (update_list);
+		sim_area.get_selected_row.connect (get_selected_row);
+		sim_area.init();
+		
 		Button sim_button=new Button.with_label ("Simulation") ;
 		sim_button.clicked.connect(sim_area.simulate);
 		header_bar.add(sim_button); 
 		Button clear_button=new Button.with_label ("Clear") ;
 		clear_button.clicked.connect(sim_area.clear);
 		header_bar.add(clear_button); 
-		Grid grid = new Grid();
-		
 		grid.add(list);
-		grid.add (sim_area);
-		add(grid);
+		grid.add(sim_area);
 		this.set_titlebar (header_bar);
 
 	}

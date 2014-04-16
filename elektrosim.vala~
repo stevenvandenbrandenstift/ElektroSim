@@ -42,7 +42,7 @@ class MainWindow : Window  {
 	public MainWindow()
 	{
 		this.title = "ElektronSim";
-		this.set_default_size (1920, 1000);
+		this.border_width = 10;
 		this.maximize ();
 		this.window_position = WindowPosition.CENTER;
 		this.destroy.connect(Gtk.main_quit);
@@ -52,11 +52,10 @@ class MainWindow : Window  {
 		
 		Resistor resistor=new Resistor(5,1);
 		list.prepend(resistor);
-		PowerSource power_source=new PowerSource(10);
-		list.add(power_source);
 		Ground ground=new Ground();
 		list.add(ground);
-		
+		PowerSource power_source=new PowerSource(10);
+		list.add(power_source);
 		Line line= new Line();
 		list.add(line);
 		sim_area.set_list_adjustable();

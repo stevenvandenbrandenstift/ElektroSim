@@ -56,7 +56,7 @@ public class Ground : Component {
 	
 	}
 	
-	public override Component clone(Component component){
+	public override Component clone(){
 			Ground newc=new Ground();
 			return newc;
 	}

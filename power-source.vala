@@ -25,9 +25,10 @@ public class PowerSource : Component {
 
 	public PowerSource (int voltage) {
 			base("PowerSource");
-			parameters.add(new Parameter.adjustable("V",10));
 			this.width=100;
 			this.height=50;
+			parameters.add(new Parameter.adjustable("V",voltage));
+			
 	}
 	
 	public override void make_image(){
@@ -62,7 +63,7 @@ public class PowerSource : Component {
 	counter=0;
 	}
 	
-	public override Component clone(Component component){
+	public override Component clone(){
 			PowerSource newc=new PowerSource(get_parameter("V").get_input());
 			counter++;
 			newc.name="v"+counter.to_string();

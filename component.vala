@@ -121,7 +121,7 @@ public abstract class Component : ListBoxRow {
 	}
 	
 
-	public abstract Component clone(Component component);
+	public abstract Component clone();
 	public abstract void snap(int range,int x, int y);
 
 	public void update_emoticon(){

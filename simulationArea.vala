@@ -100,12 +100,12 @@ public class SimulationArea : Gtk.DrawingArea {
 				break;
 			}
 			if(component.image_context!=null){
-			stdout.printf ("drawing component image %s\n",component.name);
+			//stdout.printf ("drawing component image %s\n",component.name);
 			cr.set_source_surface(component.image_context.get_target(),x,y);
 			cr.paint();
 			}
 			if(component.emoticon_context!=null){
-			stdout.printf ("drawing emoticon image %s\n",component.name);
+			//stdout.printf ("drawing emoticon image %s\n",component.name);
 			cr.set_source_surface(component.emoticon_context.get_target(),x+component.width/2-35,y-component.height-35);
 			cr.paint();
 			}
@@ -137,7 +137,7 @@ public class SimulationArea : Gtk.DrawingArea {
 			}
 		}
 		if(new_component==null){
-		new_component=component.clone(component);
+		new_component=component.clone();
 		}
 		new_component.snap(20,x,y);
 		if(!items.contains(new_component)){

@@ -52,7 +52,7 @@ public class Line : Component {
 	
 	}
 	
-	public override Component clone(Component component){
+	public override Component clone(){
 			Line new_c=new Line();
 			return new_c;
 	}

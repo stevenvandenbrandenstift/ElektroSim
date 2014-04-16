@@ -54,7 +54,7 @@ public class Parameter : Box{
 	}
 	
 	public int get_input(){
-		return (int)double.parse(entry.get_text ());
+		return int.parse(entry.get_text ());
 	}
 }
 }

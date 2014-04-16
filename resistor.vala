@@ -69,7 +69,7 @@ public class Resistor : Component {
 		counter=0;
 	}
 	
-	public override Component clone(Component component){
+	public override Component clone(){
 		Resistor newc=new Resistor(get_parameter("R").get_input(),get_parameter("Max Power").get_input());
 		counter++;
 		newc.name="r"+counter.to_string();

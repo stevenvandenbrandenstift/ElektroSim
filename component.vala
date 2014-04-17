@@ -31,9 +31,12 @@ public enum Orientation{
 		NONE,RIGHT,LEFT,DOWN,UP;
 }
 
+
+
 public abstract class Component : ListBoxRow {
 
 	// Constructor
+	public signal void val_changed();
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
 	public ElektroSim.Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
@@ -54,27 +57,18 @@ public abstract class Component : ListBoxRow {
 		
 		grid= new Box(Gtk.Orientation.VERTICAL,0);
 		
-		add_parameter("i",0,false);
-		add_parameter("p",0,false);
-		add_parameter("activity",Activity.UNKNOWN,false);
-		add_parameter("work_zone",Zone.UNKNOWN,false);
+		add_parameter("i",0,Group.PARAMETER);
+		add_parameter("p",0,Group.PARAMETER);
+		add_parameter("activity",Activity.UNKNOWN,Group.OPTIONAL_PARAMETER);
+		add_parameter("work_zone",Zone.UNKNOWN,Group.OPTIONAL_PARAMETER);
 		set_name( name);
-		grid.set_can_focus(false);
+		//grid.set_can_focus(false);
 		(this as ListBoxRow).add(grid);
 	}
 	
-	public void set_display_parameter(bool adj){
+	public void set_display_parameter(Visual vis){
 		foreach(Parameter par in parameters){
-			if(adj){ //par is adjustable
-				if(par.editable){
-					par.set_no_show_all(false);
-					}
-				else{
-					par.set_no_show_all(true);
-					}
-			}else{
-					par.set_no_show_all(false);
-			}
+			par.set_visual(vis);
 		}
 	}
 	
@@ -83,16 +77,14 @@ public abstract class Component : ListBoxRow {
 	}
 	
 	
-	public void add_parameter(string name, int val, bool adjustable){
+	public void add_parameter(string name, int val, Group group){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;
-			par.editable=adjustable;
+			par.group=group;
 		}else{  //does not exist add
-			par=new Parameter(name,val);
-			par.editable=adjustable;
+			par=new Parameter(name,val,group);
 			parameters.add(par);
-			par.show();
 		}
 	}
 	
@@ -104,6 +96,9 @@ public abstract class Component : ListBoxRow {
 		grid.add( new Label(name));
 		foreach(Parameter par in parameters){
 				grid.add(par);
+				par.val_changed.connect (() => {
+   					val_changed();
+				});
 		}
 	}
 	protected void setup_surface(ElektroSim.Orientation orientation){
@@ -139,7 +134,7 @@ public abstract class Component : ListBoxRow {
 	}
 	
 	
-	protected Parameter? get_parameter(string name){
+	public Parameter? get_parameter(string name){
 		//stdout.printf ("searching parameter %s\n",name);
 		foreach(Parameter par in parameters){
 			//stdout.printf ("parameter %s:%i\n",par.name,par.val);

@@ -27,7 +27,7 @@ public class PowerSource : Component {
 			base("PowerSource");
 			this.width=100;
 			this.height=50;
-			add_parameter("V",voltage,true);
+			add_parameter("V",voltage,Group.ADJUSTABLE);
 			
 	}
 	
@@ -64,7 +64,7 @@ public class PowerSource : Component {
 	}
 	
 	public override Component clone(){
-			PowerSource newc=new PowerSource(get_parameter("V").get_input());
+			PowerSource newc=new PowerSource(get_parameter("V").val);
 			counter++;
 			newc.set_name("v"+counter.to_string());
 			return newc;

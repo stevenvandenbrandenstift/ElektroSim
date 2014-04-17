@@ -61,7 +61,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		if(templates.size==0){
 		fill_templates();
 		}
-		set_list_adjustable(templates,true);
+		set_list_adjustable(templates,Visual.EDITABLE);
 		list_update(templates);
 	}
 	
@@ -77,9 +77,9 @@ public class SimulationArea : Gtk.DrawingArea {
 		templates.add(line);
 	}
 	
-	public void set_list_adjustable(ArrayList<Component> items,bool adj){
+	public void set_list_adjustable(ArrayList<Component> items,Visual vis){
 		foreach(Component component in items){
-			component.set_display_parameter(adj);
+			component.set_display_parameter(vis);
 		}
 	}
 	
@@ -188,7 +188,7 @@ public class SimulationArea : Gtk.DrawingArea {
 				stdout.printf ("component: '%s' \n", component.name); 
 		}
 		gen.run_simulation(items);
-		set_list_adjustable(items,false);
+		set_list_adjustable(items,Visual.EDITABLE_SLIDER);
 		list_update (items);
 		redraw_canvas();
 		

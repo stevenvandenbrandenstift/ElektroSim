@@ -28,13 +28,13 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		add_parameter("R",resistance,true);
-		add_parameter("Max Power",max_power,true);
+		add_parameter("R",resistance,Group.ADJUSTABLE);
+		add_parameter("Max Power",max_power,Group.ADJUSTABLE);
 		//parameters returned from simulation
-		add_parameter("ac",0,false);
-		add_parameter("dtemp",0,false);
-		add_parameter("bv_max",0,false);
-		add_parameter("noisy",0,false);
+		add_parameter("ac",0,Group.OPTIONAL_PARAMETER);
+		add_parameter("dtemp",0,Group.OPTIONAL_PARAMETER);
+		add_parameter("bv_max",0,Group.OPTIONAL_PARAMETER);
+		add_parameter("noisy",0,Group.OPTIONAL_PARAMETER);
 	}
 	
 	public override void make_image(){
@@ -68,7 +68,7 @@ public class Resistor : Component {
 	}
 	
 	public override Component clone(){
-		Resistor newc=new Resistor(get_parameter("R").get_input(),get_parameter("Max Power").get_input());
+		Resistor newc=new Resistor(get_parameter("R").val,get_parameter("Max Power").val);
 		if(this.get_parameter("R")==null)
 			print("error no parameter to copy from!");
 		counter++;

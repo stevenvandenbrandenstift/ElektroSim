@@ -98,8 +98,8 @@ public class MainWindow : Window  {
 		Button clear_button=new Button.with_label ("Clear") ;
 		clear_button.clicked.connect(sim_area.clear);
 		header_bar.add(clear_button); 
-		grid.add(list);
-		grid.add(sim_area);
+		grid.attach(list,0,0,1,1);
+		grid.attach(sim_area,1,0,5,1);
 		this.set_titlebar (header_bar);
 
 	}

@@ -37,7 +37,8 @@ public class SimulationArea : Gtk.DrawingArea {
 		add_events (EventMask.BUTTON_PRESS_MASK);
    		
    		this.button_press_event.connect((event)=>{
-   			//stdout.printf ("buton pressed= x %i y %i\n",(int)event.x,(int)event.y); //debug line
+   			//if(get_selected_row ()==null)
+   				//print ("row selection = null\n"); //debug line
    			insert_component((int)event.x,(int)event.y,get_selected_row ());
    			return true;
    		});
@@ -57,9 +58,11 @@ public class SimulationArea : Gtk.DrawingArea {
 	}
 	public void init(){
 	
+		if(templates.size==0){
 		fill_templates();
+		}
 		set_list_adjustable(templates,true);
-		switch_list(templates);
+		list_update(templates);
 	}
 	
 	private void fill_templates(){
@@ -72,10 +75,6 @@ public class SimulationArea : Gtk.DrawingArea {
 		
 		Line line= new Line();
 		templates.add(line);
-	}
-	
-	public void switch_list(ArrayList<Component> arraylist){
-		list_update(arraylist);
 	}
 	
 	public void set_list_adjustable(ArrayList<Component> items,bool adj){
@@ -145,6 +144,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		Point.clear();
 		items.clear();
 		redraw_canvas();
+		init();
 	}
 	
 	private void insert_component (int x , int y, Component component){
@@ -189,7 +189,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		}
 		gen.run_simulation(items);
 		set_list_adjustable(items,false);
-		switch_list(items);
+		list_update (items);
 		redraw_canvas();
 		
 	}

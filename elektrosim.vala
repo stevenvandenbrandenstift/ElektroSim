@@ -55,17 +55,23 @@ public class MainWindow : Window  {
 	}
 	
 	private void update_list(ArrayList<Component> new_list){
-			grid.remove(list);
-			grid.remove(sim_area);
-			list.dispose();
-			list=new ListBox();
-			foreach(Component component in new_list){
-				component.pack();
-				list.add(component);
+			while(list.get_row_at_index(0)!=null){
+				Component old=(Component)list.get_row_at_index(0);
+				list.remove(old);
 			}
-			grid.add(list);
-			grid.add(sim_area);
+			foreach(Component component in new_list){
+				component.pack_parameters();
+				list.add(component);
+				
+				print("list added component %s\n",component.name);
+				foreach(Parameter par in component.parameters)
+					print("parameter %s,%i\n",par.name,par.val);
+				component.grid.show_all();
+			}
 			this.show_all();
+			if(new_list==null||new_list.size==0){
+				print("NOT OK list was empty\n");
+			}
 			print("OKOKOKOKOKOK\n");
 	}
 	
@@ -79,12 +85,13 @@ public class MainWindow : Window  {
 		add(grid);
 		
 		header_bar.set_halign (Align.FILL);
-		header_bar.add(new Button.with_label ("Design"));
 		sim_area=new SimulationArea();
 		sim_area.list_update.connect (update_list);
 		sim_area.get_selected_row.connect (get_selected_row);
 		sim_area.init();
-		
+		Button design_button=new Button.with_label ("Design") ;
+		design_button.clicked.connect(sim_area.init);
+		header_bar.add(design_button);
 		Button sim_button=new Button.with_label ("Simulation") ;
 		sim_button.clicked.connect(sim_area.simulate);
 		header_bar.add(sim_button); 

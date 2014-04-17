@@ -27,7 +27,6 @@ public class Parameter : Box{
 	public int val{get;set;default=0;}
 	public bool editable{get;set;default=false;}
 	public string name{get;set;default="";}
-	public bool display{get;set;default=false;}
 	
 	private Label label{get;set;}
 	private Entry entry{get;set;}

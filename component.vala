@@ -39,10 +39,9 @@ public abstract class Component : ListBoxRow {
 	public ElektroSim.Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
 	
 	public ArrayList<Parameter> parameters =new ArrayList<Parameter>();
-	private Label name_label;
 	
 	public ArrayList<Point> connections=new ArrayList<Point>();
-	private Box grid;
+	public Box grid{get;set;}
 	private string emoticons;
 	
 	public Cairo.Surface image_surface;
@@ -59,9 +58,7 @@ public abstract class Component : ListBoxRow {
 		add_parameter("p",0,false);
 		add_parameter("activity",Activity.UNKNOWN,false);
 		add_parameter("work_zone",Zone.UNKNOWN,false);
-		name_label= new Label(name);
 		set_name( name);
-		
 		grid.set_can_focus(false);
 		(this as ListBoxRow).add(grid);
 	}
@@ -70,33 +67,21 @@ public abstract class Component : ListBoxRow {
 		foreach(Parameter par in parameters){
 			if(adj){ //par is adjustable
 				if(par.editable){
-					par.display=true;
+					par.set_no_show_all(false);
 					}
 				else{
-					par.display=false;
+					par.set_no_show_all(true);
 					}
 			}else{
-					par.display=true;
+					par.set_no_show_all(false);
 			}
 		}
 	}
 	
-	public void set_name(string name){
-		name_label.name=name;
-		this.name=name;
+	public void set_name(string new_name){
+		name=new_name;
 	}
 	
-	public void pack(){
-		//grid.dispose();
-		//grid=new Box(Gtk.Orientation.VERTICAL,0);
-		grid.remove(name_label);
-		grid.add(name_label);
-		foreach(Parameter par in parameters){
-			if(par.display){
-				grid.add(par);
-			}
-		}
-	}
 	
 	public void add_parameter(string name, int val, bool adjustable){
 		Parameter par=get_parameter(name);
@@ -107,11 +92,20 @@ public abstract class Component : ListBoxRow {
 			par=new Parameter(name,val);
 			par.editable=adjustable;
 			parameters.add(par);
+			par.show();
 		}
 	}
 	
-	
-	
+	public void pack_parameters(){
+		 GLib.List<weak Widget> list=grid.get_children ();
+		 foreach(weak Widget widget in list){
+			grid.remove(widget);
+		 }
+		grid.add( new Label(name));
+		foreach(Parameter par in parameters){
+				grid.add(par);
+		}
+	}
 	protected void setup_surface(ElektroSim.Orientation orientation){
 		
 		switch (orientation){

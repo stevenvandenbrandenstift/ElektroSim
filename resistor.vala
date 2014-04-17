@@ -69,6 +69,8 @@ public class Resistor : Component {
 	
 	public override Component clone(){
 		Resistor newc=new Resistor(get_parameter("R").get_input(),get_parameter("Max Power").get_input());
+		if(this.get_parameter("R")==null)
+			print("error no parameter to copy from!");
 		counter++;
 		newc.set_name("r"+counter.to_string());
 		return newc;

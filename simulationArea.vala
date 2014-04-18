@@ -96,27 +96,37 @@ public class SimulationArea : Gtk.DrawingArea {
 			//component.update_image();
 			component.update_emoticon();
 			
-			int x,y;
+			int x,y,x_emo,y_emo;
 			x=0;
 			y=0;
+			y_emo=0;
+			x_emo=0;
 			if(component.orientation!=ElektroSim.Orientation.NONE){
 			switch (component.orientation){
 		
 			case ElektroSim.Orientation.RIGHT:
 				x=component.connections[0].x;
 				y=component.connections[0].y-component.height/2;
+				x_emo=x+component.width/2-35;
+				y_emo=y-component.height-35;
 				break;
 			case ElektroSim.Orientation.LEFT:
 				x=component.connections[0].x-component.width;
 				y=component.connections[0].y-component.height/2;
+				x_emo=x+component.width/2-35;
+				y_emo=y-component.height-35;
 				break;
 			case ElektroSim.Orientation.UP:
 				x=component.connections[0].x-component.height/2;
-				y=component.connections[0].y;
+				y=component.connections[0].y-component.width;
+				x_emo=x+component.height+5;
+				y_emo=y+component.height+5;
 				break;
 			case ElektroSim.Orientation.DOWN:
 				x=component.connections[0].x-component.height/2;
 				y=component.connections[0].y;
+				x_emo=x+component.height+5;
+				y_emo=y+component.height+5;
 				break;
 			case ElektroSim.Orientation.NONE:
 				x=component.connections[0].x;
@@ -130,7 +140,7 @@ public class SimulationArea : Gtk.DrawingArea {
 			}
 			if(component.emoticon_context!=null){
 			//stdout.printf ("drawing emoticon image %s\n",component.name);
-			cr.set_source_surface(component.emoticon_context.get_target(),x+component.width/2-35,y-component.height-35);
+			cr.set_source_surface(component.emoticon_context.get_target(),x_emo,y_emo);
 			cr.paint();
 			}
 			}

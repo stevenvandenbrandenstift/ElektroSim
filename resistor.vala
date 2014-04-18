@@ -41,25 +41,48 @@ public class Resistor : Component {
 		
 		setup_image_surface(orientation);
 		
-		image_context.new_path ();	
-		image_context.move_to (0, height/2);
-		image_context.line_to (width/5, height/2);
-		image_context.rectangle (width/5,0,width/5*3,height);
-		image_context.close_path ();
-		image_context.stroke ();
 		
-		image_context.new_path ();
-		image_context.move_to (width*4/5, height/2);
-		image_context.line_to (width, height/2);
-		image_context.close_path ();
-		image_context.stroke ();
+		if(orientation==ElektroSim.Orientation.RIGHT||orientation==ElektroSim.Orientation.LEFT){	
+			image_context.new_path ();	
+			image_context.move_to (0, height/2);
+			image_context.line_to (width/5, height/2);
+			image_context.rectangle (width/5,0,width/5*3,height);
+			image_context.close_path ();
+			image_context.stroke ();
 		
-		image_context.new_path ();
-		image_context.set_font_size (height*0.9);
-		image_context.move_to (width/5+5,height/1.2);
-		image_context.text_path (name);
-		image_context.close_path();
-		image_context.fill();
+			image_context.new_path ();
+			image_context.move_to (width*4/5, height/2);
+			image_context.line_to (width, height/2);
+			image_context.close_path ();
+			image_context.stroke ();
+		
+			image_context.new_path ();
+			image_context.set_font_size (height*0.9);
+			image_context.move_to (width/5+5,height/1.2);
+			image_context.text_path (name);
+			image_context.close_path();
+			image_context.fill();
+		}else{
+			image_context.new_path ();	
+			image_context.move_to (height/2,0);
+			image_context.line_to (height/2,width/5);
+			image_context.rectangle (0,width/5,height,width/5*3);
+			image_context.close_path ();
+			image_context.stroke ();
+		
+			image_context.new_path ();
+			image_context.move_to (height/2,width*4/5);
+			image_context.line_to (height/2, width);
+			image_context.close_path ();
+			image_context.stroke ();
+		
+			image_context.new_path ();
+			image_context.set_font_size (height*0.8);
+			image_context.move_to (0.2,width/2+5);
+			image_context.text_path (name);
+			image_context.close_path();
+			image_context.fill();
+		}
 
 	}
 	
@@ -86,8 +109,12 @@ public class Resistor : Component {
 			point2=new Point(point.x+width,point.y);
 		} else if (orientation==ElektroSim.Orientation.LEFT){
 		 	point2=new Point(point.x-width,point.y);
+		}else if(orientation==ElektroSim.Orientation.UP){
+			point2=new Point(point.x,point.y-width);
+		}else if(orientation==ElektroSim.Orientation.DOWN){
+			point2=new Point(point.x,point.y+width);
 		}else{
-		point2=new Point(point.x-width,point.y);
+			point2=new Point(point.x+width,point.y); //should not be reached
 		}
 		point2=point2.point_nearby(range);
 		connections.add(point2);

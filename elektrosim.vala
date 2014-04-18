@@ -45,7 +45,7 @@ public class MainWindow : Window  {
 		list= new ListBox();
 		grid = new Grid();
 		this.border_width = 1;
-		this.set_default_size (1920, 1000);
+		this.set_default_size (1400, 800);
 		this.maximize();
 		this.window_position = WindowPosition.CENTER;
 		this.destroy.connect(Gtk.main_quit);
@@ -91,6 +91,8 @@ public class MainWindow : Window  {
 		add(grid);
 		
 		header_bar.set_halign (Align.FILL);
+		header_bar.show_close_button=true;
+		header_bar.set_visible(true);
 		sim_area=new SimulationArea();
 		sim_area.list_update.connect (update_list);
 		sim_area.get_selected_row.connect (get_selected_row);
@@ -107,7 +109,11 @@ public class MainWindow : Window  {
 		Button clear_button=new Button.with_label ("Clear") ;
 		clear_button.clicked.connect(sim_area.clear);
 		header_bar.add(clear_button); 
-		grid.attach(list,0,0,1,1);
+		
+		Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+		scrolled.add(list);
+		
+		grid.attach(scrolled,0,0,1,1);
 		grid.attach(sim_area,1,0,5,1);
 		this.set_titlebar (header_bar);
 

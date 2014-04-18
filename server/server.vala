@@ -36,7 +36,7 @@ class Server {
 	}
 	
 	private void run(){
-			make_folder();
+		make_folder();
 		start_server();
 		GLib.Thread.usleep (100000);
 		print("launching elektrosim \n");

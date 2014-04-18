@@ -82,7 +82,9 @@ if (!empty($_POST["submit"])) {
 				echo exec("./Server $Id > ./users/out$Id.txt ",$out);
 				echo $out;
 				echo "\n"+$Id;
-				echo "<meta http-equiv=\"refresh\" content=\"0;URL=http://localhost:";
+				echo "<meta http-equiv=\"refresh\" content=\"0;URL=http://";
+				echo $_SERVER['SERVER_ADDR'];
+				echo ":";
 				echo $Id+8080;
 				echo "\">";
 		}

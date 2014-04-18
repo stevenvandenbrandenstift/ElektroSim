@@ -80,7 +80,7 @@ public class MainWindow : Window  {
 				Component old=(Component)list.get_row_at_index(i);
 				print("list print component %s\n",old.name);
 				foreach(Parameter par in old.parameters)
-					print("parameter %s,%i\n",par.name,par.val);
+					print("parameter %s,%f\n",par.name,par.val);
 				i++;
 			}
 	}

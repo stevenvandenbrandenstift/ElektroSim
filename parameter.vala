@@ -33,7 +33,7 @@ public class Parameter : Box{
 
 	public signal void slider_changed();
 	public static ArrayList<Parameter> parameters=new ArrayList<Parameter>(); // could be used for a new Component generator
-	public int val{get;set;}
+	public float val{get;set;}
 	public string name{get;set;default="";}
 	public Group group;
 	public Visual visual;
@@ -42,7 +42,7 @@ public class Parameter : Box{
 	private Entry entry;
 	private Scale scale;
 
-	public Parameter(string name , int val, Group group){
+	public Parameter(string name , float val, Group group){
 		this.name=name;
 		this.val=val;
 		//set_can_focus(false);	
@@ -59,7 +59,7 @@ public class Parameter : Box{
 			 entry.set_overwrite_mode(false);
 		}
 		entry.key_release_event.connect (() => {
-				set_value(int.parse(entry.get_text()));
+				set_value((float)double.parse(entry.get_text()));
 				return false;
 			});
 		
@@ -70,7 +70,7 @@ public class Parameter : Box{
 			scale.set_hexpand(true);
 			
 			scale.value_changed.connect (() => {
-				set_value((int)scale.get_value());
+				set_value((float)scale.get_value());
 				if(val-50>=0){
 					scale.set_range(val-50,val+50);
 				}else{
@@ -123,7 +123,7 @@ public class Parameter : Box{
 		}
 		visual=vis;
 	}
-	public void set_value(int temp){
+	public void set_value(float temp){
 		entry.set_text (temp.to_string());
 		if(scale!=null){
 		scale.set_value(temp);

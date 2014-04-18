@@ -1,4 +1,4 @@
-/* -*- Mode: vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+ /* -*- Mode: vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
  * netlist-generator.vala
  * Copyright (C) 2014 Steven Vanden Branden <StevenVandenbrandenstift@gmail.com>
@@ -36,7 +36,7 @@ public class NGSpiceSimulator : GLib.Object {
 			string[]dataList = data.split("\n");
 			foreach (string line in dataList) {
 			line=line.strip ();
-           		//stdout.printf ("%s\n", line);
+           		stdout.printf ("%s\n", line);
 			if(current_component!=null&&current_component!=""&&(!line.has_prefix ("device"))){
 				data_ready(current_component,line);
 			}
@@ -45,7 +45,7 @@ public class NGSpiceSimulator : GLib.Object {
 				end=line.char_count ();
 				position=line.last_index_of_char (' ')+1;
 				line=line.slice(position,end);
-				stdout.printf ("deviceline: '%s'\n", line); //debug line
+				//stdout.printf ("deviceline: '%s'\n", line); //debug line
 				current_component=line;
 			}
 			}

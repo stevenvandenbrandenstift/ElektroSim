@@ -24,7 +24,7 @@ public class Resistor : Component {
 	public static int counter=0;
 	
 	// Constructor
-	public Resistor (int resistance,int max_power) {
+	public Resistor (float resistance,float max_power) {
 		base("Resistor");
 		this.width=250;
 		this.height=50;

@@ -23,7 +23,7 @@ public class PowerSource : Component {
 
 	public static int counter;
 
-	public PowerSource (int voltage) {
+	public PowerSource (float voltage) {
 			base("PowerSource");
 			this.width=100;
 			this.height=50;

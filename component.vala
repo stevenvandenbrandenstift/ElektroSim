@@ -59,8 +59,8 @@ public abstract class Component : ListBoxRow {
 		
 		add_parameter("i",0,Group.PARAMETER);
 		add_parameter("p",0,Group.PARAMETER);
-		add_parameter("activity",Activity.UNKNOWN,Group.OPTIONAL_PARAMETER);
-		add_parameter("work_zone",Zone.UNKNOWN,Group.OPTIONAL_PARAMETER);
+		add_parameter("activity",(float)Activity.UNKNOWN,Group.OPTIONAL_PARAMETER);
+		add_parameter("work_zone",(float)Zone.UNKNOWN,Group.OPTIONAL_PARAMETER);
 		set_name( name);
 		//grid.set_can_focus(false);
 		(this as ListBoxRow).add(grid);
@@ -77,13 +77,13 @@ public abstract class Component : ListBoxRow {
 	}
 	
 	
-	public void add_parameter(string name, int val, Group group){
+	public void add_parameter(string name, float val, Group group){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;
 			par.group=group;
 		}else{  //does not exist add
-			par=new Parameter(name,val,group);
+			par=new Parameter(name,(float)val,group);
 			parameters.add(par);
 			par.slider_changed.connect (() => {
    					request_simulate();
@@ -148,8 +148,8 @@ public abstract class Component : ListBoxRow {
 		
 		emoticon_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 110, 110);
 		emoticon_context=new Cairo.Context(emoticon_surface);
-		int activity= get_parameter("activity").val;
-		int zone=get_parameter("work_zone").val;
+		int activity= (int)get_parameter("activity").val;
+		int zone=(int)get_parameter("work_zone").val;
 		
 		if(activity!=Activity.UNKNOWN){
 		string emoticon;
@@ -263,37 +263,37 @@ public abstract class Component : ListBoxRow {
 		if(par!=null){
 			
 			if(name!="activity"&&name!="work_zone"){
-			par.set_value((int)double.parse(val));
+			par.set_value((float)double.parse(val));
 			}else{ //activity and zone
 				if(name=="activity"){
 					if(val.contains("inactive")){
-						par.set_value(Activity.INACTIVE);
+						par.set_value((float)Activity.INACTIVE);
 					}else if(val.contains("subactive")){
-						par.set_value(Activity.SUBACTIVE);
+						par.set_value((float)Activity.SUBACTIVE);
 					}else if(val.contains("overactive")){
-						par.set_value(Activity.OVERACTIVE);
+						par.set_value((float)Activity.OVERACTIVE);
 					}else if(val.contains("active")){
-						par.set_value(Activity.ACTIVE);
+						par.set_value((float)Activity.ACTIVE);
 					}else {
-						par.set_value(Activity.UNKNOWN);
+						par.set_value((float)Activity.UNKNOWN);
 					}
 				}else if(name=="work_zone"){
 			
 					if(val.contains("suboptimal")){
-						par.set_value(Zone.SUBOPTIMAL);
+						par.set_value((float)Zone.SUBOPTIMAL);
 					}else if(val.contains("optimal")){
-						par.set_value(Zone.OPTIMAL);
+						par.set_value((float)Zone.OPTIMAL);
 					}else if(val.contains("outofrange")){
-						par.set_value(Zone.OUTOFRANGE);
+						par.set_value((float)Zone.OUTOFRANGE);
 					}else if(val.contains("destructive")){
-						par.set_value(Zone.DESTRUCTIVE);
+						par.set_value((float)Zone.DESTRUCTIVE);
 					}else {
-						par.set_value(Zone.UNKNOWN);
+						par.set_value((float)Zone.UNKNOWN);
 					}
 				}
 				
 			}
-			stdout.printf ("added %s:%s:%s-%i\n",this.name,name,val,par.val);
+			//stdout.printf ("added %s:%s:%s-%f\n",this.name,name,val,par.val);
 			
 		}
 	}

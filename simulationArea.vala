@@ -26,6 +26,7 @@ namespace ElektroSim{
 public class SimulationArea : Gtk.DrawingArea {
 
 	public signal void list_update (ArrayList<Component> list);
+	public signal void list_print();
 	public signal Component get_selected_row ();
 	public ArrayList<Component> items;
 	public ArrayList<Component> templates;
@@ -89,6 +90,8 @@ public class SimulationArea : Gtk.DrawingArea {
 	public override bool draw (Cairo.Context cr) {
 		//print("redrawing\n");
 		//print("will print %u components \n",items.length ());
+		//cr=new Cairo.Context();
+		
 		foreach (Component component in items){
 			//component.update_image();
 			component.update_emoticon();
@@ -160,6 +163,9 @@ public class SimulationArea : Gtk.DrawingArea {
 		}
 		if(new_component==null){
 		new_component=component.clone();
+		new_component.request_simulate.connect (() => {
+   					simulate();
+			});
 		}
 		new_component.snap(20,x,y);
 		if(!items.contains(new_component)){
@@ -184,15 +190,20 @@ public class SimulationArea : Gtk.DrawingArea {
 
 	public void simulate(){
 		gen.generate_file(items);
-		foreach(Component component in items){
-				stdout.printf ("component: '%s' \n", component.name); 
-		}
+		gen.run_simulation(items);
+		redraw_canvas();
+		//list_print();
+	}
+	
+	public void simulate_button(){
+		gen.generate_file(items);
 		gen.run_simulation(items);
 		set_list_adjustable(items,Visual.EDITABLE_SLIDER);
 		list_update (items);
 		redraw_canvas();
-		
+		//list_print();	
 	}
+
 
 	public void insert_simulation_data(string component_name,string data){
 		foreach(Component component in items){

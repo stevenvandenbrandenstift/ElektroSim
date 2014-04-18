@@ -31,22 +31,20 @@ public enum Group{
 
 public class Parameter : Box{
 
-	public signal void val_changed();
+	public signal void slider_changed();
 	public static ArrayList<Parameter> parameters=new ArrayList<Parameter>(); // could be used for a new Component generator
-	public int val{get;set;default=0;}
+	public int val{get;set;}
 	public string name{get;set;default="";}
-	public Group group{get;set;}
+	public Group group;
 	public Visual visual;
-	private bool updating;
 	
-	private Label label{get;set;}
-	private Entry entry{get;set;}
-	private Scale scale {get;set;}
+	private Label label;
+	private Entry entry;
+	private Scale scale;
 
 	public Parameter(string name , int val, Group group){
 		this.name=name;
 		this.val=val;
-		updating=false;
 		//set_can_focus(false);	
 		set_size_request(200,-1);
 		label= new Label.with_mnemonic (name+":");
@@ -61,29 +59,28 @@ public class Parameter : Box{
 			 entry.set_overwrite_mode(false);
 		}
 		entry.key_release_event.connect (() => {
-				val=int.parse(entry.get_text() );
-				//val_changed();
-				//print("%s changed too %d\n",name,val);
+				set_value(int.parse(entry.get_text()));
 				return false;
 			});
 		
 		if(group==Group.ADJUSTABLE){
-			scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 1000, 1);
+			scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
 			scale.set_has_origin (false);
 			scale.set_value(val);
 			scale.set_hexpand(true);
 			
 			scale.value_changed.connect (() => {
-				if(!updating){
-				updating=true;
-				val=(int)scale.get_value ();
-				val_changed();
-				updating=false;
+				set_value((int)scale.get_value());
+				if(val-50>=0){
+					scale.set_range(val-50,val+50);
+				}else{
+					scale.set_range(0,100);
 				}
+				slider_changed();
 				//print("%s  changed too %d\n",name,val);
 			});
 		}
-		
+
 		add(label);
 		add(entry);
 		this.group=group;	

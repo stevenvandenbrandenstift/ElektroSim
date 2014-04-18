@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using Gee;
 namespace ElektroSim{
 	
 public class Line : Component {
@@ -25,18 +26,19 @@ public class Line : Component {
 	
 	public Line () {
 			base("Line");
+			parameters =new ArrayList<Parameter>();
 			this.width=100;
 			this.height=50;
 	}
 	
 	public override void make_image(){
 		
-		setup_surface(ElektroSim.Orientation.NONE);
+		setup_image_surface(ElektroSim.Orientation.NONE);
 		
 		if(second_point){
 		width=-1;
 		
-		setup_surface(orientation);
+		setup_image_surface(orientation);
 		image_context.new_path ();
 		image_context.move_to (0, 0);
 		image_context.line_to (connections[1].x-connections[0].x, 0);

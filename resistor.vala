@@ -39,7 +39,7 @@ public class Resistor : Component {
 	
 	public override void make_image(){
 		
-		setup_surface(orientation);
+		setup_image_surface(orientation);
 		
 		image_context.new_path ();	
 		image_context.move_to (0, height/2);

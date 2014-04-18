@@ -22,7 +22,7 @@ namespace ElektroSim{
 	
 public class MainWindow : Window  {
 	
-	public ListBox list{get;set;}
+	public ListBox list;
 	public SimulationArea sim_area;
 	public Grid grid{get;set;}
 
@@ -62,21 +62,27 @@ public class MainWindow : Window  {
 			foreach(Component component in new_list){
 				component.pack_parameters();
 				list.add(component);
-				
-				print("list added component %s\n",component.name);
-				foreach(Parameter par in component.parameters)
-					print("parameter %s,%i\n",par.name,par.val);
 				component.grid.show_all();
 			}
 			this.show_all();
 			if(new_list==null||new_list.size==0){
 				print("NOT OK list was empty\n");
 			}
-			print("OKOKOKOKOKOK\n");
 	}
 	
 	private Component get_selected_row(){
 		return (list.get_selected_row() as Component);
+	}
+	
+	private void print_list(){
+		int i=0;
+		while(list.get_row_at_index(i)!=null){
+				Component old=(Component)list.get_row_at_index(i);
+				print("list print component %s\n",old.name);
+				foreach(Parameter par in old.parameters)
+					print("parameter %s,%i\n",par.name,par.val);
+				i++;
+			}
 	}
 
 	private void setup_layout(){
@@ -88,12 +94,15 @@ public class MainWindow : Window  {
 		sim_area=new SimulationArea();
 		sim_area.list_update.connect (update_list);
 		sim_area.get_selected_row.connect (get_selected_row);
+		sim_area.list_print.connect (print_list);
 		sim_area.init();
+		
+		
 		Button design_button=new Button.with_label ("Design") ;
 		design_button.clicked.connect(sim_area.init);
 		header_bar.add(design_button);
 		Button sim_button=new Button.with_label ("Simulation") ;
-		sim_button.clicked.connect(sim_area.simulate);
+		sim_button.clicked.connect(sim_area.simulate_button);
 		header_bar.add(sim_button); 
 		Button clear_button=new Button.with_label ("Clear") ;
 		clear_button.clicked.connect(sim_area.clear);

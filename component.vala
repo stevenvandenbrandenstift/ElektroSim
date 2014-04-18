@@ -36,7 +36,7 @@ public enum Orientation{
 public abstract class Component : ListBoxRow {
 
 	// Constructor
-	public signal void val_changed();
+	public signal void request_simulate();
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
 	public ElektroSim.Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
@@ -85,6 +85,9 @@ public abstract class Component : ListBoxRow {
 		}else{  //does not exist add
 			par=new Parameter(name,val,group);
 			parameters.add(par);
+			par.slider_changed.connect (() => {
+   					request_simulate();
+			});
 		}
 	}
 	
@@ -95,13 +98,10 @@ public abstract class Component : ListBoxRow {
 		 }
 		grid.add( new Label(name));
 		foreach(Parameter par in parameters){
-				grid.add(par);
-				par.val_changed.connect (() => {
-   					val_changed();
-				});
+				grid.add(par);	
 		}
 	}
-	protected void setup_surface(ElektroSim.Orientation orientation){
+	protected void setup_image_surface(ElektroSim.Orientation orientation){
 		
 		switch (orientation){
 		
@@ -124,13 +124,7 @@ public abstract class Component : ListBoxRow {
 		image_context=new Cairo.Context(image_surface);
 		image_context.set_source_rgb (3, 3, 3);
 		image_context.set_line_width (3);
-		image_context.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-		
-		emoticon_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 110, 110);
-		emoticon_context=new Cairo.Context(emoticon_surface);
-		
-		
-		
+		image_context.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);			
 	}
 	
 	
@@ -152,6 +146,7 @@ public abstract class Component : ListBoxRow {
 
 	public void update_emoticon(){
 		
+		emoticon_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 110, 110);
 		emoticon_context=new Cairo.Context(emoticon_surface);
 		int activity= get_parameter("activity").val;
 		int zone=get_parameter("work_zone").val;

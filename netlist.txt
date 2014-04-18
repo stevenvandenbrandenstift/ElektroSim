@@ -1,5 +1,5 @@
 netlist by ElektroSim2
-r1 1 2 5 max_power=1
+r1 1 2 26 max_power=1
 r2 2 0 5 max_power=1
 v1 1 0 10
 .control

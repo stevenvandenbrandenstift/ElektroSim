@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+using Gee;
 namespace ElektroSim{
 	
 public class Ground : Component {
 	
 	public Ground () {
 			base("Ground");
+			parameters =new ArrayList<Parameter>();
 			this.width=100;
 			this.height=50;
 	}
 	
 	public override void make_image(){
 		
-		setup_surface(orientation);
+		setup_image_surface(orientation);
 
 		image_context.new_path ();
 		image_context.move_to (0, height/2);

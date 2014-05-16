@@ -1,19 +1,4 @@
-netlist by ElektroSim2
-r1 1 2 5 max_power=1
-r2 1 3 5 max_power=1
-r3 1 4 5 max_power=1
-r4 1 5 5 max_power=1
-r5 2 6 5 max_power=1
-r6 2 7 5 max_power=1
-r7 2 8 5 max_power=1
-.control
-OP
-show r1
-show r2
-show r3
-show r4
-show r5
-show r6
-show r7
-exit.endc
+netlist by me
+r1 1 0 1
+v1 1 0 1 SIN(0 1 1)
 .END

@@ -24,6 +24,8 @@ public class NGSpiceSimulator : GLib.Object {
 	private string current_component;
 	public signal void data_ready (string current_component, string data);
 	//public AsyncQueue<string> outputbuffer;
+	public Ngspice.NgspiceShared ngspice;
+
 
 	public NGSpiceSimulator () {
 		current_component="";
@@ -31,7 +33,7 @@ public class NGSpiceSimulator : GLib.Object {
 	
 	}
 	
-	public bool processor (string data) {
+	private bool processor (string data) {
 		
 			string[]dataList = data.split("\n");
 			foreach (string line in dataList) {
@@ -86,7 +88,7 @@ public class NGSpiceSimulator : GLib.Object {
 	
 
 
-	public void run_simulation(ArrayList<Component> items){
+	public void run_simulation(){
 	
 		//send_to_ngspice("source /home/steven/test/netlist.txt\n");
 		//send_to_ngspice("run\n");

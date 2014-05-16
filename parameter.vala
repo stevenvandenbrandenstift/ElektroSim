@@ -55,7 +55,7 @@ public class Parameter : Box{
 		entry.set_text (val.to_string());
 		entry.set_width_chars(5);
 		entry.set_hexpand(true);
-		if(group==Group.PARAMETER||group==Group.PARAMETER){
+		if(group==Group.PARAMETER||group==Group.OPTIONAL_PARAMETER){
 			 entry.set_overwrite_mode(false);
 		}
 		entry.key_release_event.connect (() => {
@@ -121,7 +121,6 @@ public class Parameter : Box{
 				set_no_show_all(true);
 			break;
 		}
-		visual=vis;
 	}
 	public void set_value(float temp){
 		entry.set_text (temp.to_string());

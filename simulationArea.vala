@@ -200,14 +200,14 @@ public class SimulationArea : Gtk.DrawingArea {
 
 	public void simulate(){
 		gen.generate_file(items);
-		gen.run_simulation(items);
+		gen.run_simulation();
 		redraw_canvas();
 		//list_print();
 	}
 	
 	public void simulate_button(){
 		gen.generate_file(items);
-		gen.run_simulation(items);
+		gen.run_simulation();
 		set_list_adjustable(items,Visual.EDITABLE_SLIDER);
 		list_update (items);
 		redraw_canvas();

@@ -44,7 +44,6 @@ int RESsetup(SMPmatrix *matrix, GENmodel *inModel, CKTcircuit*ckt, int *state)
 do { if((here->ptr = SMPmakeElt(matrix, here->first, here->second)) == NULL){\
     return(E_NOMEM);\
 } } while(0)
-
             TSTALLOC(RESposPosptr, RESposNode, RESposNode);
             TSTALLOC(RESnegNegptr, RESnegNode, RESnegNode);
             TSTALLOC(RESposNegptr, RESposNode, RESnegNode);

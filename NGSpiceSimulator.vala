@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using Gee;
+using ngspice;
 namespace ElektroSim{
 public class NGSpiceSimulator : GLib.Object {
 
@@ -24,13 +25,24 @@ public class NGSpiceSimulator : GLib.Object {
 	private string current_component;
 	public signal void data_ready (string current_component, string data);
 	//public AsyncQueue<string> outputbuffer;
-	public Ngspice.NgspiceShared ngspice;
-
+		
+		//public SendOutput a;
+		public int identificationLibrary;
+		public void* userData;
 
 	public NGSpiceSimulator () {
+		
 		current_component="";
-		//outputbuffer = new AsyncQueue<string> ();	
+		//outputbuffer = new AsyncQueue<string> ();
+
+		//ngspice.init<int>(this.test, null, null, null, null, null,5);
+		//ngspice.send_command("ok");
 	
+	}
+
+	public static int test<T>(string stdout,int id, T data){
+		stdout.printf ("stdout: '%s'\n", stdout); //debug line
+		return id;
 	}
 	
 	private bool processor (string data) {
@@ -83,7 +95,11 @@ public class NGSpiceSimulator : GLib.Object {
 			stdout.printf ("Error: %s\n", e.message);
 			return "ERROR";
 		}
+
+		
 		return "ok";
+
+		
 	}
 	
 

@@ -99,7 +99,7 @@ extern "C" {
     #define IMPEXP_LOCAL
   #endif
 #endif
-
+#include <stdbool.h>
 /* required only if header is used by the caller,
    is already defined in ngspice.dll */
 #ifndef ngspice_NGSPICE_H

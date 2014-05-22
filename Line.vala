@@ -64,7 +64,7 @@ public class Line : Component {
 		point=new Point(x,y);
 		point=point.point_nearby(range);
 		orientation=point.connect_component(this);
-		if(!connections.is_empty){
+		if(connections.is_empty){
 			second_point=true;
 		}
 		connections.add(point);

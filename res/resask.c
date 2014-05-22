@@ -228,18 +228,18 @@ RESask(CKTcircuit *ckt, GENinstance *inst, int which, IFvalue *value,
         
         case RES_ACTIVITY:
         	if(ckt->CKTrhsOld){
-        		if(ckt->CKTcurrentAnalysis & DOING_AC){
-        	    activity=fast->RESpowerSum/ckt->CKTtimePoints[ckt->CKTtimeIndex];
-        		activity+=0; //need to add the fast rising edge
-        		activity/=fast->RESmaxPower;
-        		}else{ //dc or op
-        		power = (*(ckt->CKTrhsOld + fast->RESposNode) -
+			power = (*(ckt->CKTrhsOld + fast->RESposNode) -
                              *(ckt->CKTrhsOld + fast->RESnegNode)) *
                             fast->RESconduct *
                             (*(ckt->CKTrhsOld + fast->RESposNode) -
                              *(ckt->CKTrhsOld + fast->RESnegNode));
-            	power *= fast->RESm;
-            	activity=power/(fast->RESmaxPower*fast->RESm);
+			   power *= fast->RESm;
+        		if(ckt->CKTcurrentAnalysis & DOING_AC){
+        	   	activity=fast->RESpowerSum/ckt->CKTtimePoints[ckt->CKTtimeIndex]; // mean dissipated power
+        		activity+=power/ckt->CKTdeltaList[ckt->CKTtimeIndex]; //divide by time lapse
+        		activity/=(fast->RESmaxPower*fast->RESm); // normalize
+        		}else{ //dc or op
+            		activity=power/(fast->RESmaxPower*fast->RESm);
         		}
         	if(activity<0.1){
             activityString = TMALLOC(char, strlen("Inactive") + 10);

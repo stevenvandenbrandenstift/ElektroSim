@@ -31,7 +31,6 @@ public class SimulationArea : Gtk.DrawingArea {
 	public ArrayList<Component> items;
 	public ArrayList<Component> templates;
 	public NGSpiceSimulator gen;
-
 	
 	// Constructor
 	public SimulationArea () {
@@ -47,14 +46,13 @@ public class SimulationArea : Gtk.DrawingArea {
 		items= new ArrayList<Component>();
 		templates= new ArrayList<Component>();
 		
-		
 		gen= new NGSpiceSimulator();
 		gen.data_ready.connect (insert_simulation_data);
 
 		destroy.connect (Gtk.main_quit);
 		set_vexpand(true);
 		set_hexpand(true);
-		set_size_request(500,500);
+		set_size_request(1000,1000);
 
 	}
 	public void init(){
@@ -88,63 +86,22 @@ public class SimulationArea : Gtk.DrawingArea {
 	
 	
 	public override bool draw (Cairo.Context cr) {
-		//print("redrawing\n");
-		//print("will print %u components \n",items.length ());
-		//cr=new Cairo.Context();
 		
+		//possible to paint the background
+		cr.new_path();
+		cr.set_source_rgb( 0.5, 0.5, 0.5 );
+        cr.fill( );
+		cr.close_path ();
+		//cr.paint();
+		
+		cr.set_source_rgb (200, 200, 200);
+		cr.set_line_width (3);
+		cr.select_font_face ("Adventure", Cairo.FontSlant.NORMAL,Cairo.FontWeight.BOLD);			
+
 		foreach (Component component in items){
-			//component.update_image();
-			component.update_emoticon();
-			
-			int x,y,x_emo,y_emo;
-			x=0;
-			y=0;
-			y_emo=0;
-			x_emo=0;
-			if(component.orientation!=ElektroSim.Orientation.NONE){
-			switch (component.orientation){
-		
-			case ElektroSim.Orientation.RIGHT:
-				x=component.connections[0].x;
-				y=component.connections[0].y-component.height/2;
-				x_emo=x+component.width/2-35;
-				y_emo=y-component.height-35;
-				break;
-			case ElektroSim.Orientation.LEFT:
-				x=component.connections[0].x-component.width;
-				y=component.connections[0].y-component.height/2;
-				x_emo=x+component.width/2-35;
-				y_emo=y-component.height-35;
-				break;
-			case ElektroSim.Orientation.UP:
-				x=component.connections[0].x-component.height/2;
-				y=component.connections[0].y-component.width;
-				x_emo=x+component.height+5;
-				y_emo=y+component.height+5;
-				break;
-			case ElektroSim.Orientation.DOWN:
-				x=component.connections[0].x-component.height/2;
-				y=component.connections[0].y;
-				x_emo=x+component.height+5;
-				y_emo=y+component.height+5;
-				break;
-			case ElektroSim.Orientation.NONE:
-				x=component.connections[0].x;
-				y=component.connections[0].y-component.height/2;
-				break;
-			}
-			if(component.image_context!=null){
-			//stdout.printf ("drawing component image %s\n",component.name);
-			cr.set_source_surface(component.image_context.get_target(),x,y);
-			cr.paint();
-			}
-			if(component.emoticon_context!=null){
-			//stdout.printf ("drawing emoticon image %s\n",component.name);
-			cr.set_source_surface(component.emoticon_context.get_target(),x_emo,y_emo);
-			cr.paint();
-			}
-			}
+			component.draw_image(cr);
 		}
+		
 		return true;
 	}
 	
@@ -166,12 +123,12 @@ public class SimulationArea : Gtk.DrawingArea {
 		//add line check for 2 points
 		if(component.name=="Line"){
 			foreach(Component component2 in items){
-				if(component2.name=="Line"&&!(component2 as Line).second_point){
+				if(component2.name=="Line"&&(component2 as Line).second_point_needed){
 				new_component=component2;
 				}
 			}
 		}
-		if(new_component==null){
+		if(new_component==null){	//its no line or new line
 		new_component=component.clone();
 		new_component.request_simulate.connect (() => {
    					simulate();
@@ -181,7 +138,6 @@ public class SimulationArea : Gtk.DrawingArea {
 		if(!items.contains(new_component)){
 			items.add(new_component);
 		}
-		new_component.make_image();
 		redraw_canvas();
 	}
 

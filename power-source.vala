@@ -31,33 +31,44 @@ public class PowerSource : Component {
 			
 	}
 	
-	public override void make_image(){
+			public override void draw_image(Cairo.Context cr){
 		
-		setup_image_surface(orientation);
+		int p1_x = connections[0].x;
+		int p1_y = connections[0].y;
+
+		cr.new_path ();
+		cr.move_to (p1_x, p1_y);
+		if(orientation==ElektroSim.Orientation.RIGHT){
+		cr.rel_line_to (width,0);
+		}else if(orientation==ElektroSim.Orientation.LEFT){
+		cr.rel_line_to (-width,0);
+		}else if(orientation==ElektroSim.Orientation.UP){
+		cr.rel_line_to (0,-width);
+		}else{
+		cr.rel_line_to (0,width);
+		}
+		cr.close_path ();
+		cr.stroke ();
 		
-		image_context.new_path ();
-		image_context.move_to (0, height/2);
-		image_context.line_to (width, height/2);
-		image_context.close_path ();
-		image_context.stroke ();
-		
-		image_context.new_path ();
-		image_context.set_font_size (height*0.4);
-		
+		cr.new_path ();
+		cr.set_font_size (height*0.4);
 		
 		if(orientation==ElektroSim.Orientation.RIGHT){
-
-		image_context.move_to (width*0.6, height/2-5);
-		
+		cr.move_to (p1_x+width*0.65,p1_y-5);
 		}else if(orientation==ElektroSim.Orientation.LEFT){
-		
-		image_context.move_to (0, height/2-5);
-
+		cr.move_to (p1_x-width,p1_y-5);
+		}else if(orientation==ElektroSim.Orientation.UP){
+		cr.move_to (p1_x+5,p1_y-width*0.8);
+		}else if(orientation==ElektroSim.Orientation.DOWN){
+		cr.move_to (p1_x+5,p1_y+width*0.9);
 		}
-		image_context.text_path (name);
-		image_context.fill();
-		image_context.close_path ();
+		
+		cr.text_path (name);
+		cr.fill();
+		cr.close_path ();
+	
 	}
+	
 	
 	public override void clear_counter(){
 	counter=0;

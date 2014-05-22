@@ -101,32 +101,6 @@ public abstract class Component : ListBoxRow {
 				grid.add(par);	
 		}
 	}
-	protected void setup_image_surface(ElektroSim.Orientation orientation){
-		
-		switch (orientation){
-		
-			case ElektroSim.Orientation.RIGHT:
-				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
-				break;
-			case ElektroSim.Orientation.LEFT:
-				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, width, height);
-				break;
-			case ElektroSim.Orientation.UP:
-				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
-				break;
-			case ElektroSim.Orientation.DOWN:
-				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, height, width);
-				break;	
-			case ElektroSim.Orientation.NONE:
-				image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1,1);
-				break;
-		}		
-		image_context=new Cairo.Context(image_surface);
-		image_context.set_source_rgb (3, 3, 3);
-		image_context.set_line_width (3);
-		image_context.select_font_face ("Adventure", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);			
-	}
-	
 	
 	public Parameter? get_parameter(string name){
 		//stdout.printf ("searching parameter %s\n",name);
@@ -144,12 +118,13 @@ public abstract class Component : ListBoxRow {
 	public abstract Component clone();
 	public abstract void snap(int range,int x, int y);
 
-	public void update_emoticon(){
+	public void draw_emoticon(Cairo.Context cr,int x,int y){
 		
-		emoticon_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 110, 110);
-		emoticon_context=new Cairo.Context(emoticon_surface);
 		int activity= (int)get_parameter("activity").val;
 		int zone=(int)get_parameter("work_zone").val;
+			
+		Cairo.ImageSurface temp_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 100, 100);
+		Cairo.Context emoticon_context = new Cairo.Context (temp_surface);
 		
 		if(activity!=Activity.UNKNOWN){
 		string emoticon;
@@ -229,18 +204,20 @@ public abstract class Component : ListBoxRow {
             stderr.printf( "can not open svg file\n" );
             handle=null;
         	}
-        	emoticon_context.new_path ();
+			cr.save();
+        	cr.new_path ();
+			emoticon_context.set_operator (Cairo.Operator.OVER);
         	emoticon_context.scale (1.5, 1.5);
         	handle.render_cairo( emoticon_context );
-        	emoticon_context.close_path();
-        	
+			cr.set_source_surface (emoticon_context.get_target (), x, y);
+			cr.paint();
+        	cr.close_path();
+        	cr.restore();
         	}
 		}
 	}
-	public virtual void update_image(){
-	}
-	public virtual void make_image(){
-	
+
+	public virtual void draw_image(Cairo.Context cr){
 	}
 	
 	public virtual void clear_counter(){

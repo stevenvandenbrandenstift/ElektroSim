@@ -22,7 +22,7 @@ namespace ElektroSim{
 	
 public class Line : Component {
 
-	public bool second_point{get;set;default=false;}
+	public bool second_point_needed{get;set;default=false;}
 	
 	public Line () {
 			base("Line");
@@ -31,27 +31,36 @@ public class Line : Component {
 			this.height=50;
 	}
 	
-	public override void make_image(){
+	public override void draw_image(Cairo.Context cr){
 		
-		setup_image_surface(ElektroSim.Orientation.NONE);
+		int p1_x = connections[0].x;
+		int p1_y = connections[0].y;
 		
-		if(second_point){
-		width=-1;
+		if(!second_point_needed){
+		int p2_x = connections[1].x;
+		int p2_y = connections[1].y;
+		width=100;
 		
-		setup_image_surface(orientation);
-		image_context.new_path ();
-		image_context.move_to (0, 0);
-		image_context.line_to (connections[1].x-connections[0].x, 0);
-		image_context.close_path ();
-		image_context.stroke ();
-		
-		image_context.new_path ();
-		image_context.move_to (connections[1].x-connections[0].x, 0);
-		image_context.line_to (connections[1].x-connections[0].x, connections[1].y-connections[0].y);
-		image_context.close_path ();
-		image_context.stroke ();
+		cr.new_path ();
+		cr.move_to (p1_x, p1_y);
+		if(orientation==ElektroSim.Orientation.RIGHT||orientation==ElektroSim.Orientation.LEFT){
+			cr.line_to (p2_x, p1_y);
+			cr.move_to (p2_x, p1_y);
+			cr.line_to (p2_x,p2_y);
+		}else{
+			cr.line_to (p1_x, p2_y);
+			cr.move_to (p1_x, p2_y);
+			cr.line_to (p2_x,p2_y);
 		}
-	
+		cr.close_path ();
+		cr.stroke ();
+
+		}else{ //draw tempory dot indicating to click next point
+			cr.new_path ();
+			cr.arc(p1_x, p1_y, 10.0, 0, 2*Math.PI);
+			cr.close_path ();
+			cr.fill ();
+		}
 	}
 	
 	public override Component clone(){
@@ -63,9 +72,14 @@ public class Line : Component {
 		Point point;
 		point=new Point(x,y);
 		point=point.point_nearby(range);
-		orientation=point.connect_component(this);
+		
 		if(connections.is_empty){
-			second_point=true;
+			orientation=point.connect_component(this);
+			second_point_needed=true;
+		}else{
+			second_point_needed=false;
+			point.connect_component(this);
+			point.net=connections[0].net;
 		}
 		connections.add(point);
 	}

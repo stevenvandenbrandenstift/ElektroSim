@@ -37,53 +37,60 @@ public class Resistor : Component {
 		add_parameter("noisy",0,Group.OPTIONAL_PARAMETER);
 	}
 	
-	public override void make_image(){
-		
-		setup_image_surface(orientation);
-		
-		
+	public override void draw_image(Cairo.Context cr){
+		int p1_x = connections[0].x;
+		int p1_y = connections[0].y;
+		int p2_x = connections[1].x;
+		int p2_y = connections[1].y;
+		int x,y;
 		if(orientation==ElektroSim.Orientation.RIGHT||orientation==ElektroSim.Orientation.LEFT){	
-			image_context.new_path ();	
-			image_context.move_to (0, height/2);
-			image_context.line_to (width/5, height/2);
-			image_context.rectangle (width/5,0,width/5*3,height);
-			image_context.close_path ();
-			image_context.stroke ();
+			if(p1_x>p2_x){
+				int temp=p2_x;
+				p2_x=p1_x;
+				p1_x=temp;
+			}
+			cr.new_path ();	
+			cr.move_to (p1_x, p1_y);
+			cr.rel_line_to (width/5, 0);
+			cr.rectangle (p1_x+width/5,p1_y-height/2,width/5*3,height);
+			cr.move_to (p2_x, p2_y);
+			cr.rel_line_to (-width/5, 0);
+			cr.close_path ();
+			cr.stroke ();
 		
-			image_context.new_path ();
-			image_context.move_to (width*4/5, height/2);
-			image_context.line_to (width, height/2);
-			image_context.close_path ();
-			image_context.stroke ();
-		
-			image_context.new_path ();
-			image_context.set_font_size (height*0.9);
-			image_context.move_to (width/5+5,height/1.2);
-			image_context.text_path (name);
-			image_context.close_path();
-			image_context.fill();
+			cr.new_path ();
+			cr.set_font_size (height*0.9);
+			cr.move_to (p1_x+width/3,p1_y+height/3);
+			cr.text_path (name);
+			cr.close_path();
+			cr.fill();
+			x=p1_x+100;
+			y=p1_y-120;
 		}else{
-			image_context.new_path ();	
-			image_context.move_to (height/2,0);
-			image_context.line_to (height/2,width/5);
-			image_context.rectangle (0,width/5,height,width/5*3);
-			image_context.close_path ();
-			image_context.stroke ();
+			if(p1_y>p2_y){
+				int temp=p2_y;
+				p2_y=p1_y;
+				p1_y=temp;
+			}
+			cr.new_path ();	
+			cr.move_to (p1_x, p1_y);
+			cr.rel_line_to (0,width/5);
+			cr.rectangle (p1_x-height/2,p1_y+width/5,height,width/5*3);
+			cr.move_to (p2_x, p2_y);
+			cr.rel_line_to (0,-width/5);
+			cr.close_path ();
+			cr.stroke ();
 		
-			image_context.new_path ();
-			image_context.move_to (height/2,width*4/5);
-			image_context.line_to (height/2, width);
-			image_context.close_path ();
-			image_context.stroke ();
-		
-			image_context.new_path ();
-			image_context.set_font_size (height*0.8);
-			image_context.move_to (0.2,width/2+5);
-			image_context.text_path (name);
-			image_context.close_path();
-			image_context.fill();
+			cr.new_path ();
+			cr.set_font_size (height*0.8);
+			cr.move_to (p1_x-height/2,p1_y+width/2);
+			cr.text_path (name);
+			cr.close_path();
+			cr.fill();
+			y=p1_y+80;
+			x=p1_x+40;
 		}
-
+		draw_emoticon(cr,x,y);
 	}
 	
 	public override void clear_counter(){

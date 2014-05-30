@@ -21,53 +21,103 @@ using ngspice;
 namespace ElektroSim{
 public class NGSpiceSimulator : GLib.Object {
 
-	// Constructor
-	private string current_component;
-	public signal void data_ready (string current_component, string data);
-	//public AsyncQueue<string> outputbuffer;
-		
-		//public SendOutput a;
-		public int identificationLibrary;
-		public void* userData;
+	public static ArrayList<Component> items;
+	private static Component current_component;
 
-	public NGSpiceSimulator () {
-		
-		current_component="";
-		//outputbuffer = new AsyncQueue<string> ();
+	public int identificationLibrary;
+	public void* userData;
 
-		//ngspice.init<int>(this.test, null, null, null, null, null,5);
-		//ngspice.send_command("ok");
-	
+	public NGSpiceSimulator (ArrayList<Component> items) {
+		this.items=items;
+		current_component=null;
+		ngspice.init<int>(receive_output, receive_simulation_data, controlled_exit, receive_vectors , receive_init_vectors, is_background_thread_running,5);
 	}
 
-	public static int test<T>(string stdout,int id, T data){
-		stdout.printf ("stdout: '%s'\n", stdout); //debug line
-		return id;
-	}
-	
-	private bool processor (string data) {
-		
-			string[]dataList = data.split("\n");
+	public static int receive_output(string stdout,int id, int data){
+		string[]dataList = stdout.split("\n");
 			foreach (string line in dataList) {
+			int position2,end2;
+
 			line=line.strip ();
-           		stdout.printf ("%s\n", line);
-			if(current_component!=null&&current_component!=""&&(!line.has_prefix ("device"))){
-				data_ready(current_component,line);
+			if(!line.contains("<<NAN, error = 7>>")){
+				
+				end2=line.char_count ();
+				position2=line.index_of_char (' ');
+				line=line.slice(position2+1,end2);
+
+				if(current_component!=null&&current_component.name!="Ground"&&(!line.has_prefix ("device"))){
+					line=line.replace(",",".");
+					print ("insert: '%s'\n", line); //debug line
+					current_component.insert_simulation_data(line);
+					if(line.has_prefix ("p ")){
+						//current_component=new Ground();
+					}
+				}
+				else if(line.has_prefix ("device")){
+				
+					int position,end;
+					end=line.char_count ();
+					position=line.last_index_of_char (' ')+1;
+					line=line.slice(position,end);
+					print ("deviceline: '%s'\n", line); //debug line
+					//stdout.printf ("deviceline: '%s'\n", line); //debug line
+					foreach(Component comp in items){
+						if(comp.name==line){
+						current_component=comp;
+						}
+					}
+				}
+			}   
 			}
-			else if(line.has_prefix ("device")){
-				int position,end;
-				end=line.char_count ();
-				position=line.last_index_of_char (' ')+1;
-				line=line.slice(position,end);
-				//stdout.printf ("deviceline: '%s'\n", line); //debug line
-				current_component=line;
-			}
-			}
-		return true;
+		return 0;
+	}
+
+	public static int receive_simulation_data(string simulation_status,int id, int data){
+		print ("simulation status: '%s'\n", simulation_status); //debug line
+		return 0;
+	}
+
+	public static int controlled_exit(int status, bool unload_immediate, bool exit_on_quit,int id, int	data){
+		print ("exit status: '%i'\n", status); //debug line
+		return 0;
+	}
+
+	public static int receive_vectors(VecValuesAll[] all_vectors , int amount, int id,int data){
+		//print ("vectors amount: '%i'\n", amount); //debug line
+			//print ("vecname 1 : '%s'\n", all_vectors[0].actualSetValues[0].name); //debug line  
+			//print ("vecname 2: '%s'\n", all_vectors[1].actualSetValues[0].name); //debug line
+			//print ("vecname 1: '%s'\n", all_vectors[0].actualSetValues[1].name); //debug line
+			//print ("vecname 2: '%s'\n", all_vectors[1].actualSetValues[2].name); //debug line
+		
+		return 0;
+	}
+		
+	public static int receive_init_vectors(VecInfoAll[] vecs, int id,int data){
+		print ("init vector received from id: '%i'\n", id); //debug line
+		ngspice.send_command("status");
+		return 0;
+	}
+	public static int is_background_thread_running(bool running, int id,int data){
+		if(running)
+		print ("background thread running\n"); //debug line
+		else
+		print ("background thread NOT running\n"); //debug line
+		return 0;
 	}
 	
+	public void load_netlist(ArrayList<Component> items){
+		string[] netlist = {"netlist by ElektroSim"};
+		foreach(Component component in items){
+			netlist+=component.get_netlist_line();
+			print("%s" ,component.get_netlist_line());
+		}
+		netlist+=".END";
+		upload_circuit(netlist);
+	}
 
-	public string generate_file(ArrayList<Component> items){
+
+	public string generate_file(){
+
 		try {
 		File file = File.new_for_path ("./netlist.txt");
 		if (file.query_exists ()) {
@@ -79,15 +129,16 @@ public class NGSpiceSimulator : GLib.Object {
 			dos.put_string (component.get_netlist_line());
 			print("%s" ,component.get_netlist_line());
 		}
-		dos.put_string (".control\n");
-		dos.put_string ("OP\n");
+		/*dos.put_string (".control\n");
+		//dos.put_string ("OP\n");
 			foreach(Component component in items){
-			if(component.name!="Ground"){
+			if(component.name!="Ground"&&component.name!="Line"){
 			dos.put_string("show "+component.name+"\n");
-		}
 			}
-			dos.put_string ("exit");
-		dos.put_string (".endc\n");
+			}
+			//dos.put_string ("exit");
+		//dos.put_string (".endc\n");
+		*/
 		dos.put_string (".END");
 		
 		
@@ -96,7 +147,7 @@ public class NGSpiceSimulator : GLib.Object {
 			return "ERROR";
 		}
 
-		
+		ngspice.send_command("source ./netlist.txt");
 		return "ok";
 
 		
@@ -105,32 +156,28 @@ public class NGSpiceSimulator : GLib.Object {
 
 
 	public void run_simulation(){
-	
-		//send_to_ngspice("source /home/steven/test/netlist.txt\n");
-		//send_to_ngspice("run\n");
+		/*
+		ngspice.send_command("stop when time = 1");
+		set_breakpoint(0);
+		stdout.printf ("tran 1 10 1; \n\n");
+		ngspice.send_command("tran 1 10 1");
+		Thread.usleep(1000000);
+		stdout.printf ("show r1;\n\n");
+		ngspice.send_command("show r1");
+		Thread.usleep(1000000);
+		stdout.printf ("step ;\n\n");
+		ngspice.send_command("step");
+		Thread.usleep(1000000);
+		stdout.printf ("show r1;\n\n");
+		ngspice.send_command("show r1");
+		Thread.usleep(1000000);
+		*/
 		
-		string[] spawn_args = {"/usr/local/bin/ngspice","-a","-p","./netlist.txt"};
-		string[] spawn_env = Environ.get ();
-		string standard_output;
-		string standard_error;
-		
-		try{
-		Process.spawn_sync (null,
-			                                spawn_args,
-			                                spawn_env,
-			                                SpawnFlags.SEARCH_PATH,
-			                                null,
-			                                out standard_output,
-			                                out standard_error,
-			                                null);
-		//stdout.printf ("output= %s\n",standard_output); //debug line
-		//data_ready(standard_output);	                 
-       	processor(standard_output);
-       	}
-		catch (Error e) {
-			stdout.printf ("Error: %s\n", e.message);
+		ngspice.send_command("op");
+		foreach(Component component in items){
+			if(component.name!="Ground"&&component.name!="Line")
+			ngspice.send_command("show "+component.name+"\n");
 		}
-		
 	}
 
 }

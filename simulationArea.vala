@@ -46,8 +46,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		items= new ArrayList<Component>();
 		templates= new ArrayList<Component>();
 		
-		gen= new NGSpiceSimulator();
-		gen.data_ready.connect (insert_simulation_data);
+		gen= new NGSpiceSimulator(items);
 
 		destroy.connect (Gtk.main_quit);
 		set_vexpand(true);
@@ -155,14 +154,16 @@ public class SimulationArea : Gtk.DrawingArea {
 	}
 
 	public void simulate(){
-		gen.generate_file(items);
+		//gen.generate_file(items);
+		gen.load_netlist(items);
 		gen.run_simulation();
 		redraw_canvas();
 		//list_print();
 	}
 	
 	public void simulate_button(){
-		gen.generate_file(items);
+		//gen.generate_file(items);
+		gen.load_netlist(items);
 		gen.run_simulation();
 		set_list_adjustable(items,Visual.EDITABLE_SLIDER);
 		list_update (items);

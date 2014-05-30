@@ -34,14 +34,14 @@ namespace ngspice {
     		public double cimag;      /* actual data value */
     		public bool is_scale;     /* if 'name' is the scale vector */
     		public bool is_complex;   /* if the data are complex numbers */
-	} 	//vecvalues, *pvecvalues;
+	} 	//vecvalues, *pv	ecvalues;
 
 	[CCode (cname = "vecvaluesall", has_destroy_function = false, has_copy_function = false, 		has_type_id = false)]
 	public struct VecValuesAll {
     		public int veccount;      /* number of vectors in plot */
    		public int vecindex;      /* index of actual set of vectors. i.e. the number of 		accepted data points */
-		[CCode (cname = "vecsa")]
-    		public VecValues actualSetValues; /* values of actual set of vectors, indexed from 0 to veccount - 1 */
+		[CCode (cname = "vecsa",array_length = false)]
+    		public VecValues[] actualSetValues; /* values of actual set of vectors, indexed from 0 to veccount - 1 */
 	} 	//vecvaluesall, *pvecvaluesall;
 
 	/* info for a specific vector */
@@ -63,9 +63,10 @@ namespace ngspice {
 	    public unowned string date;
 	    public unowned string type;
 	    public int veccount;
-
+		
 	   /* the data as an array of vecinfo with length equal to the number of vectors in the plot 			*/
-    		public VecInfo vecs;
+    	[CCode (array_length = false)]	
+	   public VecInfo[] vecs;
 
 	} //vecinfoall, *pvecinfoall;
 
@@ -99,7 +100,7 @@ namespace ngspice {
 
 	/* send back actual vector data */
 	[CCode (cname = "SendData", simple_generics = true, has_target = false)]
-	public delegate int  SendVectorData<T>(VecValuesAll allVectors , int amount, int id, T data);
+	public delegate int  SendVectorData<T>([CCode (array_length = false)]VecValuesAll[] allVectors , int amount, int id, T data);
 	/*
 	   allVectors pointer to array of structs containing actual values from all vectors
 	   amount           number of structs (one per vector)
@@ -174,7 +175,7 @@ namespace ngspice {
 		public int get_vector_info(string vector_name);
 		
 		[CCode (cname = "ngSpice_Circ")]
-		public int upload_circuit(string[] netlist);
+		public int upload_circuit([CCode (array_length = false)]string[] netlist);
 		
 		[CCode (cname = "ngSpice_CurPlot")]
 		public string get_current_plot_name();

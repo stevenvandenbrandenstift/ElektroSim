@@ -1,2 +1,0 @@
-ngspice 586 -> ngspice 586 -> ngspice 586 -> exit
-ngspice-26 done

@@ -36,7 +36,7 @@ class Server {
 	}
 	
 	private void run(){
-		make_folder();
+		//make_folder();
 		start_server();
 		GLib.Thread.usleep (100000);
 		print("launching elektrosim \n");
@@ -101,7 +101,7 @@ class Server {
 		Pid child_pid;
 
 		try{
-		Process.spawn_async ("/home/steven/public_html/users/user"+id,
+		Process.spawn_async ("/home/steven/public_html/users",
 			                                spawn_args,
 			                                spawn_env,
 			                                SpawnFlags.SEARCH_PATH,

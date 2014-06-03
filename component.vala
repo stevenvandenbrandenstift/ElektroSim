@@ -83,7 +83,7 @@ public abstract class Component : ListBoxRow {
 			par.val=val;
 			par.group=group;
 		}else{  //does not exist add
-			par=new Parameter(name,(float)val,group);
+			par=new Parameter(name,val,"",group);
 			parameters.add(par);
 			par.slider_changed.connect (() => {
    					request_simulate();
@@ -91,6 +91,19 @@ public abstract class Component : ListBoxRow {
 		}
 	}
 	
+	public void add_parameter_string(string name, string val, Group group){
+		Parameter par=get_parameter(name);
+		if(par!=null){  //parameter exists -- update
+			par.val_string=val;
+			par.group=group;
+		}else{  //does not exist add
+			par=new Parameter(name,0,val,group);
+			parameters.add(par);
+			par.slider_changed.connect (() => {
+   					request_simulate();
+			});
+		}
+	}
 	public void pack_parameters(){
 		 GLib.List<weak Widget> list=grid.get_children ();
 		 foreach(weak Widget widget in list){
@@ -120,9 +133,30 @@ public abstract class Component : ListBoxRow {
 
 	public void draw_emoticon(Cairo.Context cr,int x,int y){
 		
-		int activity= (int)get_parameter("activity").val;
-		int zone=(int)get_parameter("work_zone").val;
-			
+		Parameter act=get_parameter("activity");
+		Parameter zon=get_parameter("work_zone");
+		int activity=0;
+		int zone=0;
+
+		if(act.values==null||act.values.size<1){
+		activity= (int)act.val;
+		}else{
+			foreach(float val in act.values){
+				if(activity<val)
+					activity=(int)val;
+			}
+		}
+
+		if(zon.values==null||zon.values.size<1){
+		zone= (int)zon.val;
+		}else{
+			foreach(float val in zon.values){
+				if(zone<val)
+					zone=(int)val;
+			}
+		}
+		
+		print("activity: %f, zone: %f \n", activity,zone);
 		Cairo.ImageSurface temp_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 100, 100);
 		Cairo.Context emoticon_context = new Cairo.Context (temp_surface);
 		
@@ -227,7 +261,7 @@ public abstract class Component : ListBoxRow {
 		return "";
 	}
 	
-	public void insert_simulation_data(string line){
+	public void insert_simulation_data(string line,bool add){
 	
 		int position,position2,end;
 		end=line.char_count ();
@@ -240,7 +274,7 @@ public abstract class Component : ListBoxRow {
 		if(par!=null){
 			
 			if(name!="activity"&&name!="work_zone"){
-			par.set_value((float)double.parse(val));
+				par.set_value((float)double.parse(val));
 			}else{ //activity and zone
 				if(name=="activity"){
 					if(val.contains("inactive")){
@@ -270,6 +304,9 @@ public abstract class Component : ListBoxRow {
 				}
 				
 			}
+
+			if(add)
+				par.add_value(par.val);
 			//stdout.printf ("added %s:%s:%s-%f\n",this.name,name,val,par.val);
 			
 		}

@@ -172,18 +172,18 @@ namespace ngspice {
 		public int send_command(string command);
 
 		[CCode (cname = "ngGet_Vec_Info")]
-		public int get_vector_info(string vector_name);
+		public VectorInfo get_vector_info(string vector_name);
 		
 		[CCode (cname = "ngSpice_Circ")]
 		public int upload_circuit([CCode (array_length = false)]string[] netlist);
 		
 		[CCode (cname = "ngSpice_CurPlot")]
-		public string get_current_plot_name();
+		public unowned string get_current_plot_name();
 
 		[CCode (cname = "ngSpice_AllPlots")]
 		public string[] get_all_plot_names();
 
-		[CCode (cname = "ngSpice_AllVecs")]
+		[CCode (cname = "ngSpice_AllVecs",array_length = false)]
 		public string[] get_all_vectors_of_plot(string plotname);
 		
 		[CCode (cname = "ngSpice_running")]

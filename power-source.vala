@@ -23,15 +23,15 @@ public class PowerSource : Component {
 
 	public static int counter;
 
-	public PowerSource (float voltage) {
+	public PowerSource (string voltage) {
 			base("PowerSource");
 			this.width=100;
 			this.height=50;
-			add_parameter("V",voltage,Group.ADJUSTABLE);
+			add_parameter_string("V",voltage,Group.ADJUSTABLE_STRING);
 			
 	}
 	
-			public override void draw_image(Cairo.Context cr){
+		public override void draw_image(Cairo.Context cr){
 		
 		int p1_x = connections[0].x;
 		int p1_y = connections[0].y;
@@ -75,7 +75,7 @@ public class PowerSource : Component {
 	}
 	
 	public override Component clone(){
-			PowerSource newc=new PowerSource(get_parameter("V").val);
+			PowerSource newc=new PowerSource(get_parameter("V").val_string);
 			counter++;
 			newc.set_name("v"+counter.to_string());
 			return newc;
@@ -91,7 +91,7 @@ public class PowerSource : Component {
 
 	public override string get_netlist_line(){
 		string line;
-		line=name+" "+connections[0].net.to_string()+" 0 "+get_parameter("V").val.to_string()+"\n";
+		line=name+" "+connections[0].net.to_string()+" 0 "+get_parameter("V").val_string+"\n";
 		return line;
 	}
 

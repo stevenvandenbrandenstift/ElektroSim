@@ -66,13 +66,16 @@ public class SimulationArea : Gtk.DrawingArea {
 	private void fill_templates(){
 		Resistor resistor=new Resistor(5,1);
 		templates.add(resistor);
-		PowerSource power_source=new PowerSource(10);
+		PowerSource power_source=new PowerSource("sin(0 1 1 0 0)");
 		templates.add(power_source);
 		Ground ground=new Ground();
 		templates.add(ground);
 		
 		Line line= new Line();
 		templates.add(line);
+
+		Simulation sim=new Simulation("tran 0.02 1");
+		templates.add(sim);
 	}
 	
 	public void set_list_adjustable(ArrayList<Component> items,Visual vis){
@@ -165,17 +168,17 @@ public class SimulationArea : Gtk.DrawingArea {
 		//gen.generate_file(items);
 		gen.load_netlist(items);
 		gen.run_simulation();
-		set_list_adjustable(items,Visual.EDITABLE_SLIDER);
+		set_list_adjustable(items,Visual.SIMULATION);
 		list_update (items);
 		redraw_canvas();
 		//list_print();	
 	}
 
 
-	public void insert_simulation_data(string component_name,string data){
+	public void insert_simulation_data(string component_name,string data,bool add){
 		foreach(Component component in items){
 					if(component.name.contains(component_name)){
-						component.insert_simulation_data(data);
+						component.insert_simulation_data(data,add);
 						continue;
 					}
 		}

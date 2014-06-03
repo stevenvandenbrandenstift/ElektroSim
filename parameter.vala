@@ -23,10 +23,10 @@ using Gee;
 namespace ElektroSim{
 
 public enum Visual{
-		ALL,EDITABLE,EDITABLE_SLIDER,NO_OPTIONAL;
+		ALL,EDITABLE,SIMULATION,NO_OPTIONAL;
 }
 public enum Group{
-	PARAMETER,ADJUSTABLE,OPTIONAL_PARAMETER;
+	PARAMETER,ADJUSTABLE,OPTIONAL_PARAMETER,ADJUSTABLE_STRING;
 }
 
 public class Parameter : Box{
@@ -34,6 +34,8 @@ public class Parameter : Box{
 	public signal void slider_changed();
 	public static ArrayList<Parameter> parameters=new ArrayList<Parameter>(); // could be used for a new Component generator
 	public float val{get;set;}
+	public ArrayList<float?> values{get;set;}
+	public string val_string{get;set;}
 	public string name{get;set;default="";}
 	public Group group;
 	public Visual visual;
@@ -42,8 +44,10 @@ public class Parameter : Box{
 	private Entry entry;
 	private Scale scale;
 
-	public Parameter(string name , float val, Group group){
+	public Parameter(string name , float val, string val_string, Group group){
+		values=new ArrayList<float?>();
 		this.name=name;
+		this.val_string=val_string;
 		this.val=val;
 		//set_can_focus(false);	
 		set_size_request(200,-1);
@@ -52,14 +56,29 @@ public class Parameter : Box{
 		label.selectable=false;
 		
 		entry= new Entry();
+		if(group==Group.ADJUSTABLE_STRING){
+		entry.set_text (val_string);
+		entry.set_width_chars(20);
+		}else{
 		entry.set_text (val.to_string());
 		entry.set_width_chars(5);
+		}
 		entry.set_hexpand(true);
 		if(group==Group.PARAMETER||group==Group.OPTIONAL_PARAMETER){
 			 entry.set_overwrite_mode(false);
 		}
 		entry.key_release_event.connect (() => {
-				set_value((float)double.parse(entry.get_text()));
+				
+				if(group==Group.ADJUSTABLE_STRING){
+						this.val_string=entry.get_text();
+						if(visual==ElektroSim.Visual.SIMULATION){
+							slider_changed();
+							values=new ArrayList<float?>();
+						print(" changed string from %s to %s \n",val_string,entry.get_text());
+						}
+				}else{
+					set_value((float)double.parse(entry.get_text()));
+				}
 				return false;
 			});
 		
@@ -76,11 +95,13 @@ public class Parameter : Box{
 				}else{
 					scale.set_range(0,100);
 				}
+				values=new ArrayList<float?>();
 				slider_changed();
 				//print("%s  changed too %d\n",name,val);
 			});
 		}
-
+		
+		
 		add(label);
 		add(entry);
 		this.group=group;	
@@ -96,7 +117,7 @@ public class Parameter : Box{
 			break;
 		
 		case  Visual.EDITABLE:
-			if(group==Group.ADJUSTABLE)
+			if(group==Group.ADJUSTABLE||group==Group.ADJUSTABLE_STRING)
 				set_no_show_all(false);
 			else
 				set_no_show_all(true);
@@ -109,7 +130,7 @@ public class Parameter : Box{
 				set_no_show_all(true);
 			break;
 		
-		case  Visual.EDITABLE_SLIDER:
+		case  Visual.SIMULATION:
 			if(group!=Group.OPTIONAL_PARAMETER){
 				set_no_show_all(false);
 				if(group==Group.ADJUSTABLE){
@@ -121,6 +142,7 @@ public class Parameter : Box{
 				set_no_show_all(true);
 			break;
 		}
+	 this.visual=vis;
 	}
 	public void set_value(float temp){
 		entry.set_text (temp.to_string());
@@ -130,7 +152,8 @@ public class Parameter : Box{
 		val=temp;
 	}
 	
-
-	
+	public void add_value(float temp){
+			values.add(temp);
+	}
 	}
 }

@@ -19,20 +19,30 @@
 using Gee;
 using ngspice;
 namespace ElektroSim{
+
+public enum SimulationAlgorithm{
+		OP,DC,TRAN,AC;
+}
+
 public class NGSpiceSimulator : GLib.Object {
 
 	public static ArrayList<Component> items;
 	private static Component current_component;
-
+	private static  SimulationAlgorithm sim_alg=0;
+	private static int counter=0;
+	private static int req_counter=0;
+	private static Mutex mutex;
+	private static bool ready=false;
 	public int identificationLibrary;
 	public void* userData;
 
 	public NGSpiceSimulator (ArrayList<Component> items) {
 		this.items=items;
 		current_component=null;
+		mutex = new Mutex ();
 		ngspice.init<int>(receive_output, receive_simulation_data, controlled_exit, receive_vectors , receive_init_vectors, is_background_thread_running,5);
 	}
-
+	
 	public static int receive_output(string stdout,int id, int data){
 		string[]dataList = stdout.split("\n");
 			foreach (string line in dataList) {
@@ -44,11 +54,15 @@ public class NGSpiceSimulator : GLib.Object {
 				end2=line.char_count ();
 				position2=line.index_of_char (' ');
 				line=line.slice(position2+1,end2);
+				//print ("----------- '%s'\n", line); //debug line
 
-				if(current_component!=null&&current_component.name!="Ground"&&(!line.has_prefix ("device"))){
+				if(current_component!=null&&current_component.name!="Ground"&&(!line.has_prefix ("device"))&&!ready){
 					line=line.replace(",",".");
-					print ("insert: '%s'\n", line); //debug line
-					current_component.insert_simulation_data(line);
+					//print ("insert: '%s'\n", line); //debug line
+					if(sim_alg>1)
+					current_component.insert_simulation_data(line,true);
+					else
+					current_component.insert_simulation_data(line,false);
 					if(line.has_prefix ("p ")){
 						//current_component=new Ground();
 					}
@@ -59,11 +73,33 @@ public class NGSpiceSimulator : GLib.Object {
 					end=line.char_count ();
 					position=line.last_index_of_char (' ')+1;
 					line=line.slice(position,end);
-					print ("deviceline: '%s'\n", line); //debug line
+					//print ("deviceline: '%s'\n", line); //debug line
 					//stdout.printf ("deviceline: '%s'\n", line); //debug line
 					foreach(Component comp in items){
 						if(comp.name==line){
 						current_component=comp;
+						}
+					}
+					mutex.lock ();
+					counter--;
+					mutex.unlock ();
+					//print ("counter output status: '%i'\n", counter); //debug line
+					if(counter==0){
+						print ("==========================================================\nreport:\n" );
+						foreach(Component component in items){
+							if(component.name!="Ground"&&component.name!="Line"){
+								print ("\n%s :\n", component.name );
+								foreach(Parameter par in component.parameters){
+										if(par.values.size>0&&(par.name=="i"||par.name=="p"||par.name=="activity"||par.name=="work_zone")){
+											print("%s (%i) -> ",par.name,par.values.size);
+												foreach(float val in par.values){
+													print("%f - ",val);
+												}
+											print("\n");
+										}else
+											print ("%s -> %f :\n", par.name,par.val );
+								}
+							}
 						}
 					}
 				}
@@ -74,6 +110,10 @@ public class NGSpiceSimulator : GLib.Object {
 
 	public static int receive_simulation_data(string simulation_status,int id, int data){
 		print ("simulation status: '%s'\n", simulation_status); //debug line
+		if(simulation_status.contains("--ready--")){
+			ready=true;
+			print ("requested '%i' shows \n", req_counter); //debug line
+		}
 		return 0;
 	}
 
@@ -83,25 +123,32 @@ public class NGSpiceSimulator : GLib.Object {
 	}
 
 	public static int receive_vectors(VecValuesAll[] all_vectors , int amount, int id,int data){
-		//print ("vectors amount: '%i'\n", amount); //debug line
-			//print ("vecname 1 : '%s'\n", all_vectors[0].actualSetValues[0].name); //debug line  
-			//print ("vecname 2: '%s'\n", all_vectors[1].actualSetValues[0].name); //debug line
-			//print ("vecname 1: '%s'\n", all_vectors[0].actualSetValues[1].name); //debug line
-			//print ("vecname 2: '%s'\n", all_vectors[1].actualSetValues[2].name); //debug line
+		//run afther each datapoint added -- 
+		ngspice.send_command("bg_halt");
+		//print ("should halt here:\n");
+		foreach(Component component in items){
+								if(component.name!="Ground"&&component.name!="Line"&&component.name!="Simulation")
+									req_counter++;
+									mutex.lock ();
+									counter++;
+									mutex.unlock ();
+									//print ("counter send show status: '%i'\n", counter);
+									ngspice.send_command("show "+component.name+"\n");
+		}
 		
 		return 0;
 	}
 		
 	public static int receive_init_vectors(VecInfoAll[] vecs, int id,int data){
 		print ("init vector received from id: '%i'\n", id); //debug line
-		ngspice.send_command("status");
 		return 0;
 	}
 	public static int is_background_thread_running(bool running, int id,int data){
 		if(running)
 		print ("background thread running\n"); //debug line
-		else
+		else{
 		print ("background thread NOT running\n"); //debug line
+		}
 		return 0;
 	}
 	
@@ -172,12 +219,31 @@ public class NGSpiceSimulator : GLib.Object {
 		ngspice.send_command("show r1");
 		Thread.usleep(1000000);
 		*/
-		
-		ngspice.send_command("op");
+		req_counter=0;
+		counter=0;
+		ready=false;
+		print ("\n\n====================run simulation======================================\n\n" );
+		string command=null;
 		foreach(Component component in items){
-			if(component.name!="Ground"&&component.name!="Line")
-			ngspice.send_command("show "+component.name+"\n");
+			if(component.name=="Simulation"){	
+				command=component.get_parameter("algorithm").val_string;
+				print ("send this: '%s' from %s \n", command,component.name); //debug line
+				continue;
+			}
 		}
+		if(command!=null){
+			if(command.contains("op")){
+				sim_alg=SimulationAlgorithm.OP;
+				ngspice.send_command(command+"\n");
+			}else if (command.contains("tran")){
+				sim_alg=SimulationAlgorithm.TRAN;
+				ngspice.send_command(command+"\n");
+				
+			}
+			
+		}   
+		
+			
 	}
 
 }

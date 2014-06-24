@@ -27,6 +27,7 @@ public class Simulation : Component {
 			base("Simulation");
 			parameters =new ArrayList<Parameter>();
 			add_parameter_string("algorithm",sim_alg,Group.ADJUSTABLE_STRING);
+			add_parameter("time",0,Group.OPTIONAL_PARAMETER);
 			this.width=100;
 			this.height=50;
 	}

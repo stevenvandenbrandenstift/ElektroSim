@@ -6,12 +6,7 @@ namespace ngspice {
 		public double cx_real;		/* real part */
     		public int cx_imag;		/* imaginair part */
 	}
-	
-
 	[CCode (cname = "vector_info", has_destroy_function = false, has_copy_function = false, 		has_type_id = false)]
-	/* vector info obtained from any vector in ngspice.dll.
-   	Allows direct access to the ngspice internal vector structure,
-   	as defined in include/ngspice/devc.h . */
 	public struct VectorInfo {
 		[CCode (cname = "v_name")]
 		public unowned string name;		/* Same as so_vname. */
@@ -19,14 +14,14 @@ namespace ngspice {
 		public int type;			/* Same as so_vtype. */
 		[CCode (cname = "v_flags")]    		
 		public short flags;		/* Flags (a combination of VF_*). */
-   		[CCode (cname = "v_realdata")] 
+   		[CCode (cname = "v_realdata",array_length = false)]
 		public double data; 		/* Real data. */
-		[CCode (cname = "v_compdata")]  
+		[CCode (cname = "v_compdata",array_length = false)]  
     		public NgComplex data_complex;	/* Complex data. */
 		[CCode (cname = "v_length")]
     		public int length;		/* Length of the vector. */
 
-	}//vector_info, *pvector_info;
+	}
 	[CCode (cname = "vecvalues", has_destroy_function = false, has_copy_function = false, 		has_type_id = false)]
 	public struct VecValues {
     		public string name;        /* name of a specific vector */

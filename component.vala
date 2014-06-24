@@ -156,7 +156,7 @@ public abstract class Component : ListBoxRow {
 			}
 		}
 		
-		print("activity: %f, zone: %f \n", activity,zone);
+		//print("activity: %f, zone: %f \n", activity,zone);
 		Cairo.ImageSurface temp_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 100, 100);
 		Cairo.Context emoticon_context = new Cairo.Context (temp_surface);
 		
@@ -261,14 +261,8 @@ public abstract class Component : ListBoxRow {
 		return "";
 	}
 	
-	public void insert_simulation_data(string line,bool add){
+	public void insert_simulation_data(string name,string val,bool add){
 	
-		int position,position2,end;
-		end=line.char_count ();
-		position=line.index_of_char (' ');
-		position2=line.last_index_of_char (' ')+1;
-		string val=line.slice(position2,end);
-		string name=line.slice(0,position);
 		Parameter par=get_parameter(name);
 		
 		if(par!=null){

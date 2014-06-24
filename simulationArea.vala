@@ -51,7 +51,6 @@ public class SimulationArea : Gtk.DrawingArea {
 		destroy.connect (Gtk.main_quit);
 		set_vexpand(true);
 		set_hexpand(true);
-		set_size_request(1000,1000);
 
 	}
 	public void init(){
@@ -173,16 +172,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		redraw_canvas();
 		//list_print();	
 	}
-
-
-	public void insert_simulation_data(string component_name,string data,bool add){
-		foreach(Component component in items){
-					if(component.name.contains(component_name)){
-						component.insert_simulation_data(data,add);
-						continue;
-					}
-		}
-	}		
+	
 }
 }
 

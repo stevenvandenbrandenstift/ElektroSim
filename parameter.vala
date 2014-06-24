@@ -50,7 +50,7 @@ public class Parameter : Box{
 		this.val_string=val_string;
 		this.val=val;
 		//set_can_focus(false);	
-		set_size_request(200,-1);
+		set_size_request(-1,-1);
 		label= new Label.with_mnemonic (name+":");
 		label.set_can_focus(false);
 		label.selectable=false;

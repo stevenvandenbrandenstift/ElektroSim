@@ -6,6 +6,7 @@ public class MainWindow : Window  {
 	
 	public ListBox list;
 	public SimulationArea sim_area;
+	public XYGraph graph;
 	public Grid grid{get;set;}
 
 	public static int main (string[] args)
@@ -27,7 +28,7 @@ public class MainWindow : Window  {
 		list= new ListBox();
 		grid = new Grid();
 		this.border_width = 1;
-		this.set_default_size (1400, 800);
+		//this.set_default_size (1400, 800);
 		this.maximize();
 		this.window_position = WindowPosition.CENTER;
 		this.destroy.connect(Gtk.main_quit);
@@ -37,13 +38,13 @@ public class MainWindow : Window  {
 	}
 	
 	private void update_list(ArrayList<Component> new_list){
-			while(list.get_row_at_index(0)!=null){
-				Component old=(Component)list.get_row_at_index(0);
-				list.remove(old);
+			GLib.List<Widget> templist=list.get_children();
+			foreach(Widget comp in templist){
+				list.remove(comp);
 			}
 			foreach(Component component in new_list){
 				component.pack_parameters();
-				list.add(component);
+				list.add(component as ListBoxRow);
 				component.grid.show_all();
 			}
 			this.show_all();
@@ -58,15 +59,24 @@ public class MainWindow : Window  {
 	
 	private void print_list(){
 		int i=0;
-		while(list.get_row_at_index(i)!=null){
-				Component old=(Component)list.get_row_at_index(i);
-				print("list print component %s\n",old.name);
-				foreach(Parameter par in old.parameters)
+		GLib.List<Widget> templist=list.get_children();
+			foreach(Widget comp in templist){
+				print("list print component %s\n",(comp as Component).name);
+				foreach(Parameter par in (comp as Component).parameters)
 					print("parameter %s,%f\n",par.name,par.val);
-				i++;
 			}
 	}
-
+	
+	public void graph_clicked(){
+		graph.set_values((list.get_selected_row() as Component).get_parameter("i").values);
+		GLib.List<Widget> templist=list.get_children();
+			foreach(Widget comp in templist){
+				if((comp as Component).name=="Simulation"){
+					graph.set_timepoints((comp as Component).get_parameter("time").values);
+				}
+			}
+	}
+	
 	private void setup_layout(){
 		Gtk.HeaderBar header_bar= new HeaderBar();
 		
@@ -80,8 +90,9 @@ public class MainWindow : Window  {
 		sim_area.get_selected_row.connect (get_selected_row);
 		sim_area.list_print.connect (print_list);
 		sim_area.init();
-		
-		
+		graph= new XYGraph();
+		graph.graph_clicked.connect(graph_clicked);		
+	
 		Button design_button=new Button.with_label ("Design") ;
 		design_button.clicked.connect(sim_area.init);
 		header_bar.add(design_button);
@@ -95,8 +106,10 @@ public class MainWindow : Window  {
 		Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
 		scrolled.add(list);
 		
-		grid.attach(scrolled,0,0,1,1);
-		grid.attach(sim_area,1,0,5,1);
+		grid.attach(scrolled,0,0,1,4);
+		grid.attach_next_to (sim_area, scrolled, Gtk.PositionType.RIGHT, 3, 3);
+		grid.attach_next_to (graph, sim_area, Gtk.PositionType.BOTTOM, 3, 1);
+
 		this.set_titlebar (header_bar);
 
 	}

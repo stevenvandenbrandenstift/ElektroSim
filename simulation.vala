@@ -25,11 +25,12 @@ public class Simulation : Component {
 	
 	public Simulation (string sim_alg) {
 			base("Simulation");
-			parameters =new ArrayList<Parameter>();
-			add_parameter_string("algorithm",sim_alg,Group.ADJUSTABLE_STRING);
-			add_parameter("time",0,Group.OPTIONAL_PARAMETER);
+			clear_parameters();
+			add_parameter_string("algorithm",sim_alg,ParameterType.ADJUSTABLE_STRING);
+			add_parameter("time",0,ParameterType.OPTIONAL_PARAMETER);
 			this.width=100;
 			this.height=50;
+			this.componentType=ElektroSim.ComponentType.SIMULATION;
 	}
 	
 	public override void draw_image(Cairo.Context cr){

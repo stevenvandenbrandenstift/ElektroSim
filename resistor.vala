@@ -28,13 +28,13 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		add_parameter("R",resistance,Group.ADJUSTABLE);
-		add_parameter("Max Power",max_power,Group.ADJUSTABLE);
+		add_parameter("R",resistance,ParameterType.ADJUSTABLE);
+		add_parameter("Max Power",max_power,ParameterType.ADJUSTABLE);
 		//parameters returned from simulation
-		add_parameter("ac",0,Group.OPTIONAL_PARAMETER);
-		add_parameter("dtemp",0,Group.OPTIONAL_PARAMETER);
-		add_parameter("bv_max",0,Group.OPTIONAL_PARAMETER);
-		add_parameter("noisy",0,Group.OPTIONAL_PARAMETER);
+		add_parameter("ac",0,ParameterType.OPTIONAL_PARAMETER);
+		add_parameter("dtemp",0,ParameterType.OPTIONAL_PARAMETER);
+		add_parameter("bv_max",0,ParameterType.OPTIONAL_PARAMETER);
+		add_parameter("noisy",0,ParameterType.OPTIONAL_PARAMETER);
 	}
 	
 	public override void draw_image(Cairo.Context cr){

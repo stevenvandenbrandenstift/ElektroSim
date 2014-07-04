@@ -26,7 +26,7 @@ public class Line : Component {
 	
 	public Line () {
 			base("Line");
-			parameters =new ArrayList<Parameter>();
+			clear_parameters();
 			this.width=100;
 			this.height=50;
 	}

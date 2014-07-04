@@ -2,10 +2,14 @@ using Gtk;
 using Gee;
 namespace ElektroSim{
 	
+public enum Mode{
+		UNKNOWN,EDIT,SIMULATION;
+}
+
 public class ComponentList  {
 
 	public ListBox list{get;set;}
-	private Visual vis{get;set;default=ElektroSim.Visual.EDITABLE;}
+	private Mode mode{get;set;default=ElektroSim.Mode.EDIT;}
 	private ComponentType compType{get;set;default=ElektroSim.ComponentType.TEMPLATE;}
 	public signal void list_changed();
 		
@@ -20,23 +24,22 @@ public class ComponentList  {
 	}
 	
 	public void add_component(Component comp){
-		comp.pack_parameters();
-		comp.set_display_parameter(vis);
-		if(comp.componentType==compType)
+		
+		comp.set_mode(mode);
+		if(comp.componentType==compType){
 			comp.set_no_show_all(false);
-		else
+		}else{
 			comp.set_no_show_all(true);
-
-
+		}
 		this.list.add(comp);
-		list.show_all();
+		this.list.show_all();
 	}
 
-	public ArrayList<Component> get_components(ElektroSim.ComponentType type){
+	public ArrayList<Component> get_components(ElektroSim.ComponentType type2){
 			GLib.List<weak Widget> tl =this.list.get_children();
 			ArrayList<Component> temp=new ArrayList<Component>();
 			foreach(Widget comp in tl){
-				if((comp as Component).componentType==type)
+				if((comp as Component).componentType==type2)
 					temp.add((Component)comp);
 			}
 		return temp;
@@ -71,6 +74,7 @@ public class ComponentList  {
 					(comp as Component).clear_counter();		
 			}
 		Point.clear();
+		set_visable(ElektroSim.ComponentType.TEMPLATE);
 		list_changed();
 	}
 	public void fill_templates(){
@@ -94,32 +98,36 @@ public class ComponentList  {
 		Simulation sim=new Simulation("tran 0.02 1");
 		sim.componentType=ElektroSim.ComponentType.TEMPLATE;
 		add_component(sim);
-
-		set_visable(ElektroSim.ComponentType.TEMPLATE);
 	}
 
-	public void set_visable(ElektroSim.ComponentType type){
+	public void set_visable(ElektroSim.ComponentType type2){
+		this.compType=type2;
 		GLib.List<weak Widget> templist=list.get_children();
-		foreach(weak Widget comp in templist){
-				if((comp as Component).componentType==type)
+		foreach(Widget comp in templist){
+				if((comp as Component).componentType==compType){
 					comp.set_no_show_all(false);
-				else
-					comp.set_no_show_all(true);							
+				  }
+				else{
+					comp.set_no_show_all(true);
+					comp.hide();		
+				}					
 		}
-		this.compType=type;
+		this.list.show_all();
 	}
 
 	
-	public void  set_list_visual(Visual vis){
+	public void  set_modus(Mode modus){
+		this.mode=modus;
 		GLib.List<weak Widget> templist=list.get_children();
-		foreach(weak Widget comp in templist){
-			(comp as Component).set_display_parameter(vis);
+		foreach( Widget comp in templist){
+			(comp as Component).set_mode(mode);	
 		}
-		this.vis=vis;
 	}
 
-	public void set_list_visual_simulation(){
-		set_list_visual(ElektroSim.Visual.SIMULATION);
+	public void set_list_mode_simulation(){
+		set_modus(ElektroSim.Mode.SIMULATION);
+		set_visable(ElektroSim.ComponentType.COMPONENT);
+		
 	}
 }
 }

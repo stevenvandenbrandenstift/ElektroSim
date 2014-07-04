@@ -23,7 +23,7 @@ public class Ground : Component {
 	
 	public Ground () {
 			base("Ground");
-			parameters =new ArrayList<Parameter>();
+			clear_parameters();
 			this.width=100;
 			this.height=50;
 	}

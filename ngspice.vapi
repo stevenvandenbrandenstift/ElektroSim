@@ -1,4 +1,4 @@
-[CCode (cheader_filename = "/home/steven/projecten/ElektroSimgit/ElektroSim/sharedspice.h")]
+[CCode (cheader_filename = "/home/tv/projecten/ElektroSim/sharedspice.h")]
 namespace ngspice {
 	
 	[CCode (cname = "ngcomplex", has_destroy_function = false, has_copy_function = false, 			has_type_id = false)]

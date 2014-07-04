@@ -22,11 +22,8 @@ using Gee;
 
 namespace ElektroSim{
 
-public enum Visual{
-		ALL,EDITABLE,SIMULATION,NO_OPTIONAL;
-}
-public enum Group{
-	PARAMETER,ADJUSTABLE,OPTIONAL_PARAMETER,ADJUSTABLE_STRING;
+public enum ParameterType{
+	ADJUSTABLE,ADJUSTABLE_STRING,PARAMETER,OPTIONAL_PARAMETER;
 }
 
 public class Parameter : Box{
@@ -37,14 +34,13 @@ public class Parameter : Box{
 	public ArrayList<float?> values{get;set;}
 	public string val_string{get;set;}
 	public string name{get;set;default="";}
-	public Group group;
-	public Visual visual;
+	public ParameterType paramType;
 	
 	private Label label;
 	private Entry entry;
 	private Scale scale;
 
-	public Parameter(string name , float val, string val_string, Group group){
+	public Parameter(string name , float val, string val_string, ParameterType paramType){
 		values=new ArrayList<float?>();
 		this.name=name;
 		this.val_string=val_string;
@@ -56,33 +52,33 @@ public class Parameter : Box{
 		label.selectable=false;
 		
 		entry= new Entry();
-		if(group==Group.ADJUSTABLE_STRING){
-		entry.set_text (val_string);
-		entry.set_width_chars(20);
+		if(paramType==ParameterType.ADJUSTABLE_STRING){
+			entry.set_text (val_string);
+			entry.set_width_chars(20);
 		}else{
 		entry.set_text (val.to_string());
 		entry.set_width_chars(5);
 		}
 		entry.set_hexpand(true);
-		if(group==Group.PARAMETER||group==Group.OPTIONAL_PARAMETER){
+		if(paramType>=ParameterType.PARAMETER){
 			 entry.set_overwrite_mode(false);
 		}
 		entry.key_release_event.connect (() => {
 				
-				if(group==Group.ADJUSTABLE_STRING){
+				if(paramType==ParameterType.ADJUSTABLE_STRING){
 						this.val_string=entry.get_text();
-						if(visual==ElektroSim.Visual.SIMULATION){
+						/*if(visual==ElektroSim.Visual.SIMULATION){
 							slider_changed();
 							values=new ArrayList<float?>();
 						print(" changed string from %s to %s \n",val_string,entry.get_text());
-						}
+						}*/
 				}else{
 					set_value((float)double.parse(entry.get_text()));
 				}
 				return false;
 			});
-		
-		if(group==Group.ADJUSTABLE){
+		scale=null;
+		if(paramType==ParameterType.ADJUSTABLE){
 			scale = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
 			scale.set_has_origin (false);
 			scale.set_value(val);
@@ -104,45 +100,28 @@ public class Parameter : Box{
 		
 		add(label);
 		add(entry);
-		this.group=group;	
+		this.paramType=paramType;	
 		}
 	
-	public void set_visual(Visual vis){
-		//remove(entry);
-		remove(scale);
-		switch(vis){
+	public void set_mode(Mode mode){
+
+		switch(mode){
 		
-		case Visual.ALL:
-			set_no_show_all(false);
-			break;
-		
-		case  Visual.EDITABLE:
-			if(group==Group.ADJUSTABLE||group==Group.ADJUSTABLE_STRING)
-				set_no_show_all(false);
-			else
-				set_no_show_all(true);
-			break;
+		case Mode.EDIT:
 			
-		case  Visual.NO_OPTIONAL:
-			if(group!=Group.OPTIONAL_PARAMETER)
-				set_no_show_all(false);
-			else
+			if(paramType>ParameterType.ADJUSTABLE_STRING){
 				set_no_show_all(true);
+				hide();		
+			}
+			else{
+				set_no_show_all(false);
+			}
 			break;
 		
-		case  Visual.SIMULATION:
-			if(group!=Group.OPTIONAL_PARAMETER){
+		case  Mode.SIMULATION:
 				set_no_show_all(false);
-				if(group==Group.ADJUSTABLE){
-					remove(entry);
-					add(scale);
-				}
-			}
-			else
-				set_no_show_all(true);
 			break;
 		}
-	 this.visual=vis;
 	}
 	public void set_value(float temp){
 		entry.set_text (temp.to_string());

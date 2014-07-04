@@ -31,6 +31,10 @@ public enum Orientation{
 		NONE,RIGHT,LEFT,DOWN,UP;
 }
 
+public enum ComponentType{
+		COMPONENT,TEMPLATE,SIMULATION;
+}
+
 
 
 public abstract class Component : ListBoxRow {
@@ -39,6 +43,7 @@ public abstract class Component : ListBoxRow {
 	public signal void request_simulate();
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
+	public ElektroSim.ComponentType componentType {get;set;default=ElektroSim.ComponentType.COMPONENT;}
 	public ElektroSim.Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
 	
 	public ArrayList<Parameter> parameters =new ArrayList<Parameter>();
@@ -46,72 +51,84 @@ public abstract class Component : ListBoxRow {
 	public ArrayList<Point> connections=new ArrayList<Point>();
 	public Box grid{get;set;}
 	private string emoticons;
-	
+	private Label label;
 	public Cairo.Surface image_surface;
 	public Cairo.Context image_context;
 	public Cairo.Surface emoticon_surface;
 	public Cairo.Context emoticon_context;
 	
 	public Component(string name){
-		emoticons="./emoticons/";
 		
-		grid= new Box(Gtk.Orientation.VERTICAL,0);
-		
-		add_parameter("i",0,Group.PARAMETER);
-		add_parameter("p",0,Group.PARAMETER);
-		add_parameter("activity",(float)Activity.UNKNOWN,Group.OPTIONAL_PARAMETER);
-		add_parameter("work_zone",(float)Zone.UNKNOWN,Group.OPTIONAL_PARAMETER);
-		set_name( name);
-		//grid.set_can_focus(false);
-		(this as ListBoxRow).add(grid);
+		init(name);
+		add_parameter("i",0,ParameterType.PARAMETER);
+		add_parameter("p",0,ParameterType.PARAMETER);
+		add_parameter("activity",(float)Activity.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
+		add_parameter("work_zone",(float)Zone.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
 	}
 	
-	public void set_display_parameter(Visual vis){
+
+	public void init(string name){
+		emoticons="./emoticons/";
+		grid= new Box(Gtk.Orientation.VERTICAL,0);
+		label=new Label(name);
+		grid.add(label);
+		set_name(name);
+		(this as ListBoxRow).add(grid);
+	}
+
+	public void clear_parameters(){
+		GLib.List<weak Widget> tl =this.grid.get_children();
+			foreach(Widget parameter in tl){
+				if(parameter.get_type()!=typeof (Label))
+					grid.remove(parameter);
+			}
+		parameters =new ArrayList<Parameter>();
+	}
+	
+	public void set_mode(Mode mode){
 		foreach(Parameter par in parameters){
-			par.set_visual(vis);
+			par.set_mode(mode);
 		}
 	}
 	
 	public void set_name(string new_name){
+		GLib.List<weak Widget> tl =this.grid.get_children();
+			foreach(Widget parameter in tl){
+				if(parameter.get_type()==typeof (Label)){
+					(parameter as Label).label=new_name;
+					}
+			}
 		name=new_name;
 	}
 	
 	
-	public void add_parameter(string name, float val, Group group){
+	public void add_parameter(string name, float val, ParameterType paramType){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;
-			par.group=group;
+			par.paramType=paramType;
 		}else{  //does not exist add
-			par=new Parameter(name,val,"",group);
+			par=new Parameter(name,val,"",paramType);
 			parameters.add(par);
 			par.slider_changed.connect (() => {
    					request_simulate();
 			});
+			grid.add(par);
 		}
 	}
 	
-	public void add_parameter_string(string name, string val, Group group){
+	public void add_parameter_string(string name, string val, ParameterType paramType){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val_string=val;
-			par.group=group;
+			par.paramType=paramType;
 		}else{  //does not exist add
-			par=new Parameter(name,0,val,group);
+			par=new Parameter(name,0,val,paramType);
 			parameters.add(par);
 			par.slider_changed.connect (() => {
    					request_simulate();
 			});
-		}
-	}
-	public void pack_parameters(){
-		 GLib.List<weak Widget> list=grid.get_children ();
-		 foreach(weak Widget widget in list){
-			grid.remove(widget);
-		 }
-		grid.add( new Label(name));
-		foreach(Parameter par in parameters){
-				grid.add(par);	
+			grid.add(par);
 		}
 	}
 	
@@ -155,8 +172,7 @@ public abstract class Component : ListBoxRow {
 					zone=(int)val;
 			}
 		}
-		
-		//print("activity: %f, zone: %f \n", activity,zone);
+
 		Cairo.ImageSurface temp_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 100, 100);
 		Cairo.Context emoticon_context = new Cairo.Context (temp_surface);
 		
@@ -301,7 +317,6 @@ public abstract class Component : ListBoxRow {
 
 			if(add)
 				par.add_value(par.val);
-			//stdout.printf ("added %s:%s:%s-%f\n",this.name,name,val,par.val);
 			
 		}
 	}

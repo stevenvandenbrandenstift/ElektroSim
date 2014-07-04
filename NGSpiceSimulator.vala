@@ -27,6 +27,7 @@ public enum SimulationAlgorithm{
 public class NGSpiceSimulator : GLib.Object {
 
 	public static ArrayList<Component> items;
+	public signal ArrayList<Component> request_components(ElektroSim.ComponentType type2);
 	private static Component current_component;
 	private static  SimulationAlgorithm sim_alg=0;
 	private static int counter=0;
@@ -38,11 +39,11 @@ public class NGSpiceSimulator : GLib.Object {
 	public int identificationLibrary;
 	public void* userData;
 
-	public NGSpiceSimulator (ArrayList<Component> items) {
-		this.items=items;
+	public NGSpiceSimulator () {
 		current_component=null;
 		mutex = new Mutex ();
 		current_device="";
+		items=new ArrayList<Component>();
 		ngspice.init<int>(receive_output, receive_simulation_data, controlled_exit, receive_vectors , receive_init_vectors, is_background_thread_running,5);
 	}
 
@@ -95,7 +96,6 @@ public class NGSpiceSimulator : GLib.Object {
 	}
 	
 	private static bool check_device(){
-
 		foreach(Component comp in items){
 			if(comp.name==current_device){
 				current_component=comp;
@@ -110,7 +110,7 @@ public class NGSpiceSimulator : GLib.Object {
 			int position=line.index_of_char (' ');
 			return line.slice(position+1,end);
 	}
-
+	
 	public static int receive_output(string stdout,int id, int data){
 		string[] dataList = stdout.split("\n");
 			foreach (string line in dataList) {
@@ -140,18 +140,11 @@ public class NGSpiceSimulator : GLib.Object {
 				counter++;
 				mutex.unlock();
 				time_requested=true;
-				string plotname=ngspice.get_current_plot_name();
-				print("searching plotname for vectors:  %s \n",plotname);
-				string[] vectors = ngspice.get_all_vectors_of_plot(plotname.strip());
-				print("found vector %s \n",vectors[0]);
-				print("found vector %s \n",vectors[1]);
-				print("found vector %s \n",vectors[2]);
-				
-				print ("request print time\n" );
-				string chars="time";
-				//VectorInfo info=ngspice.get_vector_info(chars);
+				//string plotname=ngspice.get_current_plot_name();
+				//print("searching plotname for vectors:  %s \n",plotname);
+				//string[] vectors = ngspice.get_all_vectors_of_plot(plotname.strip());
+				//VectorInfo info=ngspice.get_vector_info("time");
 				//print ("vector time length %i",info.length);
-				//ngspice.send_command("print time\n c\n");
 				print ("requested print time\n" );
 			}
 		}
@@ -221,7 +214,8 @@ public class NGSpiceSimulator : GLib.Object {
 		return 0;
 	}
 	
-	public void load_netlist(ArrayList<Component> items){
+	public void load_netlist(ArrayList<Component> comps){
+		items=comps;
 		string[] netlist = {"netlist by ElektroSim"};
 		foreach(Component component in items){
 			netlist+=component.get_netlist_line();
@@ -232,8 +226,9 @@ public class NGSpiceSimulator : GLib.Object {
 	}
 
 
-	public string generate_file(){
-
+	public string generate_file(ArrayList<Component> comps){
+		
+		items=comps;
 		try {
 		File file = File.new_for_path ("./netlist.txt");
 		if (file.query_exists ()) {
@@ -272,18 +267,17 @@ public class NGSpiceSimulator : GLib.Object {
 
 
 	public void run_simulation(){
+		load_netlist(request_components(ElektroSim.ComponentType.COMPONENT));
 		req_counter=0;
 		counter=0;
 		ready=false;
 		time_requested=false;
 		print ("\n\n====================run simulation======================================\n\n" );
 		string command=null;
-		foreach(Component component in items){
-			if(component.name=="Simulation"){	
+		foreach(Component component in request_components(ElektroSim.ComponentType.SIMULATION)){
 				command=component.get_parameter("algorithm").val_string;
 				print ("send this: '%s' from %s \n", command,component.name); //debug line
 				continue;
-			}
 		}
 		if(command!=null){
 			if(command.contains("op")){

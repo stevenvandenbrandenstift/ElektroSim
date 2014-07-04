@@ -25,9 +25,10 @@ public class PowerSource : Component {
 
 	public PowerSource (string voltage) {
 			base("PowerSource");
+			clear_parameters();
 			this.width=100;
 			this.height=50;
-			add_parameter_string("V",voltage,Group.ADJUSTABLE_STRING);
+			add_parameter_string("V",voltage,ParameterType.ADJUSTABLE_STRING);
 			
 	}
 	

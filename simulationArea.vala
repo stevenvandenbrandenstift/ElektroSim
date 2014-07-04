@@ -86,7 +86,8 @@ public class SimulationArea : Gtk.DrawingArea {
 			});
 		}
 		newComponent.snap(20,x,y);
-		newComponent.componentType=ElektroSim.ComponentType.COMPONENT;
+		if(newComponent.componentType==ElektroSim.ComponentType.TEMPLATE)
+			newComponent.componentType=ElektroSim.ComponentType.COMPONENT;
 		new_component(newComponent);
 		redraw_canvas();
 	}

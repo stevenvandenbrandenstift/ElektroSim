@@ -36,6 +36,7 @@ public class ComponentList  {
 	}
 
 	public ArrayList<Component> get_components(ElektroSim.ComponentType type2){
+			
 			GLib.List<weak Widget> tl =this.list.get_children();
 			ArrayList<Component> temp=new ArrayList<Component>();
 			foreach(Widget comp in tl){
@@ -77,6 +78,22 @@ public class ComponentList  {
 		set_visable(ElektroSim.ComponentType.TEMPLATE);
 		list_changed();
 	}
+	
+	public ArrayList<float?> get_selected_values(){
+		return get_selected_component().get_parameter("p").values;
+	}
+	
+	public ArrayList<float?> get_time_values(){
+
+		GLib.List<weak Widget> tl =this.list.get_children();
+			foreach(Widget comp in tl){
+				if((comp as Component).componentType==ElektroSim.ComponentType.SIMULATION)
+					return (comp as Component).get_parameter("time").values;
+			}
+		print("WARN returned 0 time");
+		return new ArrayList<float?>();
+	}
+
 	public void fill_templates(){
 		Resistor resistor=new Resistor(5,1);
 		resistor.componentType=ElektroSim.ComponentType.TEMPLATE;

@@ -26,8 +26,9 @@ public enum SimulationAlgorithm{
 
 public class NGSpiceSimulator : GLib.Object {
 
-	public static ArrayList<Component> items;
-	public signal ArrayList<Component> request_components(ElektroSim.ComponentType type2);
+	public static Gee.ArrayList<Component> items;
+	public static Component simulation;
+	public signal Gee.ArrayList<Component> request_components(ElektroSim.ComponentType type2);
 	private static Component current_component;
 	private static  SimulationAlgorithm sim_alg=0;
 	private static int counter=0;
@@ -43,7 +44,7 @@ public class NGSpiceSimulator : GLib.Object {
 		current_component=null;
 		mutex = new Mutex ();
 		current_device="";
-		items=new ArrayList<Component>();
+		items=new Gee.ArrayList<Component>();
 		ngspice.init<int>(receive_output, receive_simulation_data, controlled_exit, receive_vectors , receive_init_vectors, is_background_thread_running,5);
 	}
 
@@ -134,24 +135,22 @@ public class NGSpiceSimulator : GLib.Object {
 			}
 		
 		if(counter==0&&ready){
-			//print_report();
+			//
 			if(!time_requested){
-				mutex.lock ();
-				counter++;
-				mutex.unlock();
 				time_requested=true;
-				//string plotname=ngspice.get_current_plot_name();
-				//print("searching plotname for vectors:  %s \n",plotname);
-				//string[] vectors = ngspice.get_all_vectors_of_plot(plotname.strip());
-				//VectorInfo info=ngspice.get_vector_info("time");
-				//print ("vector time length %i",info.length);
-				print ("requested print time\n" );
+				string chars="time";
+				VectorInfo info=ngspice.VectorInfo.from_string(chars);
+				print ("vector time length %i: \n",info.length);
+				for(int i=0;i<info.length;i++){
+					print ("%f --",info.data[i]);
+					simulation.insert_simulation_data("time",info.data[i].to_string(),true);
+				}
 			}
 		}
 		return 0;
 	}
 	
-	private static void print_report(){
+	private void print_report(){
 			print ("==========================================================\nreport:\n" );
 						foreach(Component component in items){
 							if(component.name!="Ground"&&component.name!="Line"){
@@ -159,7 +158,7 @@ public class NGSpiceSimulator : GLib.Object {
 								foreach(Parameter par in component.parameters){
 										if(par.values.size>0&&(par.name=="i"||par.name=="p"||par.name=="activity"||par.name=="work_zone")){
 											print("%s (%i) -> ",par.name,par.values.size);
-												foreach(float val in par.values){
+												foreach(double val in par.values){
 													print("%f - ",val);
 												}
 											print("\n");
@@ -214,8 +213,7 @@ public class NGSpiceSimulator : GLib.Object {
 		return 0;
 	}
 	
-	public void load_netlist(ArrayList<Component> comps){
-		items=comps;
+	public void load_netlist(){
 		string[] netlist = {"netlist by ElektroSim"};
 		foreach(Component component in items){
 			netlist+=component.get_netlist_line();
@@ -267,7 +265,9 @@ public class NGSpiceSimulator : GLib.Object {
 
 
 	public void run_simulation(){
-		load_netlist(request_components(ElektroSim.ComponentType.COMPONENT));
+		
+		items=request_components(ElektroSim.ComponentType.COMPONENT);
+		load_netlist();
 		req_counter=0;
 		counter=0;
 		ready=false;
@@ -275,10 +275,12 @@ public class NGSpiceSimulator : GLib.Object {
 		print ("\n\n====================run simulation======================================\n\n" );
 		string command=null;
 		foreach(Component component in request_components(ElektroSim.ComponentType.SIMULATION)){
-				command=component.get_parameter("algorithm").val_string;
-				print ("send this: '%s' from %s \n", command,component.name); //debug line
+				simulation=component;
 				continue;
 		}
+		command=simulation.get_parameter("algorithm").val_string;
+		print ("send this: '%s' from %s \n", command,simulation.name); //debug line
+
 		if(command!=null){
 			if(command.contains("op")){
 				sim_alg=SimulationAlgorithm.OP;

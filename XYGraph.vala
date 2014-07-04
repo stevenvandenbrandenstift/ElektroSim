@@ -28,15 +28,18 @@ public class XYGraph : Gtk.DrawingArea {
     private float maxValue;
     private float minValue;
     private ArrayList<float?> time;
-	public signal void graph_clicked ();
-
+	public signal ArrayList<float?> request_selected_component_values();
+	public signal ArrayList<float?> request_time_values();
+	
 	// Constructor
 	public XYGraph () {
 		add_events (EventMask.BUTTON_PRESS_MASK);
    		
    		this.button_press_event.connect(()=>{
-   			graph_clicked();
-   			return true;
+   			set_values(request_selected_component_values());
+			set_timepoints(request_time_values());
+			redraw_canvas();
+			return true;
    		});
    		
 		set_vexpand(true);
@@ -56,25 +59,34 @@ public class XYGraph : Gtk.DrawingArea {
 		cr.set_source_rgb (200, 200, 200);
 		cr.set_line_width (3);
 		cr.select_font_face ("Adventure", Cairo.FontSlant.NORMAL,Cairo.FontWeight.BOLD);			
-    		if(time!=null){
+    		if(time!=null&&time.size!=0){
 				int width = get_allocated_width ();
 				int height = get_allocated_height ();
-				
+				cr.new_path();
+				cr.set_source_rgb (200, 200, 200);
 				cr.set_line_width (1.0);
-				
+				print("time size %i",time.size);
 				float stepX=width/time[time.size-1];
 				float stepY=height/(maxValue-minValue);
-				
+				print("maxValue and minValue: %f - %f\n",maxValue,minValue);
+				float offset=0;
+				if(minValue<0){
+					offset=minValue*-1;
+				}
+					print("stepX and stepY: %f - %f\n",stepX,stepY);
+			
 				int counter=0;
 				foreach (var t in time) {
 				    float timepoint=t*stepX;
-				    float value = stepY*values[counter];
+				    float val = stepY*(values[counter]+offset);
+					print("adding point time: %f val: %f\n",timepoint,val);
 				    if (counter == 0)
-				        cr.move_to (0, value);
+				        cr.move_to (0, val);
 				    else
-				        cr.line_to (timepoint, value);
+				        cr.line_to (timepoint, val);
 				    counter++;
 				}
+				cr.close_path();
 				cr.stroke ();
 			}
 
@@ -87,8 +99,8 @@ public class XYGraph : Gtk.DrawingArea {
     
     public void set_values(ArrayList<float?> values){
         this.values=values;
-        maxValue=float.MAX;
-        minValue=float.MIN;
+        maxValue=float.MIN;
+        minValue=float.MAX;
         foreach (float p in values) {
             if(p>maxValue)
               maxValue=p;

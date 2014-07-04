@@ -15,11 +15,13 @@ namespace ngspice {
 		[CCode (cname = "v_flags")]    		
 		public short flags;		/* Flags (a combination of VF_*). */
    		[CCode (cname = "v_realdata",array_length = false)]
-		public double data; 		/* Real data. */
+		public unowned double data[]; 		/* Real data. */
 		[CCode (cname = "v_compdata",array_length = false)]  
-    		public NgComplex data_complex;	/* Complex data. */
+    		public unowned NgComplex data_complex[];	/* Complex data. */
 		[CCode (cname = "v_length")]
-    		public int length;		/* Length of the vector. */
+    		public unowned int length;		/* Length of the vector. */
+		[CCode (cname = "ngGet_Vec_Info")]
+		public static unowned VectorInfo? from_string(string vector_name);
 
 	}
 	[CCode (cname = "vecvalues", has_destroy_function = false, has_copy_function = false, 		has_type_id = false)]
@@ -166,8 +168,7 @@ namespace ngspice {
 		[CCode (cname = "ngSpice_Command")]
 		public int send_command(string command);
 
-		[CCode (cname = "ngGet_Vec_Info")]
-		public VectorInfo get_vector_info(string vector_name);
+		
 		
 		[CCode (cname = "ngSpice_Circ")]
 		public int upload_circuit([CCode (array_length = false)]string[] netlist);

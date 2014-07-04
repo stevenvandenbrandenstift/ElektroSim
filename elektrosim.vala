@@ -50,14 +50,18 @@ public class MainWindow : Window  {
 		sim_area.request_simulation.connect(gen.run_simulation);
 
 		graph= new XYGraph();
-		gen= new NGSpiceSimulator();
+		graph.request_selected_component_values.connect(clist.get_selected_values);
+		graph.request_time_values.connect(clist.get_time_values);
 
+		gen= new NGSpiceSimulator();
+		gen.request_components.connect (clist.get_components);
+		
 		Button design_button=new Button.with_label ("Design") ;
 		//design_button.clicked.connect(sim_area.init);
 		header_bar.add(design_button);
 
 		Button sim_button=new Button.with_label ("Simulation") ;
-		//sim_button.clicked.connect(gen.run_simulation);
+		sim_button.clicked.connect(gen.run_simulation);
 		sim_button.clicked.connect(clist.set_list_mode_simulation);
 		header_bar.add(sim_button); 
 

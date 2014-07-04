@@ -158,7 +158,7 @@ public abstract class Component : ListBoxRow {
 		if(act.values==null||act.values.size<1){
 		activity= (int)act.val;
 		}else{
-			foreach(float val in act.values){
+			foreach(double val in act.values){
 				if(activity<val)
 					activity=(int)val;
 			}
@@ -167,7 +167,7 @@ public abstract class Component : ListBoxRow {
 		if(zon.values==null||zon.values.size<1){
 		zone= (int)zon.val;
 		}else{
-			foreach(float val in zon.values){
+			foreach(double val in zon.values){
 				if(zone<val)
 					zone=(int)val;
 			}

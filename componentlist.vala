@@ -12,6 +12,7 @@ public class ComponentList  {
 	private Mode mode{get;set;default=ElektroSim.Mode.EDIT;}
 	private ComponentType compType{get;set;default=ElektroSim.ComponentType.TEMPLATE;}
 	public signal void list_changed();
+	public signal void selected_values_description_changed(string name);
 		
 
 	public ComponentList()
@@ -50,20 +51,18 @@ public class ComponentList  {
 		GLib.List<weak Widget> templist=list.get_children();
 			foreach(weak Widget comp in templist){
 				print("list print component %s\n",(comp as Component).name);
-				foreach(Parameter par in (comp as Component).parameters)
-					print("parameter %s,%f\n",par.name,par.val);
-			}
-	}
-	/*
-	public void graph_clicked(){
-		graph.set_values((list.get_selected_row() as Component).get_parameter("i").values);
-		GLib.List<Widget> templist=list.get_children();
-			foreach(Widget comp in templist){
-				if((comp as Component).name=="Simulation"){
-					graph.set_timepoints((comp as Component).get_parameter("time").values);
+				foreach(Parameter par in (comp as Component).parameters){
+					if(par.values!=null&&par.values.size!=0){
+						print("parameter %s: \n",par.name);
+						foreach(double val in par.values){
+							print("%f\t",val);
+						}
+					}else{
+						print("parameter %s,%f\n",par.name,par.val);
+					}				
 				}
 			}
-	}*/
+	}
 	
 
 	public void clear(){
@@ -79,11 +78,14 @@ public class ComponentList  {
 		list_changed();
 	}
 	
-	public ArrayList<float?> get_selected_values(){
-		return get_selected_component().get_parameter("p").values;
+	public ArrayList<double?> get_selected_values(){
+		//print_list();
+		Parameter par=get_selected_component().get_next_parameter();
+		selected_values_description_changed(get_selected_component().name+" : "+par.name);
+		return par.values;
 	}
 	
-	public ArrayList<float?> get_time_values(){
+	public ArrayList<double?> get_time_values(){
 
 		GLib.List<weak Widget> tl =this.list.get_children();
 			foreach(Widget comp in tl){
@@ -91,7 +93,7 @@ public class ComponentList  {
 					return (comp as Component).get_parameter("time").values;
 			}
 		print("WARN returned 0 time");
-		return new ArrayList<float?>();
+		return new ArrayList<double?>();
 	}
 
 	public void fill_templates(){

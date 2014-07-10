@@ -56,14 +56,16 @@ public abstract class Component : ListBoxRow {
 	public Cairo.Context image_context;
 	public Cairo.Surface emoticon_surface;
 	public Cairo.Context emoticon_context;
-	
+	private int selected_parameter;
+
 	public Component(string name){
 		
 		init(name);
 		add_parameter("i",0,ParameterType.PARAMETER);
 		add_parameter("p",0,ParameterType.PARAMETER);
-		add_parameter("activity",(float)Activity.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
-		add_parameter("work_zone",(float)Zone.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
+		add_parameter("activity",(double)Activity.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
+		add_parameter("work_zone",(double)Zone.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
+		selected_parameter=-1;
 	}
 	
 
@@ -102,7 +104,7 @@ public abstract class Component : ListBoxRow {
 	}
 	
 	
-	public void add_parameter(string name, float val, ParameterType paramType){
+	public void add_parameter(string name, double val, ParameterType paramType){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;
@@ -132,6 +134,22 @@ public abstract class Component : ListBoxRow {
 		}
 	}
 	
+	public Parameter? get_next_parameter(){
+		if(parameters!=null){
+		selected_parameter++;
+		if(selected_parameter>=parameters.size)
+			selected_parameter=0;
+
+		while(parameters[selected_parameter].values==null||parameters[selected_parameter].values.size==0){
+			selected_parameter++;
+			if(selected_parameter>=parameters.size)
+			selected_parameter=0;
+		}
+		return parameters[selected_parameter];
+		}
+		return null;
+	}
+
 	public Parameter? get_parameter(string name){
 		//stdout.printf ("searching parameter %s\n",name);
 		foreach(Parameter par in parameters){
@@ -284,32 +302,34 @@ public abstract class Component : ListBoxRow {
 		if(par!=null){
 			
 			if(name!="activity"&&name!="work_zone"){
-				par.set_value((float)double.parse(val));
+				double temp=double.parse(val.replace(",","."));
+				//print("%s : %s added %f  from %s\n",this.name,par.name,temp,val);
+				par.set_value(temp);
 			}else{ //activity and zone
 				if(name=="activity"){
 					if(val.contains("inactive")){
-						par.set_value((float)Activity.INACTIVE);
+						par.set_value((double)Activity.INACTIVE);
 					}else if(val.contains("subactive")){
-						par.set_value((float)Activity.SUBACTIVE);
+						par.set_value((double)Activity.SUBACTIVE);
 					}else if(val.contains("overactive")){
-						par.set_value((float)Activity.OVERACTIVE);
+						par.set_value((double)Activity.OVERACTIVE);
 					}else if(val.contains("active")){
-						par.set_value((float)Activity.ACTIVE);
+						par.set_value((double)Activity.ACTIVE);
 					}else {
-						par.set_value((float)Activity.UNKNOWN);
+						par.set_value((double)Activity.UNKNOWN);
 					}
 				}else if(name=="work_zone"){
 			
 					if(val.contains("suboptimal")){
-						par.set_value((float)Zone.SUBOPTIMAL);
+						par.set_value((double)Zone.SUBOPTIMAL);
 					}else if(val.contains("optimal")){
-						par.set_value((float)Zone.OPTIMAL);
+						par.set_value((double)Zone.OPTIMAL);
 					}else if(val.contains("outofrange")){
-						par.set_value((float)Zone.OUTOFRANGE);
+						par.set_value((double)Zone.OUTOFRANGE);
 					}else if(val.contains("destructive")){
-						par.set_value((float)Zone.DESTRUCTIVE);
+						par.set_value((double)Zone.DESTRUCTIVE);
 					}else {
-						par.set_value((float)Zone.UNKNOWN);
+						par.set_value((double)Zone.UNKNOWN);
 					}
 				}
 				

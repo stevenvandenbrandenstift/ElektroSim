@@ -43,16 +43,21 @@ public class MainWindow : Window  {
 		sim_area=new SimulationArea();
 		clist.fill_templates();
 		
+		graph= new XYGraph();
+
 		clist.list_changed.connect(sim_area.redraw_canvas);
+		clist.selected_values_description_changed.connect(graph.set_name);
+
 		sim_area.new_component.connect (clist.add_component);
 		sim_area.request_selected_component.connect (clist.get_selected_component);
 		sim_area.request_components.connect (clist.get_components);
 		sim_area.request_simulation.connect(gen.run_simulation);
 
-		graph= new XYGraph();
+		
 		graph.request_selected_component_values.connect(clist.get_selected_values);
 		graph.request_time_values.connect(clist.get_time_values);
-
+		
+		
 		gen= new NGSpiceSimulator();
 		gen.request_components.connect (clist.get_components);
 		

@@ -30,18 +30,19 @@ public class Parameter : Box{
 
 	public signal void slider_changed();
 	public static ArrayList<Parameter> parameters=new ArrayList<Parameter>(); // could be used for a new Component generator
-	public float val{get;set;}
-	public ArrayList<float?> values{get;set;}
+	public double val{get;set;}
+	public ArrayList<double?> values{get;set;}
 	public string val_string{get;set;}
 	public string name{get;set;default="";}
 	public ParameterType paramType;
+	public signal void parameter_changed();
 	
 	private Label label;
 	private Entry entry;
 	private Scale scale;
 
-	public Parameter(string name , float val, string val_string, ParameterType paramType){
-		values=new ArrayList<float?>();
+	public Parameter(string name , double val, string val_string, ParameterType paramType){
+		values=new ArrayList<double?>();
 		this.name=name;
 		this.val_string=val_string;
 		this.val=val;
@@ -73,7 +74,7 @@ public class Parameter : Box{
 						print(" changed string from %s to %s \n",val_string,entry.get_text());
 						}*/
 				}else{
-					set_value((float)double.parse(entry.get_text()));
+					set_value(double.parse(entry.get_text()));
 				}
 				return false;
 			});
@@ -85,7 +86,7 @@ public class Parameter : Box{
 			scale.set_hexpand(true);
 			
 			scale.value_changed.connect (() => {
-				set_value((float)scale.get_value());
+				set_value(scale.get_value());
 				if(val-50>=0){
 					scale.set_range(val-50,val+50);
 				}else{
@@ -123,7 +124,7 @@ public class Parameter : Box{
 			break;
 		}
 	}
-	public void set_value(float temp){
+	public void set_value(double temp){
 		entry.set_text (temp.to_string());
 		if(scale!=null){
 		scale.set_value(temp);
@@ -131,8 +132,9 @@ public class Parameter : Box{
 		val=temp;
 	}
 	
-	public void add_value(float temp){
+	public void add_value(double temp){
 			values.add(temp);
+			parameter_changed();
 	}
 	}
 }

@@ -27,7 +27,7 @@ public class PowerSource : Component {
 			base("PowerSource");
 			this.width=100;
 			this.height=50;
-			add_parameter_string("V",voltage,ParameterType.ADJUSTABLE_STRING);
+			add_parameter_string("V",voltage);
 			
 	}
 	

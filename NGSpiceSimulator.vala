@@ -264,7 +264,7 @@ public class NGSpiceSimulator : GLib.Object {
 	
 
 
-	public void run_simulation(){
+	public void	 run_simulation(){
 		
 		items=request_components(ElektroSim.ComponentType.COMPONENT);
 		load_netlist();

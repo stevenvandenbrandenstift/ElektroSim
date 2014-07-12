@@ -26,8 +26,10 @@ public class Simulation : Component {
 	public Simulation (string sim_alg) {
 			base("Simulation");
 			clear_parameters();
-			add_parameter_string("algorithm",sim_alg,ParameterType.ADJUSTABLE_STRING);
-			add_parameter("time",0,ParameterType.OPTIONAL_PARAMETER);
+			add_parameter_string("algorithm",sim_alg);
+			Parameter time=add_parameter("time",0);
+			time.set_simulation_array(time.arraylist_label_label());
+
 			this.width=100;
 			this.height=50;
 			this.componentType=ElektroSim.ComponentType.SIMULATION;

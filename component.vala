@@ -41,6 +41,7 @@ public abstract class Component : ListBoxRow {
 
 	// Constructor
 	public signal void request_simulate();
+	public signal void request_redraw();
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
 	public ElektroSim.ComponentType componentType {get;set;default=ElektroSim.ComponentType.COMPONENT;}
@@ -61,11 +62,16 @@ public abstract class Component : ListBoxRow {
 	public Component(string name){
 		
 		init(name);
-		add_parameter("i",0,ParameterType.PARAMETER);
-		add_parameter("p",0,ParameterType.PARAMETER);
-		add_parameter("activity",(double)Activity.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
-		add_parameter("work_zone",(double)Zone.UNKNOWN,ParameterType.OPTIONAL_PARAMETER);
+		Parameter i=add_parameter("i",0);
+		Parameter p=add_parameter("p",0);
+		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN);
+		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN);
 		selected_parameter=-1;
+
+		i.set_simulation_array(i.arraylist_label_label());
+		p.set_simulation_array(p.arraylist_label_label());
+		activity.set_simulation_array(activity.arraylist_label_label());
+		work_zone.set_simulation_array(work_zone.arraylist_label_label());
 	}
 	
 
@@ -103,31 +109,39 @@ public abstract class Component : ListBoxRow {
 		name=new_name;
 	}
 	
-	
-	public void add_parameter(string name, double val, ParameterType paramType){
+	public void invalidate_values(){
+		foreach(Parameter par in parameters)
+			par.invalidate_values=true;
+	}
+
+	public Parameter? add_parameter(string name, double val){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;
-			par.paramType=paramType;
 		}else{  //does not exist add
-			par=new Parameter(name,val,"",paramType);
+			par=new Parameter(name,val,"");
 			parameters.add(par);
-			par.slider_changed.connect (() => {
+			par.edited.connect (() => {
    					request_simulate();
 			});
+			if(par.name=="activity"||par.name=="work_zone"){
+			par.updated.connect (() => {
+   					request_redraw();
+			});
+			}
 			grid.add(par);
 		}
+		return par;
 	}
 	
-	public void add_parameter_string(string name, string val, ParameterType paramType){
+	public void add_parameter_string(string name, string val){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val_string=val;
-			par.paramType=paramType;
 		}else{  //does not exist add
-			par=new Parameter(name,0,val,paramType);
+			par=new Parameter(name,0,val);
 			parameters.add(par);
-			par.slider_changed.connect (() => {
+			par.edited.connect (() => {
    					request_simulate();
 			});
 			grid.add(par);

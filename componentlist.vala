@@ -11,19 +11,38 @@ public class ComponentList  {
 	public ListBox list{get;set;}
 	private Mode mode{get;set;default=ElektroSim.Mode.EDIT;}
 	private ComponentType compType{get;set;default=ElektroSim.ComponentType.TEMPLATE;}
-	public signal void list_changed();
 	public signal void selected_values_description_changed(string name);
-		
+	public signal void request_simulation();
+	public signal void request_redraw();	
+	private Timer timer ;
+	private bool timer_running;
+	private uint timerID;
 
 	public ComponentList()
 	{	
 		this.list=new ListBox();
+		timer=new Timer();
+		timer_running=false;
 	}
 	
 	public Component get_selected_component(){
 		return (list.get_selected_row() as Component);
 	}
 	
+	public void invalidate_values(){
+		GLib.List<weak Widget> tl =this.list.get_children();
+		foreach(Widget comp in tl){
+				(comp as Component).invalidate_values();
+			}
+	}
+
+	public bool timer_delay(){
+		Source.remove (timerID);
+		invalidate_values();
+		request_simulation();
+		timer_running=false;
+		return true;
+	}
 	public void add_component(Component comp){
 		
 		comp.set_mode(mode);
@@ -32,6 +51,15 @@ public class ComponentList  {
 		}else{
 			comp.set_no_show_all(true);
 		}
+		comp.request_redraw.connect (() => {
+   					request_redraw();
+			});
+		comp.request_simulate.connect (() => {
+					if(!timer_running){
+					timer_running=true;
+					timerID = Timeout.add (3000, timer_delay);
+					}
+			});
 		this.list.add(comp);
 		this.list.show_all();
 	}
@@ -75,7 +103,7 @@ public class ComponentList  {
 			}
 		Point.clear();
 		set_visable(ElektroSim.ComponentType.TEMPLATE);
-		list_changed();
+		request_redraw();
 	}
 	
 	public ArrayList<double?> get_selected_values(){
@@ -143,10 +171,10 @@ public class ComponentList  {
 		}
 	}
 
-	public void set_list_mode_simulation(){
+	public void set_mode_simulation(){
 		set_modus(ElektroSim.Mode.SIMULATION);
 		set_visable(ElektroSim.ComponentType.COMPONENT);
-		
+		request_simulation();
 	}
 }
 }

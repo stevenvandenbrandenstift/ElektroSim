@@ -124,7 +124,7 @@ public class XYGraph : Gtk.DrawingArea {
 							draw_label(cr,15,values[counter].to_string(),0,values[counter]*yScale,Location.LEFT);*/
 					}
 				    counter++;
-					print("added point time: %f val: %f x: %f  y: %f\n",t,values[counter],t*xScale,values[counter]*yScale);
+					//print("added point time: %f val: %f x: %f  y: %f\n",t,values[counter],t*xScale,values[counter]*yScale);
 				}
 				cr.stroke ();
 			}

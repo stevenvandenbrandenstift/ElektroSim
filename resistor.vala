@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  using Gtk;
+using Gee;
 namespace ElektroSim{
 	
 public class Resistor : Component {
@@ -28,13 +29,23 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		add_parameter("R",resistance,ParameterType.ADJUSTABLE);
-		add_parameter("Max Power",max_power,ParameterType.ADJUSTABLE);
-		//parameters returned from simulation
-		add_parameter("ac",0,ParameterType.OPTIONAL_PARAMETER);
-		add_parameter("dtemp",0,ParameterType.OPTIONAL_PARAMETER);
-		add_parameter("bv_max",0,ParameterType.OPTIONAL_PARAMETER);
-		add_parameter("noisy",0,ParameterType.OPTIONAL_PARAMETER);
+		Parameter res=add_parameter("R",resistance);
+		Parameter max_pow=add_parameter("Max Power",max_power);
+		Parameter ac=add_parameter("ac",0);
+		Parameter dtemp=add_parameter("dtemp",0);
+		Parameter bv_max=add_parameter("bv_max",0);
+		Parameter noisy=add_parameter("noisy",0);
+
+		res.set_edit_array(res.arraylist_label_slider());
+		res.set_simulation_array(res.arraylist_label_slider());
+
+		max_pow.set_edit_array(max_pow.arraylist_label_slider());
+		max_pow.set_simulation_array(max_pow.arraylist_label_slider());
+
+		ac.set_simulation_array(ac.arraylist_label_label());
+		dtemp.set_simulation_array(dtemp.arraylist_label_label());
+		bv_max.set_simulation_array(bv_max.arraylist_label_label());
+		noisy.set_simulation_array(noisy.arraylist_label_label());
 	}
 	
 	public override void draw_image(Cairo.Context cr){

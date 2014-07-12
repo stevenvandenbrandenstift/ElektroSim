@@ -28,7 +28,6 @@ public class SimulationArea : Gtk.DrawingArea {
 	public signal ArrayList<Component> request_components(ElektroSim.ComponentType type2);
 	public signal void new_component(Component comp);
 	public signal Component request_selected_component();
-	public signal void request_simulation();
 	
 	
 	// Constructor
@@ -79,12 +78,9 @@ public class SimulationArea : Gtk.DrawingArea {
 				}
 			}
 		}
-		if(newComponent==null){	//its no line or new line
+		if(newComponent==null)	//its no line or new line
 		newComponent=component.clone();
-		newComponent.request_simulate.connect (() => {
-   					simulate();
-			});
-		}
+
 		newComponent.snap(20,x,y);
 		if(newComponent.componentType==ElektroSim.ComponentType.TEMPLATE)
 			newComponent.componentType=ElektroSim.ComponentType.COMPONENT;
@@ -103,13 +99,6 @@ public class SimulationArea : Gtk.DrawingArea {
 		// redraw the cairo canvas completely by exposing it
 		window.invalidate_region (region, true);
 		window.process_updates (true);
-	}
-
-	public void simulate(){
-		//gen.generate_file(items);
-		request_simulation();
-		redraw_canvas();
-		//list_print();
 	}
 }
 }

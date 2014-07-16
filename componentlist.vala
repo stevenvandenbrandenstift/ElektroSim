@@ -50,6 +50,7 @@ public class ComponentList  {
 			comp.set_no_show_all(false);
 		}else{
 			comp.set_no_show_all(true);
+			comp.hide();
 		}
 		comp.request_redraw.connect (() => {
    					request_redraw();
@@ -142,7 +143,7 @@ public class ComponentList  {
 		line.componentType=ElektroSim.ComponentType.TEMPLATE;
 		add_component(line);
 		
-		Simulation sim=new Simulation("tran 0.02 1");
+		Simulation sim=new Simulation(Simulation.Type.TRAN);
 		sim.componentType=ElektroSim.ComponentType.TEMPLATE;
 		add_component(sim);
 	}
@@ -151,7 +152,7 @@ public class ComponentList  {
 		this.compType=type2;
 		GLib.List<weak Widget> templist=list.get_children();
 		foreach(Widget comp in templist){
-				if((comp as Component).componentType==compType){
+				if((comp as Component).componentType==compType||(comp as Component).componentType==ComponentType.SIMULATION){
 					comp.set_no_show_all(false);
 				  }
 				else{

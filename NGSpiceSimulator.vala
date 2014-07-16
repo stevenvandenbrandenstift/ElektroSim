@@ -259,7 +259,7 @@ public class NGSpiceSimulator : GLib.Object {
 		ngspice.send_command("source ./netlist.txt");
 		return "ok";
 
-		
+	
 	}
 	
 
@@ -278,7 +278,7 @@ public class NGSpiceSimulator : GLib.Object {
 				simulation=component;
 				continue;
 		}
-		command=simulation.get_parameter("algorithm").val_string;
+		command=simulation.get_netlist_line();
 		print ("send this: '%s' from %s \n", command,simulation.name); //debug line
 
 		if(command!=null){

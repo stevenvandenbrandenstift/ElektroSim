@@ -60,7 +60,6 @@ public abstract class Component : ListBoxRow {
 	private int selected_parameter;
 
 	public Component(string name){
-		
 		init(name);
 		Parameter i=add_parameter("i",0);
 		Parameter p=add_parameter("p",0);
@@ -68,13 +67,24 @@ public abstract class Component : ListBoxRow {
 		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN);
 		selected_parameter=-1;
 
-		i.set_simulation_array(i.arraylist_label_label());
-		p.set_simulation_array(p.arraylist_label_label());
-		activity.set_simulation_array(activity.arraylist_label_label());
-		work_zone.set_simulation_array(work_zone.arraylist_label_label());
+		i.set_simulation_array(Parameter.WidgetStyle.LABEL);
+		p.set_simulation_array(Parameter.WidgetStyle.LABEL);
+		activity.set_simulation_array(Parameter.WidgetStyle.LABEL);
+		work_zone.set_simulation_array(Parameter.WidgetStyle.LABEL);
 	}
 	
-
+	public  string to_string(){
+		string line;
+		line=name+":\n parameters in parameters:\n";
+		foreach(Parameter par in parameters)
+			line+=par.to_string();
+		line+="\n parameters in grid:\n";
+		GLib.List<weak Widget> tl =this.grid.get_children();
+			foreach(Widget parameter in tl)
+				line+=(parameter as Parameter).to_string();
+		line+="\n\n";
+		return line;
+	}
 	public void init(string name){
 		emoticons="./emoticons/";
 		grid= new Box(Gtk.Orientation.VERTICAL,0);

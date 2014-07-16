@@ -42,7 +42,9 @@ public class MainWindow : Window  {
 		
 		sim_area=new SimulationArea();
 		clist.fill_templates();
-		
+		//clist.set_modus(ElektroSim.Mode.EDIT);		
+		//clist.set_visable(ElektroSim.ComponentType.TEMPLATE);		
+
 		graph= new XYGraph();
 
 		clist.request_redraw.connect(sim_area.redraw_canvas);

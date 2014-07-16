@@ -80,10 +80,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		}
 		if(newComponent==null)	//its no line or new line
 		newComponent=component.clone();
-
 		newComponent.snap(20,x,y);
-		if(newComponent.componentType==ElektroSim.ComponentType.TEMPLATE)
-			newComponent.componentType=ElektroSim.ComponentType.COMPONENT;
 		new_component(newComponent);
 		redraw_canvas();
 	}

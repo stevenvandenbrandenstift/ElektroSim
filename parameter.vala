@@ -22,26 +22,40 @@ using Gee;
 
 namespace ElektroSim{
 
+ 
+
+
 public class Parameter : Box{
 
-	
-	public static ArrayList<Parameter> parameters=new ArrayList<Parameter>(); // could be used for a new Component generator
+	public enum WidgetStyle {
+		NONE,LABEL,ENTRY,OPTIONS,SLIDER;
+	}
+
 	public double val{get;set;}
 	public ArrayList<double?> values{get;set;}
 	private ArrayList<Widget> edit{get;set;}
 	private ArrayList<Widget> simulation{get;set;}
+	private ArrayList<Widget> all{get;set;}
+	private Label label;
+	public ArrayList<string> options{get;set;}
+
 	public string val_string{get;set;}
 	public string name{get;set;default="";}
 	public bool invalidate_values{get;set;}
 
 	public signal void updated();
 	public signal void edited();
-	
 
+	public delegate void OptionsMethod(int option);
+	
+	public OptionsMethod optionsMethod{get;set;}
+	
 	public Parameter(string name , double val, string val_string){
+		options=new ArrayList<string>();
 		values=new ArrayList<double?>();
 		edit=new ArrayList<Widget>();
 		simulation=new ArrayList<Widget>();
+		all=new ArrayList<Widget>();
 		invalidate_values=false;
 
 		this.name=name;
@@ -49,8 +63,30 @@ public class Parameter : Box{
 		this.val=val;
 		//set_can_focus(false);	
 		set_size_request(-1,-1);
+		label= new Label (name);
+		label.set_can_focus(false);
+		label.width_chars=10;
+		label.selectable=false;
 		}
 	
+	public string to_string(){
+		string line;
+		line=name+": value "+val.to_string()+" \n values: \n";
+		/*foreach(double val in values)
+			line+=val.to_string()+" - ";
+		line+="\n widgets in all:\n";
+		foreach(Widget widget in all)
+			line+=widget.name+" - ";
+		line+="\n widgets in edit:\n";
+		foreach(Widget widget in edit)
+			line+=widget.name+" - ";
+		line+="\n widgets in simulation:\n";
+		foreach(Widget widget in simulation)
+			line+=widget.name+" - ";
+			line+="\n\n";*/
+		return line;
+	
+	}
 	public void set_mode(Mode mode){
 
 		switch(mode){
@@ -93,12 +129,61 @@ public class Parameter : Box{
 			}
 	}
 
-	public void set_simulation_array(ArrayList<Widget> simulation_array){
-			simulation=simulation_array;
+	public void set_simulation_array(WidgetStyle style){
+			simulation=new ArrayList<Widget>();
+			simulation=get_arraylist(style);
 	}
 
-	public void set_edit_array(ArrayList<Widget> edit_array){
-			edit=edit_array;
+	private ArrayList<Widget> get_arraylist(WidgetStyle style){
+		Gee.ArrayList<Widget> temp= new Gee.ArrayList<Widget>();
+		temp.add(label);
+		switch(style){
+
+			case WidgetStyle.NONE:
+				break;
+			case WidgetStyle.LABEL:
+				temp.add(get_widget(typeof(Label)));
+				break;
+			case WidgetStyle.ENTRY:
+				temp.add(get_widget(typeof(Entry)));
+				break;
+			case WidgetStyle.SLIDER:
+				temp.add(get_widget(typeof(Scale)));
+				break;
+			case WidgetStyle.OPTIONS:
+				temp.add(get_widget(typeof(ComboBoxText)));
+				break;
+		}
+		return temp;	
+
+
+	}
+
+	private Widget get_widget(Type type){
+			Type test=type;
+			foreach(Widget widget in all){
+				if(Type.from_instance(widget)==test){
+					print("\n found existing widget for %s - %f\n" ,name,val);
+					return widget;
+				}
+			}
+			
+			if(test==typeof(Label))
+				return make_label();
+			else if(test==typeof(Entry))
+					return make_entry();
+			else if(test==typeof(Scale))
+					return make_scale();
+			else if(test==typeof(ComboBoxText))
+					return make_options();
+
+		return new Label("not supported");
+	}
+
+
+	public void set_edit_array(WidgetStyle style){
+			edit=new ArrayList<Widget>();
+			edit=get_arraylist(style);
 	}
 	
 
@@ -118,26 +203,6 @@ public class Parameter : Box{
 			//updated();
 	}
 
-	public ArrayList<Widget> arraylist_label_slider(){
-		ArrayList<Widget> widgets= new ArrayList<Widget>();
-		widgets.add(make_label());
-		widgets.add(make_scale());
-		return widgets;
-	}
-
-	public ArrayList<Widget> arraylist_label_label(){
-		ArrayList<Widget> widgets= new ArrayList<Widget>();
-		widgets.add(make_label());
-		widgets.add(make_label_value());
-		return widgets;
-	}
-
-	public ArrayList<Widget> arraylist_label_text(){
-		ArrayList<Widget> widgets= new ArrayList<Widget>();
-		widgets.add(make_label());
-		widgets.add(make_entry());
-		return widgets;
-	}
 
 	private Scale make_scale(){
 		Scale scale=new Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
@@ -148,6 +213,7 @@ public class Parameter : Box{
 				val=scale.get_value();
 				edited();
 		});
+		all.add(scale);
 		return scale;
 	}
 	private Entry make_entry(){
@@ -160,33 +226,36 @@ public class Parameter : Box{
 				edited();
 				return true;
 		});
+		all.add(entry);
 		return entry;
-/*
-values=new ArrayList<float?>();
-						print(" changed string from %s to %s \n",val_string,entry.get_text());
-						}
-				}else{
-					set_value(double.parse(entry.get_text()));
-				}
-				return false;
-			});
-*/
 	}
+
 
 	private Label make_label(){
-		Label label= new Label (name);
-		label.set_can_focus(false);
-		label.width_chars=10;
-		label.selectable=false;
-		return label;
-	}
-
-	private Label make_label_value(){
 		Label label= new Label (val.to_string());
 		label.set_can_focus(false);
 		label.width_chars=15;
 		label.selectable=false;
+		all.add(label);
 		return label;
+	}
+
+	private ComboBoxText make_options(){
+		ComboBoxText box = new ComboBoxText ();
+		foreach(string str in options){
+				box.append_text (str);
+		}
+		box.active = (int)val;
+
+		box.changed.connect (() => {
+			int id = box.get_active ();
+			if(optionsMethod!=null){
+			print("change comman id %i\n",id);
+			optionsMethod(id);}
+			
+		});
+		all.add(box);
+		return box;
 	}
 	
 	}

@@ -78,6 +78,7 @@ public class PowerSource : Component {
 			PowerSource newc=new PowerSource(get_parameter("V").val_string);
 			counter++;
 			newc.set_name("v"+counter.to_string());
+			newc.componentType=ElektroSim.ComponentType.COMPONENT;
 			return newc;
 	}
 

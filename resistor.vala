@@ -36,16 +36,16 @@ public class Resistor : Component {
 		Parameter bv_max=add_parameter("bv_max",0);
 		Parameter noisy=add_parameter("noisy",0);
 
-		res.set_edit_array(res.arraylist_label_slider());
-		res.set_simulation_array(res.arraylist_label_slider());
+		res.set_edit_array(Parameter.WidgetStyle.SLIDER);
+		res.set_simulation_array(Parameter.WidgetStyle.SLIDER);
 
-		max_pow.set_edit_array(max_pow.arraylist_label_slider());
-		max_pow.set_simulation_array(max_pow.arraylist_label_slider());
+		max_pow.set_edit_array(Parameter.WidgetStyle.SLIDER);
+		max_pow.set_simulation_array(Parameter.WidgetStyle.SLIDER);
 
-		ac.set_simulation_array(ac.arraylist_label_label());
-		dtemp.set_simulation_array(dtemp.arraylist_label_label());
-		bv_max.set_simulation_array(bv_max.arraylist_label_label());
-		noisy.set_simulation_array(noisy.arraylist_label_label());
+		ac.set_simulation_array(Parameter.WidgetStyle.LABEL);
+		dtemp.set_simulation_array(Parameter.WidgetStyle.LABEL);
+		bv_max.set_simulation_array(Parameter.WidgetStyle.LABEL);
+		noisy.set_simulation_array(Parameter.WidgetStyle.LABEL);
 	}
 	
 	public override void draw_image(Cairo.Context cr){
@@ -114,6 +114,7 @@ public class Resistor : Component {
 			print("error no parameter to copy from!");
 		counter++;
 		newc.set_name("r"+counter.to_string());
+		newc.componentType=ElektroSim.ComponentType.COMPONENT;
 		return newc;
 	}
 

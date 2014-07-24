@@ -208,9 +208,9 @@ public abstract class Component : ListBoxRow {
 
 		Cairo.ImageSurface temp_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 100, 100);
 		Cairo.Context emoticon_context = new Cairo.Context (temp_surface);
-		
-		if(activity!=Activity.UNKNOWN){
 		string emoticon;
+		if(activity!=Activity.UNKNOWN){
+		emoticon="";
 		if(activity==Activity.INACTIVE){
 		emoticon=emoticons+"deepSleepAlien.svg";
 		}else if(activity==Activity.SUBACTIVE){
@@ -230,6 +230,7 @@ public abstract class Component : ListBoxRow {
 					emoticon=emoticons+"sleepyAlien.svg";
 					break;
 				default:
+					print("found no zone subactive on %s",name);
 					emoticon=emoticons;
 					break;
 			}
@@ -251,6 +252,7 @@ public abstract class Component : ListBoxRow {
 					emoticon=emoticons+"NerveusAlien.svg";
 					break;
 				default:
+					print("found no zone active");
 					emoticon=emoticons;
 					break;
 			}
@@ -271,22 +273,19 @@ public abstract class Component : ListBoxRow {
 					emoticon=emoticons+"FrustratedAlien.svg";
 					break;
 				default:
+					print("found no zone overactive");
 					emoticon=emoticons;
 					break;
 			}
 		}else{
-		emoticon=null;
+		emoticon="";
 		}
 		
-		if(emoticon!=null){
+		if(emoticon!=""){
 		Rsvg.Handle handle;
 			
        	try {
             handle = new Rsvg.Handle.from_file(emoticon);
-        	} catch( Error e ) {
-            stderr.printf( "can not open svg file\n" );
-            handle=null;
-        	}
 			cr.save();
         	cr.new_path ();
 			emoticon_context.set_operator (Cairo.Operator.OVER);
@@ -296,6 +295,9 @@ public abstract class Component : ListBoxRow {
 			cr.paint();
         	cr.close_path();
         	cr.restore();
+        	} catch( Error e ) {
+            stderr.printf( "can not open svg file with link %s \n",emoticon );
+        	}
         	}
 		}
 	}

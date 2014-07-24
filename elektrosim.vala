@@ -12,17 +12,17 @@ public class MainWindow : Window  {
 
 	public static int main (string[] args)
 	{
-		Gtk.init(ref args);  //Gtk intialization
-		MainWindow window = new MainWindow (); //Create a window
+		Gtk.init(ref args);
+		MainWindow window = new MainWindow (); 
 		window.show_all();
 		window.set_decorated(true);
-		Gtk.main(); //Start the main loop
+		Gtk.main(); 
 		return 0;
 	}
 
 	public MainWindow()
 	{
-		this.title = "ElektronSim";
+		this.title = "ElektroSim";
 		clist= new ComponentList();
 		grid = new Grid();
 		border_width = 1;
@@ -41,9 +41,7 @@ public class MainWindow : Window  {
 		header_bar.set_visible(true);
 		
 		sim_area=new SimulationArea();
-		clist.fill_templates();
-		//clist.set_modus(ElektroSim.Mode.EDIT);		
-		//clist.set_visable(ElektroSim.ComponentType.TEMPLATE);		
+		clist.fill_templates();	
 
 		graph= new XYGraph();
 

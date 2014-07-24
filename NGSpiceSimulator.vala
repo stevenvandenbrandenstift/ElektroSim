@@ -30,7 +30,6 @@ public class NGSpiceSimulator : GLib.Object {
 	public static Component simulation;
 	public signal Gee.ArrayList<Component> request_components(Component.ComponentType type2);
 	private static Component current_component;
-	private static  SimulationAlgorithm sim_alg=0;
 	private static int counter=0;
 	private static int req_counter=0;
 	private static string current_device;
@@ -116,41 +115,37 @@ public class NGSpiceSimulator : GLib.Object {
 		string[] dataList = stdout.split("\n");
 			foreach (string line in dataList) {
 				line=strip_std(line);
-				//print ("----------- '%s'\n", line); //debug line
 				if(check_string(line)){
 					
-					if(check_device()){	  //&&!ready)){
+					if(check_device()){	 
 						string val,parameter;
 						val=split_line(line, out parameter);
 
 						if(current_device=="Simulation")
 							parameter="time";
 					
-						if(sim_alg>1)
 							current_component.insert_simulation_data(parameter,val,true);
-						else
-							current_component.insert_simulation_data(parameter,val,false);	
 					}
 				}
 			}
 		
 		if(counter==0&&ready){
-			//
 			if(!time_requested){
 				time_requested=true;
 				string chars="time";
 				VectorInfo info=ngspice.VectorInfo.from_string(chars);
-				print ("vector time length %i: \n",info.length);
+				debug ("vector time length "+info.length.to_string());
 				for(int i=0;i<info.length;i++){
 					print ("%f --",info.data[i]);
 					simulation.insert_simulation_data("time",info.data[i].to_string(),true);
 				}
+				//print_report();
 			}
 		}
 		return 0;
 	}
 	
-	private void print_report(){
+	private static void print_report(){
 			print ("==========================================================\nreport:\n" );
 						foreach(Component component in items){
 							if(component.name!="Ground"&&component.name!="Line"){
@@ -266,29 +261,26 @@ public class NGSpiceSimulator : GLib.Object {
 
 	public void	 run_simulation(){
 		
-		items=request_components(Component.ComponentType.COMPONENT);
-		load_netlist();
-		req_counter=0;
-		counter=0;
-		ready=false;
-		time_requested=false;
-		print ("\n\n====================run simulation======================================\n\n" );
+		
+		
+		
 		string command=null;
 		foreach(Component component in request_components(Component.ComponentType.SIMULATION)){
 				simulation=component;
 				continue;
 		}
-		command=simulation.get_netlist_line();
-		print ("send this: '%s' from %s \n", command,simulation.name); //debug line
-
-		if(command!=null){
-			if(command.contains("op")){
-				sim_alg=SimulationAlgorithm.OP;
-				ngspice.send_command(command+"\n");
-			}else if (command.contains("tran")){
-				sim_alg=SimulationAlgorithm.TRAN;
-				ngspice.send_command(command+"\n");
-			}
+		if(simulation!=null){
+			
+			items=request_components(Component.ComponentType.COMPONENT);
+			load_netlist();
+			req_counter=0;
+			counter=0;
+			ready=false;
+			time_requested=false;
+			print ("\n\n====================run simulation======================================\n\n" );
+			command=simulation.get_netlist_line();
+			print ("send this: '%s' from %s \n", command,simulation.name); //debug line
+			ngspice.send_command(command+"\n");
 			
 		}   
 		

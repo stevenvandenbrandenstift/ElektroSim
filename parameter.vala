@@ -46,7 +46,8 @@ public class Parameter : Box{
 	public signal void edited();
 
 	public delegate void OptionsMethod(int option);
-	
+	private Mutex mutex;
+	private Adjustment sliderValue;
 	public OptionsMethod optionsMethod{get;set;}
 	
 	public Parameter(string name , double val){
@@ -56,6 +57,7 @@ public class Parameter : Box{
 		simulation=new ArrayList<Widget>();
 		all=new ArrayList<Widget>();
 		invalidate_values=false;
+		mutex = new Mutex ();
 
 		this.name=name;
 		this.val=val;
@@ -209,13 +211,28 @@ public class Parameter : Box{
 
 
 	private Scale make_scale(){
-		Scale scale=new Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
+		sliderValue= new Adjustment ( val,  0.000001,  10,  0.1,  1, 0);
+		Scale scale=new Scale (Gtk.Orientation.HORIZONTAL,sliderValue);
 		scale.set_has_origin (false);
 		scale.set_hexpand(true);
 		scale.set_value(val);
+		//scale.set_update_policy(0);
 		scale.value_changed.connect (()=>{
-				val=scale.get_value();
-				edited();
+					mutex.lock();
+					val=scale.get_value();
+					double upper=sliderValue.get_upper();
+					if(val>=upper*0.95){
+						sliderValue.set_upper(upper*10);
+						sliderValue.set_step_increment (sliderValue.get_upper()/1000);
+					}
+					else if(val<=upper*0.05){
+						sliderValue.set_step_increment (sliderValue.get_upper()/1000);
+						sliderValue.set_upper(upper/10);
+					}
+					scale.set_value(val);
+					debug("sliderchanged to value "+scale.get_value().to_string()+"  -sliderValue.get_upper() "+sliderValue.get_upper().to_string());
+					edited();
+					mutex.unlock();
 		});
 		all.add(scale);
 		return scale;
@@ -246,13 +263,11 @@ public class Parameter : Box{
 
 	private ComboBoxText make_options(){
 		ComboBoxText box = new ComboBoxText ();
-		Debug.print("make options widget");
 		string temp="";
 		foreach(string str in options){
 				temp+=str+" - ";
 				box.append_text (str);
 		}
-		Debug.print(temp);
 		box.active = (int)val;
 		debug("val="+val.to_string());
 		box.changed.connect (() => {
@@ -269,7 +284,7 @@ public class Parameter : Box{
 	}
 
 	private void debug(string line){
-		bool debug=false;
+		bool debug=true;
 		if(debug)	
 			print(line+"\n");
 	}

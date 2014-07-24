@@ -28,7 +28,7 @@ public class PowerSource : Component {
 
 	public enum Type{
 		DC,SINUS,PULSE,EXPO,SFFM,AM,RANDOM,TRANSNOISE,PWLINEAR;
-		//TRANSNOISE TODO
+		//TRANSNOISE is still experimental
 		//PWLINEAR is only usefull if we can import the data, manual entering would be too much off a hastle
 	}
 	

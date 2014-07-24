@@ -274,7 +274,9 @@ public class Parameter : Box{
 			int id = box.get_active ();
 			if(optionsMethod!=null){
 			debug("change command id "+id.to_string());
-			optionsMethod(id);}
+			optionsMethod(id);
+			edited();
+			}
 			
 		});
 		all.add(box);
@@ -284,7 +286,7 @@ public class Parameter : Box{
 	}
 
 	private void debug(string line){
-		bool debug=true;
+		bool debug=false;
 		if(debug)	
 			print(line+"\n");
 	}

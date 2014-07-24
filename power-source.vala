@@ -24,13 +24,16 @@ public class PowerSource : Component {
 
 	public static int counter;
 	private ArrayList<Parameter> optionsAdded;
-	
+	private ArrayList<Parameter> randomOptionsAdded;
 
 	public enum Type{
 		DC,SINUS,PULSE,EXPO,SFFM,AM,RANDOM,TRANSNOISE,PWLINEAR;
 		//TRANSNOISE TODO
-		//RANDOM TODO
 		//PWLINEAR is only usefull if we can import the data, manual entering would be too much off a hastle
+	}
+	
+	public enum RandomType{
+		UNIFORM,GAUSSIAN,EXPONENTIAL,POISSON;
 	}
 
 	public PowerSource (int option) {
@@ -44,8 +47,11 @@ public class PowerSource : Component {
 			temp.add("expo");
 			temp.add("1 freq FM");
 			temp.add("amplitude modulation");
+			temp.add("random");
 			Parameter type=add_parameter("type",option,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,temp);
 			type.optionsMethod=change_type;
+			optionsAdded=new ArrayList<Parameter>();
+			randomOptionsAdded=new ArrayList<Parameter>();
 			change_type(option);
 	}
 	
@@ -93,7 +99,52 @@ public class PowerSource : Component {
 			parameters.remove(par);
 		}
 		optionsAdded=new ArrayList<Parameter>();
+		reset_random_options();
 	}
+
+	public void reset_random_options(){
+		foreach(Parameter par in randomOptionsAdded){
+			grid.remove((par as Widget));
+			parameters.remove(par);
+		}
+		randomOptionsAdded=new ArrayList<Parameter>();
+	}
+
+	public void change_random_type(int option){
+		print("change to subtype '%i'\n",option);
+		reset_random_options();
+		get_parameter("random type").val=option;
+
+	switch(option){
+		case(RandomType.UNIFORM):
+				Parameter range=add_parameter("range",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter offset=add_parameter("offset",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				randomOptionsAdded.add(range);
+				randomOptionsAdded.add(offset);
+				break;
+		case(RandomType.GAUSSIAN):
+			Parameter standardDev=add_parameter("standard dev",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter mean=add_parameter("mean",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				randomOptionsAdded.add(standardDev);
+				randomOptionsAdded.add(mean);
+				break;
+		case(RandomType.EXPONENTIAL):
+				Parameter mean=add_parameter("mean",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter offset=add_parameter("offset",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				randomOptionsAdded.add(mean);
+				randomOptionsAdded.add(offset);
+				break;
+		case(RandomType.POISSON):
+				Parameter lambda=add_parameter("lambda",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter offset=add_parameter("offset",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				randomOptionsAdded.add(lambda);
+				randomOptionsAdded.add(offset);
+				break;
+
+		}
+		set_mode(ComponentList.Mode.EDIT);
+		show_all();
+	}   
 
 	public void change_type(int option){
 		print("change to type '%i'\n",option);
@@ -171,6 +222,21 @@ public class PowerSource : Component {
 				optionsAdded.add(carrierFreq);
 				optionsAdded.add(signalDelay);
 				break;
+			case(Type.RANDOM):
+				ArrayList<string> types=new ArrayList<string>();
+				types.add("uniform");
+				types.add("gaussian");
+				types.add("exponential");
+				types.add("poisson");
+				Parameter randomType=add_parameter("random type",0,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,types);
+				Parameter duration=add_parameter("duration",double.parse("10e-3"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter timeDelay=add_parameter("time delay",double.parse("0"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				optionsAdded.add(randomType);
+				optionsAdded.add(duration);
+				optionsAdded.add(timeDelay);
+				randomType.optionsMethod=change_random_type;
+				change_random_type(0);
+				break;
 		}
 		set_mode(ComponentList.Mode.EDIT);
 		show_all();
@@ -222,6 +288,26 @@ public class PowerSource : Component {
 				break;
 			case(Type.AM):
 				line+="am("+get_parameter("amplitude").val.to_string()+" "+get_parameter("offset").val.to_string()+" "+get_parameter("modulating frequency").val.to_string()+" "+get_parameter("carrier frequency").val.to_string()+" "+get_parameter("signal delay").val.to_string()+")";
+				break;
+			case(Type.RANDOM):
+				line+="trrandom("+get_parameter("random type").val.to_string()+" "+get_parameter("duration").val.to_string()+" "+get_parameter("time delay").val.to_string()+" ";
+					
+					switch((int)get_parameter("random type").val){
+							case(RandomType.UNIFORM):
+									line+=get_parameter("range").val.to_string()+" "+get_parameter("offset").val.to_string();
+									break;
+							case(RandomType.GAUSSIAN):
+									line+=get_parameter("standard dev").val.to_string()+" "+get_parameter("mean").val.to_string();
+									break;
+							case(RandomType.EXPONENTIAL):
+									line+=get_parameter("mean").val.to_string()+" "+get_parameter("offset").val.to_string();
+									break;
+							case(RandomType.POISSON):
+									line+=get_parameter("lambda").val.to_string()+" "+get_parameter("offset").val.to_string();
+									break;
+					}
+				
+				line+=")";
 				break;
 		}
 		line+="\n";

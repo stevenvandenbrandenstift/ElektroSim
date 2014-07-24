@@ -27,7 +27,7 @@ public class PowerSource : Component {
 	
 
 	public enum Type{
-		DC,SIN,PULSE;
+		DC,SINUS,PULSE,EXPO,PWLINEAR,SFFM,AM,TRANSNOISE,RANDOM;
 	}
 
 	public PowerSource (int option) {
@@ -99,9 +99,9 @@ public class PowerSource : Component {
 				Parameter voltage=add_parameter("voltage",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.SLIDER);
 				optionsAdded.add(voltage);
 				break;
-			case(Type.SIN):
-				Parameter step=add_parameter("offset",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.SLIDER);
-				Parameter amplitude=add_parameter("amplitude",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.SLIDER);
+			case(Type.SINUS):
+				Parameter step=add_parameter("offset",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter amplitude=add_parameter("amplitude",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				Parameter frequency=add_parameter("frequency",10,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				Parameter delay=add_parameter("delay",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				Parameter damping=add_parameter("damping",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
@@ -112,6 +112,20 @@ public class PowerSource : Component {
 				optionsAdded.add(damping);
 				break;
 			case(Type.PULSE):
+				Parameter initial=add_parameter("initial value",-1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter pulsed=add_parameter("pulsed value",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter delay=add_parameter("delay time",double.parse("2e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter rise=add_parameter("rise time",double.parse("2e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter fall=add_parameter("fall time",double.parse("2e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter pulse=add_parameter("pulse width",double.parse("50e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter period=add_parameter("period",double.parse("100e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				optionsAdded.add(initial);
+				optionsAdded.add(pulsed);
+				optionsAdded.add(delay);
+				optionsAdded.add(rise);
+				optionsAdded.add(fall);
+				optionsAdded.add(pulse);
+				optionsAdded.add(period);
 				break;
 			
 		}
@@ -130,17 +144,8 @@ public class PowerSource : Component {
 			newc.componentType=Component.ComponentType.COMPONENT;
 
 
-			switch((int)get_parameter("type").val){
-					case(Type.DC):
-						newc.get_parameter("voltage").val=this.get_parameter("voltage").val;
-							break;
-					case(Type.SIN):
-						newc.get_parameter("offset").val=this.get_parameter("offset").val;
-						newc.get_parameter("amplitude").val=this.get_parameter("amplitude").val;
-						newc.get_parameter("frequency").val=this.get_parameter("frequency").val;
-						newc.get_parameter("delay").val=this.get_parameter("delay").val;
-						newc.get_parameter("damping").val=this.get_parameter("damping").val;
-								break;
+			foreach(Parameter par in parameters){
+				newc.get_parameter(par.name).val=par.val;
 						}
 			return newc;
 	}
@@ -160,11 +165,11 @@ public class PowerSource : Component {
 			case(Type.DC):
 				line+="dc "+get_parameter("voltage").val.to_string();
 				break;
-			case(Type.SIN):
+			case(Type.SINUS):
 				line+="sin("+get_parameter("offset").val.to_string()+" "+get_parameter("amplitude").val.to_string()+" "+get_parameter("frequency").val.to_string()+" "+get_parameter("delay").val.to_string()+" "+get_parameter("damping").val.to_string()+")";
 				break;
 			case(Type.PULSE):
-				
+				line+="pulse( "+get_parameter("initial value").val.to_string()+" "+get_parameter("pulsed value").val.to_string()+" "+get_parameter("delay time").val.to_string()+" "+get_parameter("rise time").val.to_string()+" "+get_parameter("fall time").val.to_string()+" "+get_parameter("pulse width").val.to_string()+" "+get_parameter("period").val.to_string()+")";
 				break;
 		}
 		line+="\n";

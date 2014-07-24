@@ -87,12 +87,9 @@ public class Simulation : Component {
 	}
 	public override Component clone(){
 			Simulation newc=new Simulation((int)get_parameter("type").val);
-			switch((int)get_parameter("type").val){
-				case(Type.TRAN):
-					newc.get_parameter("step").val=this.get_parameter("step").val;
-					newc.get_parameter("stop").val=this.get_parameter("stop").val;
-					break;
-			}
+				foreach(Parameter par in parameters){
+					newc.get_parameter(par.name).val=par.val;
+				}
 			newc.componentType=Component.ComponentType.SIMULATION;
 			return newc;
 	}

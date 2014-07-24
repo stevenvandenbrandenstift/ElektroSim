@@ -27,7 +27,9 @@ public class PowerSource : Component {
 	
 
 	public enum Type{
-		DC,SINUS,PULSE,EXPO,SFFM,AM,TRANSNOISE,RANDOM,PWLINEAR;
+		DC,SINUS,PULSE,EXPO,SFFM,AM,RANDOM,TRANSNOISE,PWLINEAR;
+		//TRANSNOISE TODO
+		//RANDOM TODO
 		//PWLINEAR is only usefull if we can import the data, manual entering would be too much off a hastle
 	}
 
@@ -41,6 +43,7 @@ public class PowerSource : Component {
 			temp.add("pulse");
 			temp.add("expo");
 			temp.add("1 freq FM");
+			temp.add("amplitude modulation");
 			Parameter type=add_parameter("type",option,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,temp);
 			type.optionsMethod=change_type;
 			change_type(option);
@@ -156,6 +159,18 @@ public class PowerSource : Component {
 				optionsAdded.add(modulationIndex);
 				optionsAdded.add(signalFreq);
 				break;
+			case(Type.AM):
+				Parameter amplitude=add_parameter("amplitude",0.5,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter offset=add_parameter("offset",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter modulatingFreq=add_parameter("modulating frequency",double.parse("20e3"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter carrierFreq=add_parameter("carrier frequency",double.parse("1e9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter signalDelay=add_parameter("signal delay",double.parse("1e-3"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				optionsAdded.add(amplitude);
+				optionsAdded.add(offset);
+				optionsAdded.add(modulatingFreq);
+				optionsAdded.add(carrierFreq);
+				optionsAdded.add(signalDelay);
+				break;
 		}
 		set_mode(ComponentList.Mode.EDIT);
 		show_all();
@@ -204,6 +219,9 @@ public class PowerSource : Component {
 				break;
 			case(Type.SFFM):
 				line+="sffm( "+get_parameter("offset").val.to_string()+" "+get_parameter("amplitude").val.to_string()+" "+get_parameter("carrier frequency").val.to_string()+" "+get_parameter("modulation index").val.to_string()+" "+get_parameter("signal frequency").val.to_string()+")";
+				break;
+			case(Type.AM):
+				line+="am("+get_parameter("amplitude").val.to_string()+" "+get_parameter("offset").val.to_string()+" "+get_parameter("modulating frequency").val.to_string()+" "+get_parameter("carrier frequency").val.to_string()+" "+get_parameter("signal delay").val.to_string()+")";
 				break;
 		}
 		line+="\n";

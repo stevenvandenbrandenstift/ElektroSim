@@ -320,7 +320,6 @@ public abstract class Component : ListBoxRow {
 			
 			if(name!="activity"&&name!="work_zone"){
 				double temp=double.parse(val.replace(",","."));
-				//print("%s : %s added %f  from %s\n",this.name,par.name,temp,val);
 				par.set_value(temp);
 			}else{ //activity and zone
 				if(name=="activity"){

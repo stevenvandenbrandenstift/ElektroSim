@@ -27,7 +27,8 @@ public class PowerSource : Component {
 	
 
 	public enum Type{
-		DC,SINUS,PULSE,EXPO,PWLINEAR,SFFM,AM,TRANSNOISE,RANDOM;
+		DC,SINUS,PULSE,EXPO,SFFM,AM,TRANSNOISE,RANDOM,PWLINEAR;
+		//PWLINEAR is only usefull if we can import the data, manual entering would be too much off a hastle
 	}
 
 	public PowerSource (int option) {
@@ -36,8 +37,9 @@ public class PowerSource : Component {
 			this.height=50;
 			ArrayList<string> temp=new ArrayList<string>();
 			temp.add("dc");
-			temp.add("sin");
+			temp.add("sinus");
 			temp.add("pulse");
+			temp.add("expo");
 			Parameter type=add_parameter("type",option,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,temp);
 			type.optionsMethod=change_type;
 			change_type(option);
@@ -127,6 +129,20 @@ public class PowerSource : Component {
 				optionsAdded.add(pulse);
 				optionsAdded.add(period);
 				break;
+			case(Type.EXPO):
+				Parameter initial=add_parameter("initial value",-4,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter pulsed=add_parameter("pulsed value",-1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter riseDelay=add_parameter("rise delay time",double.parse("2e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter riseConstant=add_parameter("rise time",double.parse("30e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter fallDelay=add_parameter("fall delay time",double.parse("60e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter fallConstant=add_parameter("fall time",double.parse("40e-9"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				optionsAdded.add(initial);
+				optionsAdded.add(pulsed);
+				optionsAdded.add(riseDelay);
+				optionsAdded.add(riseConstant);
+				optionsAdded.add(fallDelay);
+				optionsAdded.add(fallConstant);
+				break;
 			
 		}
 		set_mode(ComponentList.Mode.EDIT);
@@ -170,6 +186,9 @@ public class PowerSource : Component {
 				break;
 			case(Type.PULSE):
 				line+="pulse( "+get_parameter("initial value").val.to_string()+" "+get_parameter("pulsed value").val.to_string()+" "+get_parameter("delay time").val.to_string()+" "+get_parameter("rise time").val.to_string()+" "+get_parameter("fall time").val.to_string()+" "+get_parameter("pulse width").val.to_string()+" "+get_parameter("period").val.to_string()+")";
+				break;
+			case(Type.EXPO):
+				line+="exp( "+get_parameter("initial value").val.to_string()+" "+get_parameter("pulsed value").val.to_string()+" "+get_parameter("rise delay time").val.to_string()+" "+get_parameter("rise time").val.to_string()+" "+get_parameter("fall delay time").val.to_string()+" "+get_parameter("fall time").val.to_string()+" "+get_parameter("period").val.to_string()+")";
 				break;
 		}
 		line+="\n";

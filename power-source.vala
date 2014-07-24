@@ -40,6 +40,7 @@ public class PowerSource : Component {
 			temp.add("sinus");
 			temp.add("pulse");
 			temp.add("expo");
+			temp.add("1 freq FM");
 			Parameter type=add_parameter("type",option,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,temp);
 			type.optionsMethod=change_type;
 			change_type(option);
@@ -143,7 +144,18 @@ public class PowerSource : Component {
 				optionsAdded.add(fallDelay);
 				optionsAdded.add(fallConstant);
 				break;
-			
+			case(Type.SFFM):
+				Parameter offset=add_parameter("offset",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter amplitude=add_parameter("amplitude",double.parse("1e6"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter carrierFreq=add_parameter("carrier frequency",double.parse("20e3"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter modulationIndex=add_parameter("modulation index",double.parse("5"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter signalFreq=add_parameter("signal frequency",double.parse("1e3"),Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				optionsAdded.add(offset);
+				optionsAdded.add(amplitude);
+				optionsAdded.add(carrierFreq);
+				optionsAdded.add(modulationIndex);
+				optionsAdded.add(signalFreq);
+				break;
 		}
 		set_mode(ComponentList.Mode.EDIT);
 		show_all();
@@ -189,6 +201,9 @@ public class PowerSource : Component {
 				break;
 			case(Type.EXPO):
 				line+="exp( "+get_parameter("initial value").val.to_string()+" "+get_parameter("pulsed value").val.to_string()+" "+get_parameter("rise delay time").val.to_string()+" "+get_parameter("rise time").val.to_string()+" "+get_parameter("fall delay time").val.to_string()+" "+get_parameter("fall time").val.to_string()+" "+get_parameter("period").val.to_string()+")";
+				break;
+			case(Type.SFFM):
+				line+="sffm( "+get_parameter("offset").val.to_string()+" "+get_parameter("amplitude").val.to_string()+" "+get_parameter("carrier frequency").val.to_string()+" "+get_parameter("modulation index").val.to_string()+" "+get_parameter("signal frequency").val.to_string()+")";
 				break;
 		}
 		line+="\n";

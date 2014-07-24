@@ -39,7 +39,6 @@ public class Parameter : Box{
 	private Label label;
 	public ArrayList<string> options{get;set;}
 
-	public string val_string{get;set;}
 	public string name{get;set;default="";}
 	public bool invalidate_values{get;set;}
 
@@ -50,7 +49,7 @@ public class Parameter : Box{
 	
 	public OptionsMethod optionsMethod{get;set;}
 	
-	public Parameter(string name , double val, string val_string){
+	public Parameter(string name , double val){
 		options=new ArrayList<string>();
 		values=new ArrayList<double?>();
 		edit=new ArrayList<Widget>();
@@ -59,7 +58,6 @@ public class Parameter : Box{
 		invalidate_values=false;
 
 		this.name=name;
-		this.val_string=val_string;
 		this.val=val;
 		//set_can_focus(false);	
 		set_size_request(-1,-1);
@@ -87,15 +85,16 @@ public class Parameter : Box{
 		return line;
 	
 	}
-	public void set_mode(Mode mode){
+
+	public void set_mode(ComponentList.Mode mode){
 
 		switch(mode){
 		
-		case Mode.EDIT:
+		case ComponentList.Mode.EDIT:
 				fill_box(edit);
 			break;
 		
-		case  Mode.SIMULATION:
+		case  ComponentList.Mode.SIMULATION:
 				fill_box(simulation);
 			break;
 		}
@@ -131,11 +130,13 @@ public class Parameter : Box{
 
 	public void set_simulation_array(WidgetStyle style){
 			simulation=new ArrayList<Widget>();
+			debug("setting simulation array of "+name);
 			simulation=get_arraylist(style);
 	}
 
 	private ArrayList<Widget> get_arraylist(WidgetStyle style){
 		Gee.ArrayList<Widget> temp= new Gee.ArrayList<Widget>();
+		if(style!=WidgetStyle.NONE)
 		temp.add(label);
 		switch(style){
 
@@ -161,9 +162,11 @@ public class Parameter : Box{
 
 	private Widget get_widget(Type type){
 			Type test=type;
+			//debug("getwidget: type of widget "+type.name());
+			//debug("getwidget: type of comboboxtext "+typeof(ComboBoxText).name());
 			foreach(Widget widget in all){
 				if(Type.from_instance(widget)==test){
-					print("\n found existing widget for %s - %f\n" ,name,val);
+					//debug(" found existing widget for "+name+" - val "+val.to_string());
 					return widget;
 				}
 			}
@@ -183,6 +186,7 @@ public class Parameter : Box{
 
 	public void set_edit_array(WidgetStyle style){
 			edit=new ArrayList<Widget>();
+			//debug("setting edit array of "+name);
 			edit=get_arraylist(style);
 	}
 	
@@ -242,15 +246,19 @@ public class Parameter : Box{
 
 	private ComboBoxText make_options(){
 		ComboBoxText box = new ComboBoxText ();
+		Debug.print("make options widget");
+		string temp="";
 		foreach(string str in options){
+				temp+=str+" - ";
 				box.append_text (str);
 		}
+		Debug.print(temp);
 		box.active = (int)val;
-
+		debug("val="+val.to_string());
 		box.changed.connect (() => {
 			int id = box.get_active ();
 			if(optionsMethod!=null){
-			print("change comman id %i\n",id);
+			debug("change command id "+id.to_string());
 			optionsMethod(id);}
 			
 		});
@@ -258,5 +266,11 @@ public class Parameter : Box{
 		return box;
 	}
 	
+	}
+
+	private void debug(string line){
+		bool debug=false;
+		if(debug)	
+			print(line+"\n");
 	}
 }

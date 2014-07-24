@@ -25,7 +25,7 @@ namespace ElektroSim{
 
 public class SimulationArea : Gtk.DrawingArea {
 
-	public signal ArrayList<Component> request_components(ElektroSim.ComponentType type2);
+	public signal ArrayList<Component> request_components(Component.ComponentType type2);
 	public signal void new_component(Component comp);
 	public signal Component request_selected_component();
 	
@@ -61,7 +61,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		cr.set_line_width (3);
 		cr.select_font_face ("Adventure", Cairo.FontSlant.NORMAL,Cairo.FontWeight.BOLD);			
 
-		foreach (Component component in request_components(ElektroSim.ComponentType.COMPONENT)){
+		foreach (Component component in request_components(Component.ComponentType.COMPONENT)){
 			component.draw_image(cr);
 		}
 		
@@ -72,7 +72,7 @@ public class SimulationArea : Gtk.DrawingArea {
 		
 		//add line check for 2 points
 		if(component.name=="Line"){
-			foreach(Component component2 in request_components(ElektroSim.ComponentType.COMPONENT)){
+			foreach(Component component2 in request_components(Component.ComponentType.COMPONENT)){
 				if(component2.name=="Line"&&(component2 as Line).second_point_needed){
 				newComponent=component2;
 				}

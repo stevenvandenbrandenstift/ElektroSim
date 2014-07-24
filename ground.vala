@@ -35,11 +35,11 @@ public class Ground : Component {
 
 		cr.new_path ();
 		cr.move_to (p1_x, p1_y);
-		if(orientation==ElektroSim.Orientation.RIGHT){
+		if(orientation==Component.Orientation.RIGHT){
 		cr.rel_line_to (width,0);
-		}else if(orientation==ElektroSim.Orientation.LEFT){
+		}else if(orientation==Component.Orientation.LEFT){
 		cr.rel_line_to (-width,0);
-		}else if(orientation==ElektroSim.Orientation.UP){
+		}else if(orientation==Component.Orientation.UP){
 		cr.rel_line_to (0,-width);
 		}else{
 		cr.rel_line_to (0,width);
@@ -50,13 +50,13 @@ public class Ground : Component {
 		cr.new_path ();
 		cr.set_font_size (height*0.4);
 		
-		if(orientation==ElektroSim.Orientation.RIGHT){
+		if(orientation==Component.Orientation.RIGHT){
 		cr.move_to (p1_x+width*0.15,p1_y-5);
-		}else if(orientation==ElektroSim.Orientation.LEFT){
+		}else if(orientation==Component.Orientation.LEFT){
 		cr.move_to (p1_x-width,p1_y-5);
-		}else if(orientation==ElektroSim.Orientation.UP){
+		}else if(orientation==Component.Orientation.UP){
 		cr.move_to (p1_x+5,p1_y-width*0.8);
-		}else if(orientation==ElektroSim.Orientation.DOWN){
+		}else if(orientation==Component.Orientation.DOWN){
 		cr.move_to (p1_x+5,p1_y+width*0.95);
 		}
 		

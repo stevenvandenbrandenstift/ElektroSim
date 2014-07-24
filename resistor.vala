@@ -29,23 +29,12 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		Parameter res=add_parameter("R",resistance);
-		Parameter max_pow=add_parameter("Max Power",max_power);
-		Parameter ac=add_parameter("ac",0);
-		Parameter dtemp=add_parameter("dtemp",0);
-		Parameter bv_max=add_parameter("bv_max",0);
-		Parameter noisy=add_parameter("noisy",0);
-
-		res.set_edit_array(Parameter.WidgetStyle.SLIDER);
-		res.set_simulation_array(Parameter.WidgetStyle.SLIDER);
-
-		max_pow.set_edit_array(Parameter.WidgetStyle.SLIDER);
-		max_pow.set_simulation_array(Parameter.WidgetStyle.SLIDER);
-
-		ac.set_simulation_array(Parameter.WidgetStyle.LABEL);
-		dtemp.set_simulation_array(Parameter.WidgetStyle.LABEL);
-		bv_max.set_simulation_array(Parameter.WidgetStyle.LABEL);
-		noisy.set_simulation_array(Parameter.WidgetStyle.LABEL);
+		add_parameter("R",resistance,Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+		add_parameter("Max Power",max_power,Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+		add_parameter("ac",0,Parameter.WidgetStyle.LABEL);
+		add_parameter("dtemp",0,Parameter.WidgetStyle.LABEL);
+		add_parameter("bv_max",0,Parameter.WidgetStyle.LABEL);
+		add_parameter("noisy",0,Parameter.WidgetStyle.LABEL);
 	}
 	
 	public override void draw_image(Cairo.Context cr){
@@ -54,7 +43,7 @@ public class Resistor : Component {
 		int p2_x = connections[1].x;
 		int p2_y = connections[1].y;
 		int x,y;
-		if(orientation==ElektroSim.Orientation.RIGHT||orientation==ElektroSim.Orientation.LEFT){	
+		if(orientation==Component.Orientation.RIGHT||orientation==Component.Orientation.LEFT){	
 			if(p1_x>p2_x){
 				int temp=p2_x;
 				p2_x=p1_x;
@@ -109,12 +98,14 @@ public class Resistor : Component {
 	}
 	
 	public override Component clone(){
+		print("start cloning %s\n",name);
 		Resistor newc=new Resistor(get_parameter("R").val,get_parameter("Max Power").val);
 		if(this.get_parameter("R")==null)
 			print("error no parameter to copy from!");
 		counter++;
 		newc.set_name("r"+counter.to_string());
-		newc.componentType=ElektroSim.ComponentType.COMPONENT;
+		newc.componentType=Component.ComponentType.COMPONENT;
+		print("end cloning %s\n",name);
 		return newc;
 	}
 
@@ -124,13 +115,13 @@ public class Resistor : Component {
 		point=point.point_nearby(range);
 		connections.add(point);
 		orientation=point.connect_component(this);
-		if(orientation==ElektroSim.Orientation.RIGHT){
+		if(orientation==Component.Orientation.RIGHT){
 			point2=new Point(point.x+width,point.y);
-		} else if (orientation==ElektroSim.Orientation.LEFT){
+		} else if (orientation==Component.Orientation.LEFT){
 		 	point2=new Point(point.x-width,point.y);
-		}else if(orientation==ElektroSim.Orientation.UP){
+		}else if(orientation==Component.Orientation.UP){
 			point2=new Point(point.x,point.y-width);
-		}else if(orientation==ElektroSim.Orientation.DOWN){
+		}else if(orientation==Component.Orientation.DOWN){
 			point2=new Point(point.x,point.y+width);
 		}else{
 			point2=new Point(point.x+width,point.y); //should not be reached

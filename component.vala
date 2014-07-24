@@ -19,33 +19,35 @@
 
 using Gtk;
 using Gee;
+
 namespace ElektroSim{
 
-public enum Activity {
-	UNKNOWN,INACTIVE, SUBACTIVE, ACTIVE, OVERACTIVE;
-}
-public enum Zone {
-	UNKNOWN,SUBOPTIMAL, OPTIMAL, OUTOFRANGE, DESTRUCTIVE;
-}
-public enum Orientation{
-		NONE,RIGHT,LEFT,DOWN,UP;
-}
 
-public enum ComponentType{
-		COMPONENT,TEMPLATE,SIMULATION;
-}
 
 
 
 public abstract class Component : ListBoxRow {
+	
+	public enum Activity {
+	UNKNOWN,INACTIVE, SUBACTIVE, ACTIVE, OVERACTIVE;
+	}
+	public enum Zone {
+		UNKNOWN,SUBOPTIMAL, OPTIMAL, OUTOFRANGE, DESTRUCTIVE;
+	}
+	public enum Orientation{
+			NONE,RIGHT,LEFT,DOWN,UP;
+	}
 
+	public enum ComponentType{
+			COMPONENT,TEMPLATE,SIMULATION;
+	}
 	// Constructor
 	public signal void request_simulate();
 	public signal void request_redraw();
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
-	public ElektroSim.ComponentType componentType {get;set;default=ElektroSim.ComponentType.COMPONENT;}
-	public ElektroSim.Orientation orientation{get;set;default=ElektroSim.Orientation.NONE;}
+	public ComponentType componentType {get;set;default=ComponentType.COMPONENT;}
+	public Orientation orientation{get;set;default=Orientation.NONE;}
 	
 	public ArrayList<Parameter> parameters =new ArrayList<Parameter>();
 	
@@ -61,16 +63,12 @@ public abstract class Component : ListBoxRow {
 
 	public Component(string name){
 		init(name);
-		Parameter i=add_parameter("i",0);
-		Parameter p=add_parameter("p",0);
-		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN);
-		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN);
+		add_parameter("i",0,Parameter.WidgetStyle.LABEL);
+		add_parameter("p",0,Parameter.WidgetStyle.LABEL);
+		add_parameter("activity",(double)Activity.UNKNOWN,Parameter.WidgetStyle.LABEL);
+		add_parameter("work_zone",(double)Zone.UNKNOWN,Parameter.WidgetStyle.LABEL);
 		selected_parameter=-1;
 
-		i.set_simulation_array(Parameter.WidgetStyle.LABEL);
-		p.set_simulation_array(Parameter.WidgetStyle.LABEL);
-		activity.set_simulation_array(Parameter.WidgetStyle.LABEL);
-		work_zone.set_simulation_array(Parameter.WidgetStyle.LABEL);
 	}
 	
 	public  string to_string(){
@@ -79,7 +77,7 @@ public abstract class Component : ListBoxRow {
 		foreach(Parameter par in parameters)
 			line+=par.to_string();
 		line+="\n parameters in grid:\n";
-		GLib.List<weak Widget> tl =this.grid.get_children();
+		GLib.List<weak Widget> tl =this.grid.get_children(); 
 			foreach(Widget parameter in tl)
 				line+=(parameter as Parameter).to_string();
 		line+="\n\n";
@@ -103,7 +101,7 @@ public abstract class Component : ListBoxRow {
 		parameters =new ArrayList<Parameter>();
 	}
 	
-	public void set_mode(Mode mode){
+	public void set_mode(ComponentList.Mode mode){
 		foreach(Parameter par in parameters){
 			par.set_mode(mode);
 		}
@@ -124,12 +122,14 @@ public abstract class Component : ListBoxRow {
 			par.invalidate_values=true;
 	}
 
-	public Parameter? add_parameter(string name, double val){
+	public Parameter? add_parameter(string name, double val,Parameter.WidgetStyle simulation = Parameter.WidgetStyle.NONE,Parameter.WidgetStyle edit= Parameter.WidgetStyle.NONE, ArrayList<string> options = new ArrayList<string>()){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;
+			par.set_edit_array(edit);
+			par.set_simulation_array(simulation);
 		}else{  //does not exist add
-			par=new Parameter(name,val,"");
+			par=new Parameter(name,val);
 			parameters.add(par);
 			par.edited.connect (() => {
    					request_simulate();
@@ -139,23 +139,14 @@ public abstract class Component : ListBoxRow {
    					request_redraw();
 			});
 			}
+			foreach(string str in options){
+				par.options.add(str);
+			}
+			par.set_edit_array(edit);
+			par.set_simulation_array(simulation);
 			grid.add(par);
 		}
 		return par;
-	}
-	
-	public void add_parameter_string(string name, string val){
-		Parameter par=get_parameter(name);
-		if(par!=null){  //parameter exists -- update
-			par.val_string=val;
-		}else{  //does not exist add
-			par=new Parameter(name,0,val);
-			parameters.add(par);
-			par.edited.connect (() => {
-   					request_simulate();
-			});
-			grid.add(par);
-		}
 	}
 	
 	public Parameter? get_next_parameter(){

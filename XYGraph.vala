@@ -51,7 +51,7 @@ public class XYGraph : Gtk.DrawingArea {
    		
 		set_vexpand(true);
 		set_hexpand(true);
-		name="select a component and click graph";
+		name="select a component and click here";
 		redraw_canvas ();
 	}
 
@@ -98,7 +98,7 @@ public class XYGraph : Gtk.DrawingArea {
 				double scaledOffset=minValue;
 
 				double offset=height_graph*((-minValue)/(maxValue-minValue));
-				print("offset: %f - scaledOffset: %f \n\n",offset,scaledOffset);
+				debug("offset: "+offset.to_string()+" - scaledOffset: "+scaledOffset.to_string());
 				cr.translate(0,height); // go to 0 0 for graph
 				cr.scale(1,-1);			//set y axis from bottom up
 				cr.translate(border,border+offset);	//add border
@@ -107,7 +107,7 @@ public class XYGraph : Gtk.DrawingArea {
 				double xScale=(width_graph)/(time[time.size-1]);
 				double yScale=height_graph/((maxValue-minValue));
 				//cr.scale(xScale,yScale) ;	//scaling
-				print("xScale: %f - yScale: %f \n\n",xScale,yScale);
+				debug("xScale: "+xScale.to_string()+" - yScale: "+yScale.to_string());
 				
 
 				cr.set_line_width (1.0);
@@ -179,5 +179,10 @@ public class XYGraph : Gtk.DrawingArea {
 		window.invalidate_region (region, true);
 		window.process_updates (true);
 	}		
+	private void debug(string line){
+		bool debug=false;
+		if(debug)	
+			print(line+"\n");
+	}
 }
 }

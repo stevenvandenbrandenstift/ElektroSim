@@ -28,7 +28,7 @@ public class NGSpiceSimulator : GLib.Object {
 
 	public static Gee.ArrayList<Component> items;
 	public static Component simulation;
-	public signal Gee.ArrayList<Component> request_components(ElektroSim.ComponentType type2);
+	public signal Gee.ArrayList<Component> request_components(Component.ComponentType type2);
 	private static Component current_component;
 	private static  SimulationAlgorithm sim_alg=0;
 	private static int counter=0;
@@ -266,7 +266,7 @@ public class NGSpiceSimulator : GLib.Object {
 
 	public void	 run_simulation(){
 		
-		items=request_components(ElektroSim.ComponentType.COMPONENT);
+		items=request_components(Component.ComponentType.COMPONENT);
 		load_netlist();
 		req_counter=0;
 		counter=0;
@@ -274,7 +274,7 @@ public class NGSpiceSimulator : GLib.Object {
 		time_requested=false;
 		print ("\n\n====================run simulation======================================\n\n" );
 		string command=null;
-		foreach(Component component in request_components(ElektroSim.ComponentType.SIMULATION)){
+		foreach(Component component in request_components(Component.ComponentType.SIMULATION)){
 				simulation=component;
 				continue;
 		}

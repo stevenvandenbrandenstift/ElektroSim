@@ -43,7 +43,7 @@ public class Line : Component {
 		
 		cr.new_path ();
 		cr.move_to (p1_x, p1_y);
-		if(orientation==ElektroSim.Orientation.RIGHT||orientation==ElektroSim.Orientation.LEFT){
+		if(orientation==Component.Orientation.RIGHT||orientation==Component.Orientation.LEFT){
 			cr.line_to (p2_x, p1_y);
 			cr.move_to (p2_x, p1_y);
 			cr.line_to (p2_x,p2_y);

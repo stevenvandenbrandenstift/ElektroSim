@@ -2,15 +2,17 @@ using Gtk;
 using Gee;
 namespace ElektroSim{
 	
-public enum Mode{
-		UNKNOWN,EDIT,SIMULATION;
-}
+
 
 public class ComponentList  {
+	
+	public enum Mode{
+		UNKNOWN,EDIT,SIMULATION;
+	}
 
 	public ListBox list{get;set;}
-	private Mode mode{get;set;default=ElektroSim.Mode.EDIT;}
-	private ComponentType compType{get;set;default=ElektroSim.ComponentType.TEMPLATE;}
+	private Mode mode{get;set;default=Mode.EDIT;}
+	private Component.ComponentType compType{get;set;default=Component.ComponentType.TEMPLATE;}
 	public signal void selected_values_description_changed(string name);
 	public signal void request_simulation();
 	public signal void request_redraw();	
@@ -22,6 +24,7 @@ public class ComponentList  {
 	{	
 		this.list=new ListBox();
 		timer=new Timer();
+		list.width_request=50;
 		timer_running=false;
 	}
 	
@@ -65,7 +68,7 @@ public class ComponentList  {
 		this.list.show_all();
 	}
 
-	public ArrayList<Component> get_components(ElektroSim.ComponentType type2){
+	public ArrayList<Component> get_components(Component.ComponentType type2){
 			
 			GLib.List<weak Widget> tl =this.list.get_children();
 			ArrayList<Component> temp=new ArrayList<Component>();
@@ -97,13 +100,14 @@ public class ComponentList  {
 	public void clear(){
 		GLib.List<weak Widget> templist=list.get_children();
 			foreach(weak Widget comp in templist){
-				if((comp as Component).componentType!=ElektroSim.ComponentType.TEMPLATE)
+				if((comp as Component).componentType!=Component.ComponentType.TEMPLATE)
 					this.list.remove(comp);
 				else
 					(comp as Component).clear_counter();		
 			}
 		Point.clear();
-		set_visable(ElektroSim.ComponentType.TEMPLATE);
+		set_visable(Component.ComponentType.TEMPLATE);
+		set_modus(mode.EDIT);
 		request_redraw();
 	}
 	
@@ -118,7 +122,7 @@ public class ComponentList  {
 
 		GLib.List<weak Widget> tl =this.list.get_children();
 			foreach(Widget comp in tl){
-				if((comp as Component).componentType==ElektroSim.ComponentType.SIMULATION)
+				if((comp as Component).componentType==Component.ComponentType.SIMULATION)
 					return (comp as Component).get_parameter("time").values;
 			}
 		print("WARN returned 0 time");
@@ -127,32 +131,32 @@ public class ComponentList  {
 
 	public void fill_templates(){
 		Resistor resistor=new Resistor(5,1);
-		resistor.componentType=ElektroSim.ComponentType.TEMPLATE;
+		resistor.componentType=Component.ComponentType.TEMPLATE;
 		add_component(resistor);
 
-		PowerSource power_source=new PowerSource("sin(0 1 1 0 0)");
-		power_source.componentType=ElektroSim.ComponentType.TEMPLATE;
+		PowerSource power_source=new PowerSource(PowerSource.Type.DC);
+		power_source.componentType=Component.ComponentType.TEMPLATE;
 		add_component(power_source);
 		
 		
 		Ground ground=new Ground();
-		ground.componentType=ElektroSim.ComponentType.TEMPLATE;		
+		ground.componentType=Component.ComponentType.TEMPLATE;		
 		add_component(ground);
 		
 		Line line= new Line();
-		line.componentType=ElektroSim.ComponentType.TEMPLATE;
+		line.componentType=Component.ComponentType.TEMPLATE;
 		add_component(line);
 		
 		Simulation sim=new Simulation(Simulation.Type.TRAN);
-		sim.componentType=ElektroSim.ComponentType.TEMPLATE;
+		sim.componentType=Component.ComponentType.TEMPLATE;
 		add_component(sim);
 	}
 
-	public void set_visable(ElektroSim.ComponentType type2){
+	public void set_visable(Component.ComponentType type2){
 		this.compType=type2;
 		GLib.List<weak Widget> templist=list.get_children();
 		foreach(Widget comp in templist){
-				if((comp as Component).componentType==compType||(comp as Component).componentType==ComponentType.SIMULATION){
+				if((comp as Component).componentType==compType||(comp as Component).componentType==Component.ComponentType.SIMULATION){
 					comp.set_no_show_all(false);
 				  }
 				else{
@@ -173,8 +177,8 @@ public class ComponentList  {
 	}
 
 	public void set_mode_simulation(){
-		set_modus(ElektroSim.Mode.SIMULATION);
-		set_visable(ElektroSim.ComponentType.COMPONENT);
+		set_modus(Mode.SIMULATION);
+		set_visable(Component.ComponentType.COMPONENT);
 		request_simulation();
 	}
 }

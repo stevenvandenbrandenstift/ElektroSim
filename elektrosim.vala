@@ -76,13 +76,15 @@ public class MainWindow : Window  {
 		header_bar.add(clear_button); 
 		
 		Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
-		//scrolled.min_content_width=200;
+		scrolled.set_min_content_width(300);
+		scrolled.set_hexpand(false);
+
 		scrolled.add(clist.list);
 		grid.attach(scrolled,0,0,1,4);
-		grid.attach_next_to (sim_area, scrolled, Gtk.PositionType.RIGHT, 3, 3);
-		grid.attach_next_to (graph, sim_area, Gtk.PositionType.BOTTOM, 3, 1);
+		grid.attach_next_to (sim_area, scrolled, Gtk.PositionType.RIGHT, 4, 3);
+		grid.attach_next_to (graph, sim_area, Gtk.PositionType.BOTTOM, 4, 1);
 		
-		
+		grid.set_column_homogeneous(false);
 
 		set_titlebar (header_bar);
 	}

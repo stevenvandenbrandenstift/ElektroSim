@@ -35,25 +35,22 @@ public class Simulation : Component {
 			base("Simulation");
 			clear_parameters();
 			optionsAdded=new ArrayList<Parameter>();
-			Parameter time=add_parameter("time",0);
-
-			time.set_simulation_array(Parameter.WidgetStyle.LABEL);
+			add_parameter("time",0,Parameter.WidgetStyle.LABEL);
 		
-			Parameter type=add_parameter("type",option);
-			type.options.add("op");
-			type.options.add("dc");
-			type.options.add("tran");
+			ArrayList<string> temp=new ArrayList<string>();
+			temp.add("op");
+			temp.add("dc");
+			temp.add("tran");
+
+			Parameter type=add_parameter("type",option,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,temp);
+		
 			type.optionsMethod=change_type;
 				
-			change_type((int)option);
+			change_type(option);
 
-			type.set_edit_array(Parameter.WidgetStyle.OPTIONS);
-			type.set_simulation_array(Parameter.WidgetStyle.OPTIONS);
-
-			
 			this.width=100;
 			this.height=50;
-			this.componentType=ElektroSim.ComponentType.SIMULATION;
+			this.componentType=Component.ComponentType.SIMULATION;
 	}
 	
 	public override void draw_image(Cairo.Context cr){
@@ -72,15 +69,11 @@ public class Simulation : Component {
 	public void change_type(int option){
 		print("change to type '%i'\n",option);
 		reset_options();
+		get_parameter("type").val=option;
 		switch(option){
 			case(Type.TRAN):
-				get_parameter("type").val=(int)Type.TRAN;
-				Parameter step=add_parameter("step",0.02);
-				Parameter stop=add_parameter("stop",1);
-				step.set_edit_array(Parameter.WidgetStyle.ENTRY);
-				step.set_simulation_array(Parameter.WidgetStyle.ENTRY);
-				stop.set_edit_array(Parameter.WidgetStyle.ENTRY);
-				stop.set_simulation_array(Parameter.WidgetStyle.ENTRY);
+				Parameter step=add_parameter("step",0.02,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter stop=add_parameter("stop",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				optionsAdded.add(step);
 				optionsAdded.add(stop);
 				break;
@@ -89,7 +82,7 @@ public class Simulation : Component {
 			case(Type.DC):
 				break;
 		}
-		set_mode(ElektroSim.Mode.EDIT);
+		set_mode(ComponentList.Mode.EDIT);
 		show_all();
 	}
 	public override Component clone(){
@@ -100,7 +93,7 @@ public class Simulation : Component {
 					newc.get_parameter("stop").val=this.get_parameter("stop").val;
 					break;
 			}
-			newc.componentType=ElektroSim.ComponentType.SIMULATION;
+			newc.componentType=Component.ComponentType.SIMULATION;
 			return newc;
 	}
 	

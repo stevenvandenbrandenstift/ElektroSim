@@ -74,37 +74,37 @@ public class Point{
 	}
 	
 	
-	public ElektroSim.Orientation connect_component(Component component){
+	public Component.Orientation connect_component(Component component){
 		
-		if(component.orientation==ElektroSim.Orientation.NONE){	// empty list means first point
+		if(component.orientation==Component.Orientation.NONE){	// empty list means first point
 			if(connections.right==null){
 				connections.right=component;
-				return ElektroSim.Orientation.RIGHT;
+				return Component.Orientation.RIGHT;
 			}else if(connections.left==null){
 				connections.left=component;
-				return ElektroSim.Orientation.LEFT;
+				return Component.Orientation.LEFT;
 			}else if(connections.down==null){
 				connections.down=component;
-				return ElektroSim.Orientation.DOWN;
+				return Component.Orientation.DOWN;
 			}else if(connections.up==null){
 				connections.up=component;
-				return ElektroSim.Orientation.UP;
+				return Component.Orientation.UP;
 			}
 		}else{
 			switch (component.orientation){
-			case ElektroSim.Orientation.RIGHT:
+			case Component.Orientation.RIGHT:
 				connections.left=component;
 				break;
-			case ElektroSim.Orientation.LEFT:
+			case Component.Orientation.LEFT:
 				connections.right=component;
 				break;
-			case ElektroSim.Orientation.UP:
+			case Component.Orientation.UP:
 				connections.down=component;
 				break;
-			case ElektroSim.Orientation.DOWN:
+			case Component.Orientation.DOWN:
 				connections.up=component;
 				break;
-			case ElektroSim.Orientation.NONE:
+			case Component.Orientation.NONE:
 				connections.left=component;
 				print("error found orientation NONE \n");
 				break;

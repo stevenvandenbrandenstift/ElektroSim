@@ -242,7 +242,7 @@ public class PowerSource : Component {
 				optionsAdded.add(duration);
 				optionsAdded.add(timeDelay);
 				randomType.optionsMethod=change_random_type;
-				change_random_type(0);
+				change_random_type(RandomType.UNIFORM);
 				break;
 		}
 		set_mode(ComponentList.Mode.EDIT);

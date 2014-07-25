@@ -27,6 +27,7 @@ public class Simulation : Component {
 	
 
 	private ArrayList<Parameter> optionsAdded;
+	private ArrayList<Parameter> dcOptionsAdded;
 
 	public enum Type{
 		OP,TRAN,AC,DC;
@@ -34,6 +35,10 @@ public class Simulation : Component {
 
 	public enum AcVariation{
 		DECADE,OCTAVE,LINEAIR;
+	}
+
+	public enum NumberOfSources{
+		ONE,TWO;
 	}
 
 	public Simulation (int option) {
@@ -44,9 +49,9 @@ public class Simulation : Component {
 		
 			ArrayList<string> temp=new ArrayList<string>();
 			temp.add("op");
-			temp.add("dc");
-			temp.add("tran");
+			temp.add("transient");
 			temp.add("ac");
+			temp.add("dc sweep");
 			Parameter type=add_parameter("type",option,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,temp);
 		
 			type.optionsMethod=change_type;
@@ -56,6 +61,8 @@ public class Simulation : Component {
 			this.width=100;
 			this.height=50;
 			this.componentType=Component.ComponentType.SIMULATION;
+			optionsAdded=new ArrayList<Parameter>();
+			dcOptionsAdded=new ArrayList<Parameter>();
 	}
 	
 	public override void draw_image(Cairo.Context cr){
@@ -69,7 +76,40 @@ public class Simulation : Component {
 			parameters.remove(par);
 		}
 		optionsAdded=new ArrayList<Parameter>();
+		reset_dc_options();
 	}
+	
+
+	public void reset_dc_options(){
+		foreach(Parameter par in dcOptionsAdded){
+			grid.remove((par as Widget));
+			parameters.remove(par);
+		}
+		dcOptionsAdded=new ArrayList<Parameter>();
+	}
+
+	public void change_dc_sources(int option){
+		print("change to subtype '%i'\n",option);
+		reset_dc_options();
+		get_parameter("# sources").val=option;
+
+		switch(option){
+			case(NumberOfSources.ONE):
+					break;
+			case(NumberOfSources.TWO):
+					Parameter source2=add_parameter("power source 2",2,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+					Parameter start2=add_parameter("start 2",0.25,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+					Parameter stop2=add_parameter("stop 2",5,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+					Parameter step2=add_parameter("step 2",0.25,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+					dcOptionsAdded.add(source2);
+					dcOptionsAdded.add(start2);
+					dcOptionsAdded.add(stop2);
+					dcOptionsAdded.add(step2);
+					break;
+			}
+		set_mode(ComponentList.Mode.EDIT);
+		show_all();
+	}   
 
 	public void change_type(int option){
 		print("change to type '%i'\n",option);
@@ -79,7 +119,7 @@ public class Simulation : Component {
 			case(Type.TRAN):
 				Parameter step=add_parameter("step",0.02,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				Parameter stop=add_parameter("stop",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
-				Parameter start=add_parameter("start",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter start=add_parameter("start",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				optionsAdded.add(step);
 				optionsAdded.add(stop);
 				optionsAdded.add(start);
@@ -87,6 +127,21 @@ public class Simulation : Component {
 			case(Type.OP):
 				break;
 			case(Type.DC):
+				ArrayList<string> numberOfSources=new ArrayList<string>();
+				numberOfSources.add("1");
+				numberOfSources.add("2");
+				Parameter amountSources=add_parameter("# sources",0,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,numberOfSources);
+				Parameter source=add_parameter("power source",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter start=add_parameter("start",0.25,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter stop=add_parameter("stop",5,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter step=add_parameter("step",0.25,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				optionsAdded.add(amountSources);
+				optionsAdded.add(source);
+				optionsAdded.add(start);
+				optionsAdded.add(stop);
+				optionsAdded.add(step);
+				amountSources.optionsMethod=change_dc_sources;
+				change_dc_sources(NumberOfSources.ONE);
 				break;
 			case(Type.AC):
 				ArrayList<string> variations=new ArrayList<string>();
@@ -129,7 +184,9 @@ public class Simulation : Component {
 				line+="op";
 				break;
 			case(Type.DC):
-				line+="dc";
+				line+="dc v"+get_parameter("power source").val.to_string()+" "+get_parameter("start").val.to_string()+" "+get_parameter("stop").val.to_string()+" "+get_parameter("step").val.to_string();
+				if((int)get_parameter("# sources").val==NumberOfSources.TWO)
+					line+=" "+get_parameter("power source 2").val.to_string()+" "+get_parameter("start 2").val.to_string()+" "+get_parameter("stop 2").val.to_string()+" "+get_parameter("step 2").val.to_string();
 				break;
 			case(Type.AC):
 				line+="ac ";

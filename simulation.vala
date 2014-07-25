@@ -29,8 +29,13 @@ public class Simulation : Component {
 	private ArrayList<Parameter> optionsAdded;
 
 	public enum Type{
-		OP,DC,TRAN;
+		OP,TRAN,AC,DC;
 	}
+
+	public enum AcVariation{
+		DECADE,OCTAVE,LINEAIR;
+	}
+
 	public Simulation (int option) {
 			base("Simulation");
 			clear_parameters();
@@ -41,7 +46,7 @@ public class Simulation : Component {
 			temp.add("op");
 			temp.add("dc");
 			temp.add("tran");
-
+			temp.add("ac");
 			Parameter type=add_parameter("type",option,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,temp);
 		
 			type.optionsMethod=change_type;
@@ -74,13 +79,28 @@ public class Simulation : Component {
 			case(Type.TRAN):
 				Parameter step=add_parameter("step",0.02,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				Parameter stop=add_parameter("stop",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter start=add_parameter("start",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				optionsAdded.add(step);
 				optionsAdded.add(stop);
+				optionsAdded.add(start);
 				break;
 			case(Type.OP):
 				break;
 			case(Type.DC):
 				break;
+			case(Type.AC):
+				ArrayList<string> variations=new ArrayList<string>();
+				types.add("decade");
+				types.add("octave");
+				types.add("lineair");
+				Parameter variation=add_parameter("variation",0,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,variations);
+				Parameter points=add_parameter("points",100,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter start=add_parameter("start frequency",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				Parameter stop=add_parameter("stop frequency",100,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
+				optionsAdded.add(variation);
+				optionsAdded.add(points);
+				optionsAdded.add(start);
+				optionsAdded.add(stop);
 		}
 		set_mode(ComponentList.Mode.EDIT);
 		show_all();
@@ -102,13 +122,28 @@ public class Simulation : Component {
 		line="";
 		switch((int)get_parameter("type").val){
 			case(Type.TRAN):
-				line+="tran "+get_parameter("step").val.to_string()+" "+get_parameter("stop").val.to_string();
+				line+="tran "+get_parameter("step").val.to_string()+" "+get_parameter("stop").val.to_string()+" "+get_parameter("start").val.to_string();
 				break;
 			case(Type.OP):
 				line+="op";
 				break;
 			case(Type.DC):
 				line+="dc";
+				break;
+			case(Type.AC):
+				line+="ac ";
+					switch((int)get_parameter("variation").val){
+							case(AcVariation.DECADE):
+									line+="dec "
+									break;
+							case(AcVariation.OCTAVE):
+									line+="oct "
+									break;
+							case(AcVariation.LINEAIR):
+									line+="lin "
+									break;
+					}
+				line+=get_parameter("points").val.to_string()+" "+get_parameter("start frequency").val.to_string()+" "+get_parameter("stop frequency").val.to_string();
 				break;
 		}
 		return line;

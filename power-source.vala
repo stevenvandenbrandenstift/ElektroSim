@@ -27,7 +27,7 @@ public class PowerSource : Component {
 	private ArrayList<Parameter> randomOptionsAdded;
 
 	public enum Type{
-		DC,SINUS,PULSE,EXPO,SFFM,AM,RANDOM,TRANSNOISE,PWLINEAR;
+		DC,DCAC,SINUS,PULSE,EXPO,SFFM,AM,RANDOM,TRANSNOISE,PWLINEAR;
 		//TRANSNOISE is still experimental
 		//PWLINEAR is only usefull if we can import the data, manual entering would be too much off a hastle
 	}
@@ -42,6 +42,7 @@ public class PowerSource : Component {
 			this.height=50;
 			ArrayList<string> temp=new ArrayList<string>();
 			temp.add("dc");
+			temp.add("dc/ac");
 			temp.add("sinus");
 			temp.add("pulse");
 			temp.add("expo");
@@ -155,6 +156,12 @@ public class PowerSource : Component {
 			case(Type.DC):
 				Parameter voltage=add_parameter("voltage",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.SLIDER);
 				optionsAdded.add(voltage);
+				break;
+			case(Type.DCAC):
+				Parameter dcVoltage=add_parameter("dc voltage",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.SLIDER);
+				Parameter acVoltage=add_parameter("ac voltage",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.SLIDER);
+				optionsAdded.add(dcVoltage);
+				optionsAdded.add(acVoltage);
 				break;
 			case(Type.SINUS):
 				Parameter step=add_parameter("offset",0,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
@@ -273,6 +280,9 @@ public class PowerSource : Component {
 		switch((int)get_parameter("type").val){
 			case(Type.DC):
 				line+="dc "+get_parameter("voltage").val.to_string();
+				break;
+			case(Type.DCAC):
+				line+="dc "+get_parameter("dc voltage").val.to_string()+"ac "+get_parameter("ac voltage").val.to_string();
 				break;
 			case(Type.SINUS):
 				line+="sin("+get_parameter("offset").val.to_string()+" "+get_parameter("amplitude").val.to_string()+" "+get_parameter("frequency").val.to_string()+" "+get_parameter("delay").val.to_string()+" "+get_parameter("damping").val.to_string()+")";

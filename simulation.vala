@@ -90,9 +90,9 @@ public class Simulation : Component {
 				break;
 			case(Type.AC):
 				ArrayList<string> variations=new ArrayList<string>();
-				types.add("decade");
-				types.add("octave");
-				types.add("lineair");
+				variations.add("decade");
+				variations.add("octave");
+				variations.add("lineair");
 				Parameter variation=add_parameter("variation",0,Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,variations);
 				Parameter points=add_parameter("points",100,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
 				Parameter start=add_parameter("start frequency",1,Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
@@ -101,6 +101,7 @@ public class Simulation : Component {
 				optionsAdded.add(points);
 				optionsAdded.add(start);
 				optionsAdded.add(stop);
+				break;
 		}
 		set_mode(ComponentList.Mode.EDIT);
 		show_all();
@@ -134,13 +135,13 @@ public class Simulation : Component {
 				line+="ac ";
 					switch((int)get_parameter("variation").val){
 							case(AcVariation.DECADE):
-									line+="dec "
+									line+="dec ";
 									break;
 							case(AcVariation.OCTAVE):
-									line+="oct "
+									line+="oct ";
 									break;
 							case(AcVariation.LINEAIR):
-									line+="lin "
+									line+="lin ";
 									break;
 					}
 				line+=get_parameter("points").val.to_string()+" "+get_parameter("start frequency").val.to_string()+" "+get_parameter("stop frequency").val.to_string();

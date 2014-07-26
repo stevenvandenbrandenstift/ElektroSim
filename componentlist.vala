@@ -117,13 +117,17 @@ public class ComponentList  {
 	public ArrayList<double?> get_selected_values(bool next){
 		//print_list();
 		Parameter par;
-		if(next)
-		par=get_selected_component().get_next_parameter();
-		else
-		par=get_selected_component().get_selected_parameter();
-		
-		selected_values_description_changed(get_selected_component().name+" : "+par.name);
-		return par.values;
+		if(get_selected_component()!=null){
+			if(next)
+			par=get_selected_component().get_next_parameter();
+			else
+			par=get_selected_component().get_selected_parameter();
+			if(par!=null&&par.name!=null){
+			selected_values_description_changed(get_selected_component().name+" : "+par.name);
+			return par.values;
+			}
+		}
+		return null;
 	}
 	
 	public ArrayList<double?> get_time_values(){

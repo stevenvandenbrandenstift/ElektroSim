@@ -64,10 +64,10 @@ public abstract class Component : ListBoxRow {
 
 	public Component(string name){
 		init(name);
-		add_parameter("i",0,"A",Parameter.WidgetStyle.LABEL);
-		add_parameter("p",0,"V",Parameter.WidgetStyle.LABEL);
-		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN,"",Parameter.WidgetStyle.LABEL);
-		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN,"",Parameter.WidgetStyle.LABEL);
+		add_parameter("i",0,"A",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
+		add_parameter("p",0,"V",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
+		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN,"",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
+		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN,"",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
 		work_zone.updated.connect (() => {
    					request_redraw();
 			});
@@ -129,7 +129,7 @@ public abstract class Component : ListBoxRow {
 			par.invalidate_values=true;
 	}
 
-	public Parameter? add_parameter(string name, double val,string unit="",Parameter.WidgetStyle simulation = Parameter.WidgetStyle.NONE,Parameter.WidgetStyle edit= Parameter.WidgetStyle.NONE, ArrayList<string> options = new ArrayList<string>()){
+	public Parameter? add_parameter(string name, double val,string unit="",Parameter.WidgetStyle simulation = Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle edit= Parameter.WidgetStyle.SLIDER, ArrayList<string> options = new ArrayList<string>()){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;

@@ -45,8 +45,8 @@ public class Simulation : Component {
 			base("Simulation");
 			clear_parameters();
 			optionsAdded=new ArrayList<Parameter>();
-			Parameter time=add_parameter("time",0,"s",Parameter.WidgetStyle.LABEL);
-			Parameter status=add_parameter("status",0);
+			Parameter time=add_parameter("time",0,"s",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
+			Parameter status=add_parameter("status",0,"",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
 			time.updated.connect (() => {
    					request_graph_redraw();
 			});
@@ -101,9 +101,9 @@ public class Simulation : Component {
 					break;
 			case(NumberOfSources.TWO):
 					Parameter source2=add_parameter("power source 2",2,"",Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
-					Parameter start2=add_parameter("start 2",double.parse("250e-3"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-					Parameter stop2=add_parameter("stop 2",5,"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-					Parameter step2=add_parameter("step 2",double.parse("250e-3"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+					Parameter start2=add_parameter("start 2",double.parse("250e-3"),"s");
+					Parameter stop2=add_parameter("stop 2",5,"s");
+					Parameter step2=add_parameter("step 2",double.parse("250e-3"),"s");
 					dcOptionsAdded.add(source2);
 					dcOptionsAdded.add(start2);
 					dcOptionsAdded.add(stop2);
@@ -120,9 +120,9 @@ public class Simulation : Component {
 		get_parameter("type").val=option;
 		switch(option){
 			case(Type.TRAN):
-				Parameter step=add_parameter("step",double.parse("20e-3"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter stop=add_parameter("stop",1,"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter start=add_parameter("start",0,"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter step=add_parameter("step",double.parse("20e-3"),"s");
+				Parameter stop=add_parameter("stop",1,"s");
+				Parameter start=add_parameter("start",0,"s");
 				optionsAdded.add(step);
 				optionsAdded.add(stop);
 				optionsAdded.add(start);
@@ -135,9 +135,9 @@ public class Simulation : Component {
 				numberOfSources.add("2");
 				Parameter amountSources=add_parameter("# sources",0,"",Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,numberOfSources);
 				Parameter source=add_parameter("power source",1,"",Parameter.WidgetStyle.ENTRY,Parameter.WidgetStyle.ENTRY);
-				Parameter start=add_parameter("start",double.parse("250e-3"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter stop=add_parameter("stop",5,"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter step=add_parameter("step",double.parse("250e-3"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter start=add_parameter("start",double.parse("250e-3"),"s");
+				Parameter stop=add_parameter("stop",5,"s");
+				Parameter step=add_parameter("step",double.parse("250e-3"),"s");
 				optionsAdded.add(amountSources);
 				optionsAdded.add(source);
 				optionsAdded.add(start);
@@ -152,9 +152,9 @@ public class Simulation : Component {
 				variations.add("octave");
 				variations.add("lineair");
 				Parameter variation=add_parameter("variation",0,"",Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,variations);
-				Parameter points=add_parameter("points",100,"",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter start=add_parameter("start frequency",1,"Hz",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter stop=add_parameter("stop frequency",100,"Hz",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter points=add_parameter("points",100,"");
+				Parameter start=add_parameter("start frequency",1,"Hz");
+				Parameter stop=add_parameter("stop frequency",100,"Hz");
 				optionsAdded.add(variation);
 				optionsAdded.add(points);
 				optionsAdded.add(start);

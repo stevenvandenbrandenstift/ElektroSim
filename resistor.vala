@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- using Gtk;
+
+using Gtk;
 using Gee;
 namespace ElektroSim{
 	
 public class Resistor : Component {
-
 	public static int counter=0;
 	
 	// Constructor
@@ -29,12 +29,12 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		add_parameter("R",resistance,"ohm",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-		add_parameter("Max Power",max_power,"w",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-		add_parameter("ac",0,"V",Parameter.WidgetStyle.LABEL);
-		add_parameter("dtemp",0,"t",Parameter.WidgetStyle.LABEL);
-		add_parameter("bv_max",0,"",Parameter.WidgetStyle.LABEL);
-		add_parameter("noisy",0,"",Parameter.WidgetStyle.LABEL);
+		add_parameter("R",resistance,"\xe2\x84\xa6");
+		add_parameter("Max Power",max_power,"w");
+		add_parameter("ac",0,"V",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
+		add_parameter("dtemp",0,"t",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
+		add_parameter("bv_max",0,"",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
+		add_parameter("noisy",0,"",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
 	}
 	
 	public override void draw_image(Cairo.Context cr){

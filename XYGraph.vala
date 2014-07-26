@@ -72,7 +72,9 @@ public class XYGraph : Gtk.DrawingArea {
 	
 
 	public void redraw(){
-			set_values(request_selected_component_values(false));
+			ArrayList<double?> temp=request_selected_component_values(false);
+			if(temp!=null)
+			set_values(temp);
 			set_timepoints(request_time_values());
 			redraw_canvas();
 	}
@@ -160,14 +162,14 @@ public class XYGraph : Gtk.DrawingArea {
         this.values=values;
         maxValue=double.MIN;
         minValue=0; //always keep relative to x-axis
-		int counter=1;
-        foreach (double p in values) {
-            if(p>maxValue)
-              maxValue=p;
-            if(p<minValue)
-              minValue=p;
-			counter++;
-        }
+		if(values!=null){
+		    foreach (double p in values) {
+		        if(p>maxValue)
+		          maxValue=p;
+		        if(p<minValue)
+		          minValue=p;
+		    }
+		}
     }
     
 	public void clear(){
@@ -187,10 +189,6 @@ public class XYGraph : Gtk.DrawingArea {
 		window.invalidate_region (region, true);
 		window.process_updates (true);
 	}		
-	private void debug(string line){
-		bool debug=false;
-		if(debug)	
-			print(line+"\n");
-	}
+	
 }
 }

@@ -20,6 +20,8 @@
 using Gtk;
 using Gee;
 
+
+
 namespace ElektroSim{
 
  
@@ -87,7 +89,7 @@ public class Parameter : Box{
 	public string to_string(){
 		string line;
 		line=name+": value "+val.to_string()+" \n values: \n";
-		/*foreach(double val in values)
+		foreach(double val in values)
 			line+=val.to_string()+" - ";
 		line+="\n widgets in all:\n";
 		foreach(Widget widget in all)
@@ -98,7 +100,7 @@ public class Parameter : Box{
 		line+="\n widgets in simulation:\n";
 		foreach(Widget widget in simulation)
 			line+=widget.name+" - ";
-			line+="\n\n";*/
+			line+="\n\n";
 		return line;
 	
 	}
@@ -307,10 +309,14 @@ public class Parameter : Box{
 	
 	private ComboBoxText make_suffix_options(){
 		ComboBoxText box = new ComboBoxText ();
+		box.has_frame=false;
+		box.set_vexpand(false);
+		if(unit!="s"){
 		box.append(Suffix.GIGA.get_string(),"T"+unit);
 		box.append(Suffix.GIGA.get_string(),"G"+unit);
 		box.append(Suffix.MEGA.get_string(),"Meg"+unit);
 		box.append(Suffix.KILO.get_string(),"K"+unit);
+		}
 		box.append(Suffix.BASE.get_string(),unit);
 		box.append(Suffix.MILLI.get_string(),"m"+unit);
 		box.append(Suffix.MICRO.get_string(),"u"+unit);

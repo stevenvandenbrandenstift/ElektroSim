@@ -118,26 +118,26 @@ public class PowerSource : Component {
 
 	switch(option){
 		case(RandomType.UNIFORM):
-				Parameter range=add_parameter("range",1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter offset=add_parameter("offset",0,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter range=add_parameter("range",1,"V");
+				Parameter offset=add_parameter("offset",0,"V");
 				randomOptionsAdded.add(range);
 				randomOptionsAdded.add(offset);
 				break;
 		case(RandomType.GAUSSIAN):
-			Parameter standardDev=add_parameter("standard dev",1,"",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter mean=add_parameter("mean",0,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+			Parameter standardDev=add_parameter("standard dev",1,"");
+				Parameter mean=add_parameter("mean",0,"V");
 				randomOptionsAdded.add(standardDev);
 				randomOptionsAdded.add(mean);
 				break;
 		case(RandomType.EXPONENTIAL):
-				Parameter mean=add_parameter("mean",1,"",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter offset=add_parameter("offset",0,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter mean=add_parameter("mean",1,"");
+				Parameter offset=add_parameter("offset",0,"V");
 				randomOptionsAdded.add(mean);
 				randomOptionsAdded.add(offset);
 				break;
 		case(RandomType.POISSON):
-				Parameter lambda=add_parameter("lambda",1,"",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter offset=add_parameter("offset",0,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter lambda=add_parameter("lambda",1);
+				Parameter offset=add_parameter("offset",0,"V");
 				randomOptionsAdded.add(lambda);
 				randomOptionsAdded.add(offset);
 				break;
@@ -148,27 +148,27 @@ public class PowerSource : Component {
 	}   
 
 	public void change_type(int option){
-		print("change to type '%i'\n",option);
+		debug("change to type "+option.to_string());
 		reset_options();
 		get_parameter("type").val=option;
 
 		switch(option){
 			case(Type.DC):
-				Parameter voltage=add_parameter("voltage",1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter voltage=add_parameter("voltage",1,"V");
 				optionsAdded.add(voltage);
 				break;
 			case(Type.DCAC):
-				Parameter dcVoltage=add_parameter("dc voltage",1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter acVoltage=add_parameter("ac voltage",1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter dcVoltage=add_parameter("dc voltage",1,"V");
+				Parameter acVoltage=add_parameter("ac voltage",1,"V");
 				optionsAdded.add(dcVoltage);
 				optionsAdded.add(acVoltage);
 				break;
 			case(Type.SINUS):
-				Parameter step=add_parameter("offset",0,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter amplitude=add_parameter("amplitude",1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter frequency=add_parameter("frequency",10,"Hz",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter delay=add_parameter("delay",0,"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter damping=add_parameter("damping",0,"",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter step=add_parameter("offset",0,"V");
+				Parameter amplitude=add_parameter("amplitude",1,"V");
+				Parameter frequency=add_parameter("frequency",10,"Hz");
+				Parameter delay=add_parameter("delay",0,"s");
+				Parameter damping=add_parameter("damping",0);
 				optionsAdded.add(step);
 				optionsAdded.add(amplitude);
 				optionsAdded.add(frequency);
@@ -176,13 +176,13 @@ public class PowerSource : Component {
 				optionsAdded.add(damping);
 				break;
 			case(Type.PULSE):
-				Parameter initial=add_parameter("initial value",-1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter pulsed=add_parameter("pulsed value",1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter delay=add_parameter("delay",double.parse("2e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter rise=add_parameter("rise",double.parse("2e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter fall=add_parameter("fall",double.parse("2e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter pulse=add_parameter("pulse width",double.parse("50e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter period=add_parameter("period",double.parse("100e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter initial=add_parameter("initial value",-1,"V");
+				Parameter pulsed=add_parameter("pulsed value",1,"V");
+				Parameter delay=add_parameter("delay",double.parse("2e-9"),"s");
+				Parameter rise=add_parameter("rise",double.parse("2e-9"),"s");
+				Parameter fall=add_parameter("fall",double.parse("2e-9"),"s");
+				Parameter pulse=add_parameter("pulse width",double.parse("50e-9"),"s");
+				Parameter period=add_parameter("period",double.parse("100e-9"),"s");
 				optionsAdded.add(initial);
 				optionsAdded.add(pulsed);
 				optionsAdded.add(delay);
@@ -192,12 +192,12 @@ public class PowerSource : Component {
 				optionsAdded.add(period);
 				break;
 			case(Type.EXPO):
-				Parameter initial=add_parameter("initial value",-4,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter pulsed=add_parameter("pulsed value",-1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter riseDelay=add_parameter("rise delay",double.parse("2e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter riseConstant=add_parameter("rise",double.parse("30e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter fallDelay=add_parameter("fall delay",double.parse("60e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter fallConstant=add_parameter("fall",double.parse("40e-9"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter initial=add_parameter("initial value",-4,"V");
+				Parameter pulsed=add_parameter("pulsed value",-1,"V");
+				Parameter riseDelay=add_parameter("rise delay",double.parse("2e-9"),"s");
+				Parameter riseConstant=add_parameter("rise",double.parse("30e-9"),"s");
+				Parameter fallDelay=add_parameter("fall delay",double.parse("60e-9"),"s");
+				Parameter fallConstant=add_parameter("fall",double.parse("40e-9"),"s");
 				optionsAdded.add(initial);
 				optionsAdded.add(pulsed);
 				optionsAdded.add(riseDelay);
@@ -206,11 +206,11 @@ public class PowerSource : Component {
 				optionsAdded.add(fallConstant);
 				break;
 			case(Type.SFFM):
-				Parameter offset=add_parameter("offset",0,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter amplitude=add_parameter("amplitude",double.parse("1e6"),"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter carrierFreq=add_parameter("carrier frequency",double.parse("20e3"),"Hz",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter modulationIndex=add_parameter("modulation index",double.parse("5"),"",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter signalFreq=add_parameter("signal frequency",double.parse("1e3"),"Hz",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter offset=add_parameter("offset",0,"V");
+				Parameter amplitude=add_parameter("amplitude",double.parse("1e6"),"V");
+				Parameter carrierFreq=add_parameter("carrier freq",double.parse("20e3"),"Hz");
+				Parameter modulationIndex=add_parameter("modulation index",double.parse("5"));
+				Parameter signalFreq=add_parameter("signal frequency",double.parse("1e3"),"Hz");
 				optionsAdded.add(offset);
 				optionsAdded.add(amplitude);
 				optionsAdded.add(carrierFreq);
@@ -218,11 +218,11 @@ public class PowerSource : Component {
 				optionsAdded.add(signalFreq);
 				break;
 			case(Type.AM):
-				Parameter amplitude=add_parameter("amplitude",0.5,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter offset=add_parameter("offset",1,"V",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter modulatingFreq=add_parameter("modulating frequency",double.parse("20e3"),"Hz",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter carrierFreq=add_parameter("carrier frequency",double.parse("1e9"),"Hz",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter signalDelay=add_parameter("signal delay",double.parse("1e-3"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter amplitude=add_parameter("amplitude",0.5,"V");
+				Parameter offset=add_parameter("offset",1,"V");
+				Parameter modulatingFreq=add_parameter("modulating freq",double.parse("20e3"),"Hz");
+				Parameter carrierFreq=add_parameter("carrier freq",double.parse("1e9"),"Hz");
+				Parameter signalDelay=add_parameter("signal delay",double.parse("1e-3"),"s");
 				optionsAdded.add(amplitude);
 				optionsAdded.add(offset);
 				optionsAdded.add(modulatingFreq);
@@ -236,8 +236,8 @@ public class PowerSource : Component {
 				types.add("exponential");
 				types.add("poisson");
 				Parameter randomType=add_parameter("random type",0,"",Parameter.WidgetStyle.OPTIONS,Parameter.WidgetStyle.OPTIONS,types);
-				Parameter duration=add_parameter("duration",double.parse("10e-3"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-				Parameter timeDelay=add_parameter("time delay",double.parse("0"),"s",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+				Parameter duration=add_parameter("duration",double.parse("10e-3"),"s");
+				Parameter timeDelay=add_parameter("time delay",double.parse("0"),"s");
 				optionsAdded.add(randomType);
 				optionsAdded.add(duration);
 				optionsAdded.add(timeDelay);

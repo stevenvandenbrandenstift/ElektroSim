@@ -35,7 +35,7 @@ public class XYGraph : Gtk.DrawingArea {
     private double minValue;
     private ArrayList<double?> time;
 	private string name;
-	public signal ArrayList<double?> request_selected_component_values();
+	public signal ArrayList<double?> request_selected_component_values(bool next);
 	public signal ArrayList<double?> request_time_values();
 	
 	// Constructor
@@ -43,7 +43,7 @@ public class XYGraph : Gtk.DrawingArea {
 		add_events (EventMask.BUTTON_PRESS_MASK);
    		
    		this.button_press_event.connect(()=>{
-   			set_values(request_selected_component_values());
+   			set_values(request_selected_component_values(true));
 			set_timepoints(request_time_values());
 			redraw_canvas();
 			return true;
@@ -69,7 +69,13 @@ public class XYGraph : Gtk.DrawingArea {
 			cr.stroke ();
 			cr.close_path();
 	}
+	
 
+	public void redraw(){
+			set_values(request_selected_component_values(false));
+			set_timepoints(request_time_values());
+			redraw_canvas();
+	}
 	public override bool draw (Cairo.Context cr) {
 		
 		//possible to paint the background

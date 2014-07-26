@@ -20,28 +20,19 @@ using Gee;
 using ngspice;
 namespace ElektroSim{
 
-public enum SimulationAlgorithm{
-		OP,DC,TRAN,AC;
-}
-
 public class NGSpiceSimulator : GLib.Object {
 
 	public static Gee.ArrayList<Component> items;
 	public static Component simulation;
 	public signal Gee.ArrayList<Component> request_components(Component.ComponentType type2);
 	private static Component current_component;
-	private static int counter=0;
-	private static int req_counter=0;
 	private static string current_device;
-	private static Mutex mutex;
 	private static bool ready=false;
-	private static bool time_requested=false;
 	public int identificationLibrary;
 	public void* userData;
 
 	public NGSpiceSimulator () {
 		current_component=null;
-		mutex = new Mutex ();
 		current_device="";
 		items=new Gee.ArrayList<Component>();
 		ngspice.init<int>(receive_output, receive_simulation_data, controlled_exit, receive_vectors , receive_init_vectors, is_background_thread_running,5);
@@ -57,27 +48,17 @@ public class NGSpiceSimulator : GLib.Object {
 		test=line.strip ();
 		foreach(string str in wrong){
 			if(test.contains(str))
-				//print ("wrongline , '%s' , \n", test); //debug line
 				return false;
 		}
 		if(test.has_prefix("device")){
 				current_device=split_line(line,null);
-				//print ("deviceline , '%s'  \n", current_device); //debug line
-				mutex.lock ();
-				counter--;
-				mutex.unlock ();
 				return false;
 		}
 		if(test.has_prefix("Index")){
 				current_device="Simulation";
-				//print ("deviceline , '%s' \n",current_device); //debug line
-				mutex.lock ();
-				counter--;
-				mutex.unlock ();
 				return false;
 		}
 		if(test.contains("hit return for more")){
-				//print ("send enter , '%s' \n",current_device); //debug line
 				ngspice.send_command("c\n");
 		}
 		return true;
@@ -116,39 +97,19 @@ public class NGSpiceSimulator : GLib.Object {
 			foreach (string line in dataList) {
 				line=strip_std(line);
 				if(check_string(line)){
-					
 					if(check_device()){	 
 						string val,parameter;
 						val=split_line(line, out parameter);
-
-						if(current_device=="Simulation")
-							parameter="time";
-					
-							current_component.insert_simulation_data(parameter,val,true);
+						current_component.insert_simulation_data(parameter,val,true);
 					}
 				}
 			}
-		
-		if(counter==0&&ready){
-			if(!time_requested){
-				time_requested=true;
-				string chars="time";
-				VectorInfo info=ngspice.VectorInfo.from_string(chars);
-				debug ("vector time length "+info.length.to_string());
-				for(int i=0;i<info.length;i++){
-					print ("%f --",info.data[i]);
-					simulation.insert_simulation_data("time",info.data[i].to_string(),true);
-				}
-				//print_report();
-			}
-		}
 		return 0;
 	}
 	
 	private static void print_report(){
 			print ("==========================================================\nreport:\n" );
 						foreach(Component component in items){
-							if(component.name!="Ground"&&component.name!="Line"){
 								print ("\n%s :\n", component.name );
 								foreach(Parameter par in component.parameters){
 										if(par.values.size>0&&(par.name=="i"||par.name=="p"||par.name=="activity"||par.name=="work_zone")){
@@ -160,14 +121,13 @@ public class NGSpiceSimulator : GLib.Object {
 										}else
 											print ("%s -> %f :\n", par.name,par.val );
 								}
-							}
 						}
 	}
 	public static int receive_simulation_data(string simulation_status,int id, int data){
-		print ("simulation status: '%s'\n", simulation_status); //debug line
 		if(simulation_status.contains("--ready--")){
 			ready=true;
-			print ("requested '%i' shows \n", req_counter); //debug line
+			simulation.get_parameter("status").set_value(1);
+			debug("simulation status set to 1");
 		}
 		return 0;
 	}
@@ -183,15 +143,14 @@ public class NGSpiceSimulator : GLib.Object {
 
 		foreach(Component component in items){
 								if(component.name!="Ground"&&component.name!="Line"&&component.name!="Simulation"){
-									req_counter++;
-									mutex.lock ();
-									counter++;
-									mutex.unlock ();
 									ngspice.send_command("show "+component.name+"\n");
-									//print("send command: %s","show "+component.name+"\n");
 								}
+								
 		}
-		
+		string chars="time";
+		VectorInfo info=ngspice.VectorInfo.from_string(chars);
+		debug ("vector time length "+info.length.to_string());
+		simulation.insert_simulation_data("time",info.data[info.length-1].to_string(),true);
 		return 0;
 	}
 		
@@ -233,16 +192,6 @@ public class NGSpiceSimulator : GLib.Object {
 			dos.put_string (component.get_netlist_line());
 			print("%s" ,component.get_netlist_line());
 		}
-		/*dos.put_string (".control\n");
-		//dos.put_string ("OP\n");
-			foreach(Component component in items){
-			if(component.name!="Ground"&&component.name!="Line"){
-			dos.put_string("show "+component.name+"\n");
-			}
-			}
-			//dos.put_string ("exit");
-		//dos.put_string (".endc\n");
-		*/
 		dos.put_string (".END");
 		
 		
@@ -260,26 +209,20 @@ public class NGSpiceSimulator : GLib.Object {
 
 
 	public void	 run_simulation(){
-		
-		
-		
-		
+
 		string command=null;
 		foreach(Component component in request_components(Component.ComponentType.SIMULATION)){
 				simulation=component;
 				continue;
 		}
 		if(simulation!=null){
-			
+			simulation.get_parameter("status").set_value(0);
 			items=request_components(Component.ComponentType.COMPONENT);
 			load_netlist();
-			req_counter=0;
-			counter=0;
 			ready=false;
-			time_requested=false;
 			print ("\n\n====================run simulation======================================\n\n" );
 			command=simulation.get_netlist_line();
-			print ("send this: '%s' from %s \n", command,simulation.name); //debug line
+			debug ("send this: '"+command+"' from "+simulation.name);
 			ngspice.send_command(command+"\n");
 			
 		}   

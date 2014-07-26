@@ -283,11 +283,5 @@ public class Parameter : Box{
 		return box;
 	}
 	
-	}
-
-	private void debug(string line){
-		bool debug=false;
-		if(debug)	
-			print(line+"\n");
-	}
+	}	
 }

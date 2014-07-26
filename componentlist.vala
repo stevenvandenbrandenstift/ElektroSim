@@ -15,7 +15,8 @@ public class ComponentList  {
 	private Component.ComponentType compType{get;set;default=Component.ComponentType.TEMPLATE;}
 	public signal void selected_values_description_changed(string name);
 	public signal void request_simulation();
-	public signal void request_redraw();	
+	public signal void request_redraw();
+	public signal void request_graph_redraw();	
 	private Timer timer ;
 	private bool timer_running;
 	private uint timerID;
@@ -64,6 +65,9 @@ public class ComponentList  {
 					timerID = Timeout.add (3000, timer_delay);
 					}
 			});
+		comp.request_graph_redraw.connect (() => {
+   					request_graph_redraw();
+			});
 		this.list.add(comp);
 		this.list.show_all();
 	}
@@ -111,9 +115,14 @@ public class ComponentList  {
 		request_redraw();
 	}
 	
-	public ArrayList<double?> get_selected_values(){
+	public ArrayList<double?> get_selected_values(bool next){
 		//print_list();
-		Parameter par=get_selected_component().get_next_parameter();
+		Parameter par;
+		if(next)
+		par=get_selected_component().get_next_parameter();
+		else
+		par=get_selected_component().get_selected_parameter();
+		
 		selected_values_description_changed(get_selected_component().name+" : "+par.name);
 		return par.values;
 	}

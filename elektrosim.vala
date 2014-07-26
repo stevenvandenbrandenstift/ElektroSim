@@ -46,7 +46,8 @@ public class MainWindow : Window  {
 		graph= new XYGraph();
 
 		clist.request_redraw.connect(sim_area.redraw_canvas);
-		clist.selected_values_description_changed.connect(graph.set_name);		
+		clist.selected_values_description_changed.connect(graph.set_name);
+		clist.request_graph_redraw.connect(graph.redraw);		
 				
 
 		sim_area.new_component.connect (clist.add_component);
@@ -89,4 +90,9 @@ public class MainWindow : Window  {
 
 
 }
+	private void debug(string line){
+		bool debug=true;
+		if(debug)	
+			print(line+"\n");
+	}
 }

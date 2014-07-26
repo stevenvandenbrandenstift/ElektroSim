@@ -45,8 +45,12 @@ public class Simulation : Component {
 			base("Simulation");
 			clear_parameters();
 			optionsAdded=new ArrayList<Parameter>();
-			add_parameter("time",0,Parameter.WidgetStyle.LABEL);
-		
+			Parameter time=add_parameter("time",0,Parameter.WidgetStyle.LABEL);
+			Parameter status=add_parameter("status",0);
+			time.updated.connect (() => {
+					debug("time changed "+status.val.to_string());
+   					request_graph_redraw();
+			});
 			ArrayList<string> temp=new ArrayList<string>();
 			temp.add("op");
 			temp.add("transient");

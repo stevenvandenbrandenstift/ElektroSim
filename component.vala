@@ -44,6 +44,7 @@ public abstract class Component : ListBoxRow {
 	// Constructor
 	public signal void request_simulate();
 	public signal void request_redraw();
+	public signal void request_graph_redraw();
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
 	public ComponentType componentType {get;set;default=ComponentType.COMPONENT;}
@@ -65,8 +66,14 @@ public abstract class Component : ListBoxRow {
 		init(name);
 		add_parameter("i",0,Parameter.WidgetStyle.LABEL);
 		add_parameter("p",0,Parameter.WidgetStyle.LABEL);
-		add_parameter("activity",(double)Activity.UNKNOWN,Parameter.WidgetStyle.LABEL);
-		add_parameter("work_zone",(double)Zone.UNKNOWN,Parameter.WidgetStyle.LABEL);
+		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN,Parameter.WidgetStyle.LABEL);
+		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN,Parameter.WidgetStyle.LABEL);
+		work_zone.updated.connect (() => {
+   					request_redraw();
+			});
+		activity.updated.connect (() => {
+   					request_redraw();
+			});
 		selected_parameter=-1;
 
 	}
@@ -134,11 +141,6 @@ public abstract class Component : ListBoxRow {
 			par.edited.connect (() => {
    					request_simulate();
 			});
-			if(par.name=="activity"||par.name=="work_zone"){
-			par.updated.connect (() => {
-   					request_redraw();
-			});
-			}
 			foreach(string str in options){
 				par.options.add(str);
 			}
@@ -150,19 +152,33 @@ public abstract class Component : ListBoxRow {
 	}
 	
 	public Parameter? get_next_parameter(){
+		bool goRound=true;
 		if(parameters!=null){
-		selected_parameter++;
-		if(selected_parameter>=parameters.size)
-			selected_parameter=0;
-
-		while(parameters[selected_parameter].values==null||parameters[selected_parameter].values.size==0){
 			selected_parameter++;
-			if(selected_parameter>=parameters.size)
-			selected_parameter=0;
-		}
-		return parameters[selected_parameter];
-		}
+				if(selected_parameter>=parameters.size){
+					selected_parameter=0;
+					goRound=false;
+				}
+				while(parameters[selected_parameter].values==null||parameters[selected_parameter].values.size==0){
+					selected_parameter++;
+					if(selected_parameter>=parameters.size){
+						if(goRound){
+							selected_parameter=0;
+							goRound=false;
+						}else
+							return null;
+					}
+				}
+			return parameters[selected_parameter];
+			}
 		return null;
+	}
+	
+	public Parameter? get_selected_parameter(){
+		if(parameters!=null&&selected_parameter!=-1&&selected_parameter<parameters.size){
+			return parameters[selected_parameter];
+		}else
+		return get_next_parameter();
 	}
 
 	public Parameter? get_parameter(string name){

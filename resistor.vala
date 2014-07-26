@@ -29,12 +29,12 @@ public class Resistor : Component {
 		base("Resistor");
 		this.width=250;
 		this.height=50;
-		add_parameter("R",resistance,Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-		add_parameter("Max Power",max_power,Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
-		add_parameter("ac",0,Parameter.WidgetStyle.LABEL);
-		add_parameter("dtemp",0,Parameter.WidgetStyle.LABEL);
-		add_parameter("bv_max",0,Parameter.WidgetStyle.LABEL);
-		add_parameter("noisy",0,Parameter.WidgetStyle.LABEL);
+		add_parameter("R",resistance,"ohm",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+		add_parameter("Max Power",max_power,"w",Parameter.WidgetStyle.SLIDER,Parameter.WidgetStyle.SLIDER);
+		add_parameter("ac",0,"V",Parameter.WidgetStyle.LABEL);
+		add_parameter("dtemp",0,"t",Parameter.WidgetStyle.LABEL);
+		add_parameter("bv_max",0,"",Parameter.WidgetStyle.LABEL);
+		add_parameter("noisy",0,"",Parameter.WidgetStyle.LABEL);
 	}
 	
 	public override void draw_image(Cairo.Context cr){

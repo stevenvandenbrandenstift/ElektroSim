@@ -60,10 +60,9 @@ public class ComponentList  {
    					request_redraw();
 			});
 		comp.request_simulate.connect (() => {
-					if(!timer_running){
-					timer_running=true;
+					if(timerID!=0)
+					Source.remove (timerID);
 					timerID = Timeout.add (3000, timer_delay);
-					}
 			});
 		comp.request_graph_redraw.connect (() => {
    					request_graph_redraw();

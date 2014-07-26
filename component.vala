@@ -64,10 +64,10 @@ public abstract class Component : ListBoxRow {
 
 	public Component(string name){
 		init(name);
-		add_parameter("i",0,Parameter.WidgetStyle.LABEL);
-		add_parameter("p",0,Parameter.WidgetStyle.LABEL);
-		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN,Parameter.WidgetStyle.LABEL);
-		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN,Parameter.WidgetStyle.LABEL);
+		add_parameter("i",0,"A",Parameter.WidgetStyle.LABEL);
+		add_parameter("p",0,"V",Parameter.WidgetStyle.LABEL);
+		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN,"",Parameter.WidgetStyle.LABEL);
+		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN,"",Parameter.WidgetStyle.LABEL);
 		work_zone.updated.connect (() => {
    					request_redraw();
 			});
@@ -129,14 +129,15 @@ public abstract class Component : ListBoxRow {
 			par.invalidate_values=true;
 	}
 
-	public Parameter? add_parameter(string name, double val,Parameter.WidgetStyle simulation = Parameter.WidgetStyle.NONE,Parameter.WidgetStyle edit= Parameter.WidgetStyle.NONE, ArrayList<string> options = new ArrayList<string>()){
+	public Parameter? add_parameter(string name, double val,string unit="",Parameter.WidgetStyle simulation = Parameter.WidgetStyle.NONE,Parameter.WidgetStyle edit= Parameter.WidgetStyle.NONE, ArrayList<string> options = new ArrayList<string>()){
 		Parameter par=get_parameter(name);
 		if(par!=null){  //parameter exists -- update
 			par.val=val;
 			par.set_edit_array(edit);
 			par.set_simulation_array(simulation);
+			par.unit=unit;
 		}else{  //does not exist add
-			par=new Parameter(name,val);
+			par=new Parameter(name,val,unit);
 			parameters.add(par);
 			par.edited.connect (() => {
    					request_simulate();

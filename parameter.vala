@@ -30,8 +30,20 @@ public class Parameter : Box{
 	public enum WidgetStyle {
 		NONE,LABEL,ENTRY,OPTIONS,SLIDER;
 	}
+		
+	public enum Suffix {	
+		FEMTO=-15,PICO=-12,NANO=-9,MICRO=-6,MILLI=-3,BASE=0,KILO=3,MEGA=6,GIGA=9,TERA=12;
+		
+		public string get_string ()
+        {
+                return ((EnumClass)typeof (Suffix).class_ref ()).get_value(this).value.to_string();
+        }
+	}
 
 	public double val{get;set;}
+	private double valBase;
+	private int suffix;
+	public string unit;
 	public ArrayList<double?> values{get;set;}
 	private ArrayList<Widget> edit{get;set;}
 	private ArrayList<Widget> simulation{get;set;}
@@ -50,7 +62,7 @@ public class Parameter : Box{
 	private Adjustment sliderValue;
 	public OptionsMethod optionsMethod{get;set;}
 	
-	public Parameter(string name , double val){
+	public Parameter(string name , double val,string unit=""){
 		options=new ArrayList<string>();
 		values=new ArrayList<double?>();
 		edit=new ArrayList<Widget>();
@@ -58,9 +70,12 @@ public class Parameter : Box{
 		all=new ArrayList<Widget>();
 		invalidate_values=false;
 		mutex = new Mutex ();
-
+		
 		this.name=name;
 		this.val=val;
+		this.unit=unit;
+		this.suffix=0;
+		convert_val_to_base();
 		//set_can_focus(false);	
 		set_size_request(-1,-1);
 		label= new Label (name);
@@ -86,6 +101,41 @@ public class Parameter : Box{
 			line+="\n\n";*/
 		return line;
 	
+	}
+
+	private void convert_base_to_val(){
+		val=valBase*Math.pow10((double)suffix);
+	}
+	private void convert_val_to_base(){
+		debug("suffix:"+suffix.to_string());
+		debug("baseval:"+valBase.to_string());
+		debug("val:"+val.to_string());
+		double exponent=0;
+		double fraction=0;
+		if(val!=0){
+		exponent=Math.logb(val);
+		fraction=val/(Math.pow10(exponent));
+		}
+		debug("fraction:"+fraction.to_string());
+		debug("exponent:"+exponent.to_string());
+		int residu=(int)Math.fmod(exponent,(double)3);
+		debug("residu:"+exponent.to_string());
+		if(residu!=0){
+			//not dividable by 3
+			if(exponent>0){
+				exponent=exponent-residu;
+				fraction*=Math.pow10((double)residu);
+			}
+			else{
+				exponent+=residu;
+				fraction*=Math.pow10(-(double)residu);
+			}
+		}
+		suffix=(int)exponent;
+		valBase=fraction;
+		debug("suffix:"+suffix.to_string());
+			debug("baseval:"+valBase.to_string());
+			debug("val:"+val.to_string());
 	}
 
 	public void set_mode(ComponentList.Mode mode){
@@ -124,8 +174,9 @@ public class Parameter : Box{
 						(widget as Label).set_label(val.to_string());
 				}else if(widget is Entry)
 					(widget as Entry).set_text(val.to_string());
-				else if(widget is Scale)
-					(widget as Scale).set_value(val);
+				else if(widget is Scale){
+					(widget as Scale).set_value(valBase);
+				}
 				
 			}
 	}
@@ -152,6 +203,7 @@ public class Parameter : Box{
 				break;
 			case WidgetStyle.SLIDER:
 				temp.add(get_widget(typeof(Scale)));
+				temp.add(make_suffix_options());
 				break;
 			case WidgetStyle.OPTIONS:
 				temp.add(get_widget(typeof(ComboBoxText)));
@@ -211,7 +263,7 @@ public class Parameter : Box{
 
 
 	private Scale make_scale(){
-		sliderValue= new Adjustment ( val,  0.000001,  10,  0.1,  1, 0);
+		sliderValue= new Adjustment (valBase,  0.1,  100,  0.1,  0.1, 0);
 		Scale scale=new Scale (Gtk.Orientation.HORIZONTAL,sliderValue);
 		scale.set_has_origin (false);
 		scale.set_hexpand(true);
@@ -219,18 +271,10 @@ public class Parameter : Box{
 		//scale.set_update_policy(0);
 		scale.value_changed.connect (()=>{
 					mutex.lock();
-					val=scale.get_value();
-					double upper=sliderValue.get_upper();
-					if(val>=upper*0.95){
-						sliderValue.set_upper(upper*10);
-						sliderValue.set_step_increment (sliderValue.get_upper()/1000);
-					}
-					else if(val<=upper*0.05){
-						sliderValue.set_step_increment (sliderValue.get_upper()/1000);
-						sliderValue.set_upper(upper/10);
-					}
-					scale.set_value(val);
-					debug("sliderchanged to value "+scale.get_value().to_string()+"  -sliderValue.get_upper() "+sliderValue.get_upper().to_string());
+					valBase=scale.get_value();
+					convert_base_to_val();
+					sliderValue.set_step_increment (0.1);
+					debug("sliderchanged to value "+scale.get_value().to_string());
 					edited();
 					mutex.unlock();
 		});
@@ -260,15 +304,35 @@ public class Parameter : Box{
 		all.add(label);
 		return label;
 	}
+	
+	private ComboBoxText make_suffix_options(){
+		ComboBoxText box = new ComboBoxText ();
+		box.append(Suffix.GIGA.get_string(),"T"+unit);
+		box.append(Suffix.GIGA.get_string(),"G"+unit);
+		box.append(Suffix.MEGA.get_string(),"Meg"+unit);
+		box.append(Suffix.KILO.get_string(),"K"+unit);
+		box.append(Suffix.BASE.get_string(),unit);
+		box.append(Suffix.MILLI.get_string(),"m"+unit);
+		box.append(Suffix.MICRO.get_string(),"u"+unit);
+		box.append(Suffix.NANO.get_string(),"n"+unit);
+		box.append(Suffix.PICO.get_string(),"p"+unit);
+		box.append(Suffix.FEMTO.get_string(),"f"+unit);
+		box.set_active_id(suffix.to_string());
+		box.changed.connect (() => {
+			suffix = int.parse(box.get_active_id ());
+			convert_base_to_val();
+			edited();		
+		});
+		all.add(box);
+		return box;
+	}
 
 	private ComboBoxText make_options(){
 		ComboBoxText box = new ComboBoxText ();
-		string temp="";
 		foreach(string str in options){
-				temp+=str+" - ";
 				box.append_text (str);
 		}
-		box.active = (int)val;
+		box.set_active((int)val);
 		debug("val="+val.to_string());
 		box.changed.connect (() => {
 			int id = box.get_active ();

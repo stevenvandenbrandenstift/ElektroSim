@@ -1,0 +1,3 @@
+/home/steven/projecten/elektrosim/build/CMakeFiles/elektrosim.dir
+/home/steven/projecten/elektrosim/build/CMakeFiles/ui_copy_elektrosim.dir
+/home/steven/projecten/elektrosim/build/CMakeFiles/uninstall.dir

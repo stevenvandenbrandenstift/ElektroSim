@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/steven/projecten/elektrosim/build/src/component.c
+glib.h
+-
+glib-object.h
+-
+gtk/gtk.h
+-
+cairo.h
+-
+stdlib.h
+-
+string.h
+-
+gee.h
+-
+float.h
+-
+math.h
+-
+librsvg/rsvg.h
+-
+stdio.h
+-
+

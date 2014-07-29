@@ -1,0 +1,33 @@
+<project version="0.1">
+	<name>elektrosim</name>
+	<buildsystem library="false">cmake</buildsystem>
+	<version>
+		<major>0</major>
+		<minor>0</minor>
+		<patch>0</patch>
+	</version>
+	<packages>
+		<package name="gdk-3.0"/>
+		<package name="gee-0.8"/>
+		<package name="gio-2.0"/>
+		<package name="glib-2.0"/>
+		<package name="gobject-2.0"/>
+		<package name="gtk+-3.0"/>
+		<package name="librsvg-2.0"/>
+		<package name="ngspice"/>
+	</packages>
+	<source-directories>
+		<directory>src</directory>
+		<directory>vapi</directory>
+	</source-directories>
+	<ui-directories>
+		<directory>ui</directory>
+	</ui-directories>
+	<buildsystem-directories>
+		<directory></directory>
+		<directory>cmake</directory>
+	</buildsystem-directories>
+	<data-directories>
+		<directory>emoticons</directory>
+	</data-directories>
+</project>

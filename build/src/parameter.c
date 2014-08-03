@@ -1293,6 +1293,7 @@ void elektro_sim_parameter_set_value (ElektroSimParameter* self, gdouble temp) {
 	g_return_if_fail (self != NULL);
 	_tmp0_ = temp;
 	elektro_sim_parameter_set_val (self, _tmp0_);
+	elektro_sim_parameter_convert_val_to_base (self);
 	elektro_sim_parameter_set_widgets_value (self);
 	g_signal_emit_by_name (self, "updated");
 }
@@ -1341,27 +1342,24 @@ static void block1_data_unref (void * _userdata_) {
 static void __lambda7_ (Block1Data* _data1_) {
 	ElektroSimParameter* self;
 	gdouble _tmp0_ = 0.0;
-	GtkAdjustment* _tmp1_ = NULL;
-	gdouble _tmp2_ = 0.0;
+	gdouble _tmp1_ = 0.0;
+	gchar* _tmp2_ = NULL;
 	gchar* _tmp3_ = NULL;
 	gchar* _tmp4_ = NULL;
 	gchar* _tmp5_ = NULL;
-	gchar* _tmp6_ = NULL;
 	self = _data1_->self;
 	g_mutex_lock (&self->priv->mutex);
 	_tmp0_ = gtk_range_get_value ((GtkRange*) _data1_->scale);
 	self->priv->valBase = _tmp0_;
 	elektro_sim_parameter_convert_base_to_val (self);
-	_tmp1_ = self->priv->sliderValue;
-	gtk_adjustment_set_step_increment (_tmp1_, 0.1);
-	_tmp2_ = gtk_range_get_value ((GtkRange*) _data1_->scale);
-	_tmp3_ = double_to_string (_tmp2_);
-	_tmp4_ = _tmp3_;
-	_tmp5_ = g_strconcat ("sliderchanged to value ", _tmp4_, NULL);
-	_tmp6_ = _tmp5_;
-	elektro_sim_debug (_tmp6_);
-	_g_free0 (_tmp6_);
-	_g_free0 (_tmp4_);
+	_tmp1_ = gtk_range_get_value ((GtkRange*) _data1_->scale);
+	_tmp2_ = double_to_string (_tmp1_);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = g_strconcat ("sliderchanged to value ", _tmp3_, NULL);
+	_tmp5_ = _tmp4_;
+	elektro_sim_debug (_tmp5_);
+	_g_free0 (_tmp5_);
+	_g_free0 (_tmp3_);
 	g_signal_emit_by_name (self, "edited");
 	g_mutex_unlock (&self->priv->mutex);
 }

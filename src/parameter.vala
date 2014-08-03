@@ -249,6 +249,7 @@ public class Parameter : Box{
 
 	public void set_value(double temp){
 		val=temp;
+		convert_val_to_base();
 		set_widgets_value();
 		updated();
 	}
@@ -275,7 +276,6 @@ public class Parameter : Box{
 					mutex.lock();
 					valBase=scale.get_value();
 					convert_base_to_val();
-					sliderValue.set_step_increment (0.1);
 					debug("sliderchanged to value "+scale.get_value().to_string());
 					edited();
 					mutex.unlock();

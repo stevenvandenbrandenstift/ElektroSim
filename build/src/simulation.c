@@ -635,7 +635,7 @@ void elektro_sim_simulation_change_type (ElektroSimSimulation* self, gint option
 			ElektroSimParameter* _tmp21_ = NULL;
 			GeeArrayList* _tmp22_ = NULL;
 			ElektroSimParameter* _tmp23_ = NULL;
-			_tmp5_ = double_parse ("20e-3");
+			_tmp5_ = double_parse ("200e-3");
 			_tmp6_ = gee_array_list_new (G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, g_free, NULL, NULL, NULL);
 			_tmp7_ = _tmp6_;
 			_tmp8_ = elektro_sim_component_add_parameter ((ElektroSimComponent*) self, "step", _tmp5_, "s", ELEKTRO_SIM_PARAMETER_WIDGET_STYLE_SLIDER, ELEKTRO_SIM_PARAMETER_WIDGET_STYLE_SLIDER, _tmp7_);

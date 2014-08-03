@@ -63,6 +63,11 @@ struct _ElektroSimXYGraphPrivate {
 	gdouble minValue;
 	GeeArrayList* time;
 	gchar* name;
+	gdouble rangeX;
+	gdouble rangeY;
+	gdouble offset;
+	gint height;
+	gint width;
 };
 
 typedef enum  {
@@ -89,11 +94,10 @@ void elektro_sim_xy_graph_set_values (ElektroSimXYGraph* self, GeeArrayList* val
 void elektro_sim_xy_graph_set_timepoints (ElektroSimXYGraph* self, GeeArrayList* timepoints);
 static void elektro_sim_xy_graph_redraw_canvas (ElektroSimXYGraph* self);
 static gboolean ___lambda14__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self);
-void elektro_sim_xy_graph_draw_axes (ElektroSimXYGraph* self, cairo_t* cr, gint width, gint height, gint border, gdouble offset);
+void elektro_sim_xy_graph_draw_axes (ElektroSimXYGraph* self, cairo_t* cr, gdouble border, gdouble offset);
 void elektro_sim_xy_graph_redraw (ElektroSimXYGraph* self);
 static gboolean elektro_sim_xy_graph_real_draw (GtkWidget* base, cairo_t* cr);
 void elektro_sim_xy_graph_draw_label (ElektroSimXYGraph* self, cairo_t* cr, gint fontsize, const gchar* label, gdouble x, gdouble y, ElektroSimXYGraphLocation location);
-void elektro_sim_debug (const gchar* line);
 void elektro_sim_xy_graph_set_name (ElektroSimXYGraph* self, const gchar* name);
 void elektro_sim_xy_graph_clear (ElektroSimXYGraph* self);
 static void g_cclosure_user_marshal_OBJECT__BOOLEAN (GClosure * closure, GValue * return_value, guint n_param_values, const GValue * param_values, gpointer invocation_hint, gpointer marshal_data);
@@ -161,52 +165,67 @@ ElektroSimXYGraph* elektro_sim_xy_graph_new (void) {
 }
 
 
-void elektro_sim_xy_graph_draw_axes (ElektroSimXYGraph* self, cairo_t* cr, gint width, gint height, gint border, gdouble offset) {
+void elektro_sim_xy_graph_draw_axes (ElektroSimXYGraph* self, cairo_t* cr, gdouble border, gdouble offset) {
 	cairo_t* _tmp0_ = NULL;
 	cairo_t* _tmp1_ = NULL;
 	cairo_t* _tmp2_ = NULL;
-	gint _tmp3_ = 0;
-	cairo_t* _tmp4_ = NULL;
+	cairo_t* _tmp3_ = NULL;
+	gdouble _tmp4_ = 0.0;
 	gint _tmp5_ = 0;
-	gint _tmp6_ = 0;
-	cairo_t* _tmp7_ = NULL;
+	gdouble _tmp6_ = 0.0;
+	gdouble _tmp7_ = 0.0;
 	cairo_t* _tmp8_ = NULL;
-	gdouble _tmp9_ = 0.0;
-	gint _tmp10_ = 0;
-	cairo_t* _tmp11_ = NULL;
-	gint _tmp12_ = 0;
+	gint _tmp9_ = 0;
+	gdouble _tmp10_ = 0.0;
+	gint _tmp11_ = 0;
+	gdouble _tmp12_ = 0.0;
 	gdouble _tmp13_ = 0.0;
-	gint _tmp14_ = 0;
+	cairo_t* _tmp14_ = NULL;
 	cairo_t* _tmp15_ = NULL;
-	cairo_t* _tmp16_ = NULL;
+	gdouble _tmp16_ = 0.0;
+	gdouble _tmp17_ = 0.0;
+	cairo_t* _tmp18_ = NULL;
+	gdouble _tmp19_ = 0.0;
+	gint _tmp20_ = 0;
+	gdouble _tmp21_ = 0.0;
+	cairo_t* _tmp22_ = NULL;
+	cairo_t* _tmp23_ = NULL;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (cr != NULL);
 	_tmp0_ = cr;
-	cairo_set_line_width (_tmp0_, (gdouble) 3);
+	cairo_save (_tmp0_);
 	_tmp1_ = cr;
-	cairo_set_source_rgb (_tmp1_, (gdouble) 0, (gdouble) 0, (gdouble) 0);
+	cairo_set_line_width (_tmp1_, (gdouble) 3);
 	_tmp2_ = cr;
-	_tmp3_ = border;
-	cairo_move_to (_tmp2_, (gdouble) ((-_tmp3_) / 2), (gdouble) 0);
-	_tmp4_ = cr;
-	_tmp5_ = width;
+	cairo_set_source_rgb (_tmp2_, (gdouble) 0, (gdouble) 0, (gdouble) 0);
+	_tmp3_ = cr;
+	_tmp4_ = border;
+	_tmp5_ = self->priv->height;
 	_tmp6_ = border;
-	cairo_line_to (_tmp4_, (gdouble) (_tmp5_ + (_tmp6_ / 2)), (gdouble) 0);
-	_tmp7_ = cr;
-	cairo_stroke (_tmp7_);
+	_tmp7_ = offset;
+	cairo_move_to (_tmp3_, _tmp4_ / 2, (_tmp5_ - _tmp6_) + _tmp7_);
 	_tmp8_ = cr;
-	_tmp9_ = offset;
+	_tmp9_ = self->priv->width;
 	_tmp10_ = border;
-	cairo_move_to (_tmp8_, (gdouble) 0, (-_tmp9_) - (_tmp10_ / 2));
-	_tmp11_ = cr;
-	_tmp12_ = height;
+	_tmp11_ = self->priv->height;
+	_tmp12_ = border;
 	_tmp13_ = offset;
-	_tmp14_ = border;
-	cairo_line_to (_tmp11_, (gdouble) 0, (_tmp12_ - _tmp13_) + (_tmp14_ / 2));
+	cairo_line_to (_tmp8_, _tmp9_ - (_tmp10_ / 2), (_tmp11_ - _tmp12_) + _tmp13_);
+	_tmp14_ = cr;
+	cairo_stroke (_tmp14_);
 	_tmp15_ = cr;
-	cairo_stroke (_tmp15_);
-	_tmp16_ = cr;
-	cairo_close_path (_tmp16_);
+	_tmp16_ = border;
+	_tmp17_ = border;
+	cairo_move_to (_tmp15_, _tmp16_, _tmp17_ / 2);
+	_tmp18_ = cr;
+	_tmp19_ = border;
+	_tmp20_ = self->priv->height;
+	_tmp21_ = border;
+	cairo_line_to (_tmp18_, _tmp19_, _tmp20_ - (_tmp21_ / 2));
+	_tmp22_ = cr;
+	cairo_stroke (_tmp22_);
+	_tmp23_ = cr;
+	cairo_restore (_tmp23_);
 }
 
 
@@ -234,26 +253,6 @@ void elektro_sim_xy_graph_redraw (ElektroSimXYGraph* self) {
 }
 
 
-static gchar* double_to_string (gdouble self) {
-	gchar* result = NULL;
-	gchar* _tmp0_ = NULL;
-	gchar* _tmp1_ = NULL;
-	gint _tmp1__length1 = 0;
-	const gchar* _tmp2_ = NULL;
-	gchar* _tmp3_ = NULL;
-	gchar* _tmp4_ = NULL;
-	_tmp0_ = g_new0 (gchar, G_ASCII_DTOSTR_BUF_SIZE);
-	_tmp1_ = _tmp0_;
-	_tmp1__length1 = G_ASCII_DTOSTR_BUF_SIZE;
-	_tmp2_ = g_ascii_dtostr (_tmp1_, G_ASCII_DTOSTR_BUF_SIZE, self);
-	_tmp3_ = g_strdup (_tmp2_);
-	_tmp4_ = _tmp3_;
-	_tmp1_ = (g_free (_tmp1_), NULL);
-	result = _tmp4_;
-	return result;
-}
-
-
 static gpointer _g_object_ref0 (gpointer self) {
 	return self ? g_object_ref (self) : NULL;
 }
@@ -268,322 +267,252 @@ static gboolean elektro_sim_xy_graph_real_draw (GtkWidget* base, cairo_t* cr) {
 	cairo_t* _tmp3_ = NULL;
 	cairo_t* _tmp4_ = NULL;
 	cairo_t* _tmp5_ = NULL;
-	cairo_t* _tmp6_ = NULL;
-	cairo_t* _tmp7_ = NULL;
 	gint border = 0;
-	gint width = 0;
+	gint _tmp6_ = 0;
+	gint _tmp7_ = 0;
+	gint width_graph = 0;
 	gint _tmp8_ = 0;
-	cairo_t* _tmp9_ = NULL;
-	const gchar* _tmp10_ = NULL;
+	gint _tmp9_ = 0;
+	gint height_graph = 0;
+	gint _tmp10_ = 0;
 	gint _tmp11_ = 0;
-	gint _tmp12_ = 0;
-	gboolean _tmp13_ = FALSE;
-	gboolean _tmp14_ = FALSE;
-	gboolean _tmp15_ = FALSE;
-	GeeArrayList* _tmp16_ = NULL;
+	cairo_t* _tmp12_ = NULL;
+	const gchar* _tmp13_ = NULL;
+	gint _tmp14_ = 0;
+	gint _tmp15_ = 0;
+	gboolean _tmp16_ = FALSE;
+	gboolean _tmp17_ = FALSE;
+	GeeArrayList* _tmp18_ = NULL;
 	self = (ElektroSimXYGraph*) base;
 	g_return_val_if_fail (cr != NULL, FALSE);
 	_tmp0_ = cr;
-	cairo_new_path (_tmp0_);
+	cairo_set_source_rgb (_tmp0_, 0.6, 0.6, 0.6);
 	_tmp1_ = cr;
-	cairo_set_source_rgb (_tmp1_, 0.6, 0.6, 0.6);
+	cairo_fill (_tmp1_);
 	_tmp2_ = cr;
-	cairo_fill (_tmp2_);
+	cairo_paint (_tmp2_);
 	_tmp3_ = cr;
-	cairo_close_path (_tmp3_);
+	cairo_set_source_rgb (_tmp3_, (gdouble) 200, (gdouble) 200, (gdouble) 200);
 	_tmp4_ = cr;
-	cairo_paint (_tmp4_);
+	cairo_set_line_width (_tmp4_, (gdouble) 5);
 	_tmp5_ = cr;
-	cairo_set_source_rgb (_tmp5_, (gdouble) 200, (gdouble) 200, (gdouble) 200);
-	_tmp6_ = cr;
-	cairo_set_line_width (_tmp6_, (gdouble) 5);
-	_tmp7_ = cr;
-	cairo_select_font_face (_tmp7_, "Adventure", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+	cairo_select_font_face (_tmp5_, "Adventure", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
 	border = 50;
-	_tmp8_ = gtk_widget_get_allocated_width ((GtkWidget*) self);
-	width = _tmp8_;
-	_tmp9_ = cr;
-	_tmp10_ = self->priv->name;
-	_tmp11_ = width;
-	_tmp12_ = border;
-	elektro_sim_xy_graph_draw_label (self, _tmp9_, 25, _tmp10_, (gdouble) (_tmp11_ / 2), (gdouble) (_tmp12_ / 2), ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT);
-	_tmp16_ = self->priv->time;
-	if (_tmp16_ != NULL) {
-		GeeArrayList* _tmp17_ = NULL;
-		gint _tmp18_ = 0;
-		gint _tmp19_ = 0;
-		_tmp17_ = self->priv->time;
-		_tmp18_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp17_);
-		_tmp19_ = _tmp18_;
-		_tmp15_ = _tmp19_ != 0;
+	_tmp6_ = gtk_widget_get_allocated_width ((GtkWidget*) self);
+	self->priv->width = _tmp6_;
+	_tmp7_ = gtk_widget_get_allocated_height ((GtkWidget*) self);
+	self->priv->height = _tmp7_;
+	_tmp8_ = self->priv->width;
+	_tmp9_ = border;
+	width_graph = _tmp8_ - (2 * _tmp9_);
+	_tmp10_ = self->priv->height;
+	_tmp11_ = border;
+	height_graph = _tmp10_ - (2 * _tmp11_);
+	_tmp12_ = cr;
+	_tmp13_ = self->priv->name;
+	_tmp14_ = self->priv->width;
+	_tmp15_ = border;
+	elektro_sim_xy_graph_draw_label (self, _tmp12_, 25, _tmp13_, (gdouble) (_tmp14_ / 2), (gdouble) (_tmp15_ / 2), ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT);
+	_tmp18_ = self->priv->time;
+	if (_tmp18_ != NULL) {
+		GeeArrayList* _tmp19_ = NULL;
+		_tmp19_ = self->priv->values;
+		_tmp17_ = _tmp19_ != NULL;
 	} else {
-		_tmp15_ = FALSE;
+		_tmp17_ = FALSE;
 	}
-	if (_tmp15_) {
+	if (_tmp17_) {
 		GeeArrayList* _tmp20_ = NULL;
-		_tmp20_ = self->priv->values;
-		_tmp14_ = _tmp20_ != NULL;
-	} else {
-		_tmp14_ = FALSE;
-	}
-	if (_tmp14_) {
-		GeeArrayList* _tmp21_ = NULL;
+		gint _tmp21_ = 0;
 		gint _tmp22_ = 0;
-		gint _tmp23_ = 0;
-		GeeArrayList* _tmp24_ = NULL;
+		GeeArrayList* _tmp23_ = NULL;
+		gint _tmp24_ = 0;
 		gint _tmp25_ = 0;
-		gint _tmp26_ = 0;
-		_tmp21_ = self->priv->values;
-		_tmp22_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp21_);
-		_tmp23_ = _tmp22_;
-		_tmp24_ = self->priv->time;
-		_tmp25_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp24_);
-		_tmp26_ = _tmp25_;
-		_tmp13_ = _tmp23_ >= _tmp26_;
+		_tmp20_ = self->priv->values;
+		_tmp21_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp20_);
+		_tmp22_ = _tmp21_;
+		_tmp23_ = self->priv->time;
+		_tmp24_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp23_);
+		_tmp25_ = _tmp24_;
+		_tmp16_ = _tmp22_ >= _tmp25_;
 	} else {
-		_tmp13_ = FALSE;
+		_tmp16_ = FALSE;
 	}
-	if (_tmp13_) {
-		gint height = 0;
-		gint _tmp27_ = 0;
-		gint width_graph = 0;
+	if (_tmp16_) {
+		gdouble scaleX = 0.0;
+		gint _tmp26_ = 0;
+		gdouble _tmp27_ = 0.0;
+		gdouble scaleY = 0.0;
 		gint _tmp28_ = 0;
-		gint _tmp29_ = 0;
-		gint height_graph = 0;
-		gint _tmp30_ = 0;
-		gint _tmp31_ = 0;
-		gdouble scaledOffset = 0.0;
+		gdouble _tmp29_ = 0.0;
+		gdouble _tmp30_ = 0.0;
+		gdouble _tmp31_ = 0.0;
 		gdouble _tmp32_ = 0.0;
-		gdouble offset = 0.0;
-		gint _tmp33_ = 0;
-		gdouble _tmp34_ = 0.0;
-		gdouble _tmp35_ = 0.0;
+		cairo_t* _tmp33_ = NULL;
+		cairo_t* _tmp34_ = NULL;
+		gint _tmp35_ = 0;
 		gdouble _tmp36_ = 0.0;
 		gdouble _tmp37_ = 0.0;
-		gchar* _tmp38_ = NULL;
-		gchar* _tmp39_ = NULL;
-		gchar* _tmp40_ = NULL;
-		gchar* _tmp41_ = NULL;
-		gchar* _tmp42_ = NULL;
-		gchar* _tmp43_ = NULL;
+		cairo_t* _tmp38_ = NULL;
+		gint _tmp39_ = 0;
+		gint _tmp40_ = 0;
+		gint _tmp41_ = 0;
+		gdouble _tmp42_ = 0.0;
+		gdouble _tmp43_ = 0.0;
+		gchar* test = NULL;
 		gdouble _tmp44_ = 0.0;
 		gchar* _tmp45_ = NULL;
-		gchar* _tmp46_ = NULL;
-		gchar* _tmp47_ = NULL;
-		gchar* _tmp48_ = NULL;
-		cairo_t* _tmp49_ = NULL;
-		gint _tmp50_ = 0;
-		cairo_t* _tmp51_ = NULL;
-		cairo_t* _tmp52_ = NULL;
-		gint _tmp53_ = 0;
-		gint _tmp54_ = 0;
-		gdouble _tmp55_ = 0.0;
-		cairo_t* _tmp56_ = NULL;
-		gint _tmp57_ = 0;
-		gint _tmp58_ = 0;
-		gint _tmp59_ = 0;
-		gdouble _tmp60_ = 0.0;
-		gdouble xScale = 0.0;
-		gint _tmp61_ = 0;
-		GeeArrayList* _tmp62_ = NULL;
-		GeeArrayList* _tmp63_ = NULL;
-		gint _tmp64_ = 0;
-		gint _tmp65_ = 0;
-		gpointer _tmp66_ = NULL;
-		gdouble* _tmp67_ = NULL;
-		gdouble _tmp68_ = 0.0;
-		gdouble yScale = 0.0;
-		gint _tmp69_ = 0;
-		gdouble _tmp70_ = 0.0;
-		gdouble _tmp71_ = 0.0;
-		gdouble _tmp72_ = 0.0;
-		gchar* _tmp73_ = NULL;
-		gchar* _tmp74_ = NULL;
-		gchar* _tmp75_ = NULL;
-		gchar* _tmp76_ = NULL;
-		gchar* _tmp77_ = NULL;
-		gchar* _tmp78_ = NULL;
-		gdouble _tmp79_ = 0.0;
-		gchar* _tmp80_ = NULL;
-		gchar* _tmp81_ = NULL;
-		gchar* _tmp82_ = NULL;
-		gchar* _tmp83_ = NULL;
-		cairo_t* _tmp84_ = NULL;
-		cairo_t* _tmp85_ = NULL;
+		const gchar* _tmp46_ = NULL;
+		cairo_t* _tmp47_ = NULL;
+		gdouble _tmp48_ = 0.0;
+		gchar* _tmp49_ = NULL;
+		gchar* _tmp50_ = NULL;
+		gdouble _tmp51_ = 0.0;
+		gdouble _tmp52_ = 0.0;
+		cairo_t* _tmp53_ = NULL;
+		gdouble _tmp54_ = 0.0;
+		gchar* _tmp55_ = NULL;
+		gchar* _tmp56_ = NULL;
+		gdouble _tmp57_ = 0.0;
+		gdouble _tmp58_ = 0.0;
+		cairo_t* _tmp59_ = NULL;
 		gint counter = 0;
-		cairo_t* _tmp115_ = NULL;
-		_tmp27_ = gtk_widget_get_allocated_height ((GtkWidget*) self);
-		height = _tmp27_;
-		_tmp28_ = width;
-		_tmp29_ = border;
-		width_graph = _tmp28_ - (2 * _tmp29_);
-		_tmp30_ = height;
-		_tmp31_ = border;
-		height_graph = _tmp30_ - (2 * _tmp31_);
-		_tmp32_ = self->priv->minValue;
-		scaledOffset = _tmp32_;
-		_tmp33_ = height_graph;
-		_tmp34_ = self->priv->minValue;
-		_tmp35_ = self->priv->maxValue;
-		_tmp36_ = self->priv->minValue;
-		offset = _tmp33_ * ((-_tmp34_) / (_tmp35_ - _tmp36_));
-		_tmp37_ = offset;
-		_tmp38_ = double_to_string (_tmp37_);
-		_tmp39_ = _tmp38_;
-		_tmp40_ = g_strconcat ("offset: ", _tmp39_, NULL);
-		_tmp41_ = _tmp40_;
-		_tmp42_ = g_strconcat (_tmp41_, " - scaledOffset: ", NULL);
-		_tmp43_ = _tmp42_;
-		_tmp44_ = scaledOffset;
-		_tmp45_ = double_to_string (_tmp44_);
-		_tmp46_ = _tmp45_;
-		_tmp47_ = g_strconcat (_tmp43_, _tmp46_, NULL);
-		_tmp48_ = _tmp47_;
-		elektro_sim_debug (_tmp48_);
-		_g_free0 (_tmp48_);
-		_g_free0 (_tmp46_);
-		_g_free0 (_tmp43_);
-		_g_free0 (_tmp41_);
-		_g_free0 (_tmp39_);
-		_tmp49_ = cr;
-		_tmp50_ = height;
-		cairo_translate (_tmp49_, (gdouble) 0, (gdouble) _tmp50_);
-		_tmp51_ = cr;
-		cairo_scale (_tmp51_, (gdouble) 1, (gdouble) (-1));
-		_tmp52_ = cr;
-		_tmp53_ = border;
-		_tmp54_ = border;
-		_tmp55_ = offset;
-		cairo_translate (_tmp52_, (gdouble) _tmp53_, _tmp54_ + _tmp55_);
-		_tmp56_ = cr;
-		_tmp57_ = width_graph;
-		_tmp58_ = height_graph;
-		_tmp59_ = border;
-		_tmp60_ = offset;
-		elektro_sim_xy_graph_draw_axes (self, _tmp56_, _tmp57_, _tmp58_, _tmp59_, _tmp60_);
-		_tmp61_ = width_graph;
-		_tmp62_ = self->priv->time;
-		_tmp63_ = self->priv->time;
-		_tmp64_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp63_);
-		_tmp65_ = _tmp64_;
-		_tmp66_ = gee_abstract_list_get ((GeeAbstractList*) _tmp62_, _tmp65_ - 1);
-		_tmp67_ = (gdouble*) _tmp66_;
-		_tmp68_ = _tmp61_ / (*_tmp67_);
-		_g_free0 (_tmp67_);
-		xScale = _tmp68_;
-		_tmp69_ = height_graph;
-		_tmp70_ = self->priv->maxValue;
-		_tmp71_ = self->priv->minValue;
-		yScale = _tmp69_ / (_tmp70_ - _tmp71_);
-		_tmp72_ = xScale;
-		_tmp73_ = double_to_string (_tmp72_);
-		_tmp74_ = _tmp73_;
-		_tmp75_ = g_strconcat ("xScale: ", _tmp74_, NULL);
-		_tmp76_ = _tmp75_;
-		_tmp77_ = g_strconcat (_tmp76_, " - yScale: ", NULL);
-		_tmp78_ = _tmp77_;
-		_tmp79_ = yScale;
-		_tmp80_ = double_to_string (_tmp79_);
-		_tmp81_ = _tmp80_;
-		_tmp82_ = g_strconcat (_tmp78_, _tmp81_, NULL);
-		_tmp83_ = _tmp82_;
-		elektro_sim_debug (_tmp83_);
-		_g_free0 (_tmp83_);
-		_g_free0 (_tmp81_);
-		_g_free0 (_tmp78_);
-		_g_free0 (_tmp76_);
-		_g_free0 (_tmp74_);
-		_tmp84_ = cr;
-		cairo_set_line_width (_tmp84_, 1.0);
-		_tmp85_ = cr;
-		cairo_set_source_rgb (_tmp85_, (gdouble) 300, (gdouble) 300, (gdouble) 300);
+		cairo_t* _tmp89_ = NULL;
+		_tmp26_ = width_graph;
+		_tmp27_ = self->priv->rangeX;
+		scaleX = _tmp26_ / _tmp27_;
+		_tmp28_ = height_graph;
+		_tmp29_ = self->priv->rangeY;
+		scaleY = _tmp28_ / _tmp29_;
+		_tmp30_ = self->priv->offset;
+		_tmp31_ = scaleX;
+		_tmp32_ = scaleY;
+		g_print ("offset: %f scale: x: %f y: %f\n\n", _tmp30_, _tmp31_, _tmp32_);
+		_tmp33_ = cr;
+		cairo_set_source_rgb (_tmp33_, (gdouble) 22, (gdouble) 22, (gdouble) 22);
+		_tmp34_ = cr;
+		_tmp35_ = border;
+		_tmp36_ = self->priv->offset;
+		_tmp37_ = scaleY;
+		elektro_sim_xy_graph_draw_axes (self, _tmp34_, (gdouble) _tmp35_, _tmp36_ * _tmp37_);
+		_tmp38_ = cr;
+		_tmp39_ = border;
+		_tmp40_ = self->priv->height;
+		_tmp41_ = border;
+		_tmp42_ = self->priv->offset;
+		_tmp43_ = scaleY;
+		cairo_translate (_tmp38_, (gdouble) _tmp39_, (_tmp40_ - _tmp41_) + (_tmp42_ * _tmp43_));
+		_tmp44_ = self->priv->minValue;
+		_tmp45_ = g_strdup_printf ("\n ---- %3.1f  ---- \n", _tmp44_);
+		test = _tmp45_;
+		_tmp46_ = test;
+		g_print ("%s", _tmp46_);
+		_tmp47_ = cr;
+		_tmp48_ = self->priv->minValue;
+		_tmp49_ = g_strdup_printf ("%20lf", _tmp48_);
+		_tmp50_ = _tmp49_;
+		_tmp51_ = self->priv->minValue;
+		_tmp52_ = scaleY;
+		elektro_sim_xy_graph_draw_label (self, _tmp47_, 15, _tmp50_, (gdouble) 0, _tmp51_ * _tmp52_, ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT);
+		_g_free0 (_tmp50_);
+		_tmp53_ = cr;
+		_tmp54_ = self->priv->maxValue;
+		_tmp55_ = g_strdup_printf ("%20lf", _tmp54_);
+		_tmp56_ = _tmp55_;
+		_tmp57_ = self->priv->maxValue;
+		_tmp58_ = scaleY;
+		elektro_sim_xy_graph_draw_label (self, _tmp53_, 15, _tmp56_, (gdouble) 0, _tmp57_ * _tmp58_, ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT);
+		_g_free0 (_tmp56_);
+		_tmp59_ = cr;
+		cairo_set_line_width (_tmp59_, (gdouble) 2);
 		counter = 0;
 		{
 			GeeArrayList* _t_list = NULL;
-			GeeArrayList* _tmp86_ = NULL;
-			GeeArrayList* _tmp87_ = NULL;
+			GeeArrayList* _tmp60_ = NULL;
+			GeeArrayList* _tmp61_ = NULL;
 			gint _t_size = 0;
-			GeeArrayList* _tmp88_ = NULL;
-			gint _tmp89_ = 0;
-			gint _tmp90_ = 0;
+			GeeArrayList* _tmp62_ = NULL;
+			gint _tmp63_ = 0;
+			gint _tmp64_ = 0;
 			gint _t_index = 0;
-			_tmp86_ = self->priv->time;
-			_tmp87_ = _g_object_ref0 (_tmp86_);
-			_t_list = _tmp87_;
-			_tmp88_ = _t_list;
-			_tmp89_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp88_);
-			_tmp90_ = _tmp89_;
-			_t_size = _tmp90_;
+			_tmp60_ = self->priv->time;
+			_tmp61_ = _g_object_ref0 (_tmp60_);
+			_t_list = _tmp61_;
+			_tmp62_ = _t_list;
+			_tmp63_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp62_);
+			_tmp64_ = _tmp63_;
+			_t_size = _tmp64_;
 			_t_index = -1;
 			while (TRUE) {
-				gint _tmp91_ = 0;
-				gint _tmp92_ = 0;
-				gint _tmp93_ = 0;
+				gint _tmp65_ = 0;
+				gint _tmp66_ = 0;
+				gint _tmp67_ = 0;
 				gdouble* t = NULL;
-				GeeArrayList* _tmp94_ = NULL;
-				gint _tmp95_ = 0;
-				gpointer _tmp96_ = NULL;
-				gint _tmp97_ = 0;
-				gint _tmp114_ = 0;
-				_tmp91_ = _t_index;
-				_t_index = _tmp91_ + 1;
-				_tmp92_ = _t_index;
-				_tmp93_ = _t_size;
-				if (!(_tmp92_ < _tmp93_)) {
+				GeeArrayList* _tmp68_ = NULL;
+				gint _tmp69_ = 0;
+				gpointer _tmp70_ = NULL;
+				gint _tmp71_ = 0;
+				gint _tmp88_ = 0;
+				_tmp65_ = _t_index;
+				_t_index = _tmp65_ + 1;
+				_tmp66_ = _t_index;
+				_tmp67_ = _t_size;
+				if (!(_tmp66_ < _tmp67_)) {
 					break;
 				}
-				_tmp94_ = _t_list;
-				_tmp95_ = _t_index;
-				_tmp96_ = gee_abstract_list_get ((GeeAbstractList*) _tmp94_, _tmp95_);
-				t = (gdouble*) _tmp96_;
-				_tmp97_ = counter;
-				if (_tmp97_ == 0) {
-					cairo_t* _tmp98_ = NULL;
-					gdouble* _tmp99_ = NULL;
-					gdouble _tmp100_ = 0.0;
-					GeeArrayList* _tmp101_ = NULL;
-					gint _tmp102_ = 0;
-					gpointer _tmp103_ = NULL;
-					gdouble* _tmp104_ = NULL;
-					gdouble _tmp105_ = 0.0;
-					_tmp98_ = cr;
-					_tmp99_ = t;
-					_tmp100_ = xScale;
-					_tmp101_ = self->priv->values;
-					_tmp102_ = counter;
-					_tmp103_ = gee_abstract_list_get ((GeeAbstractList*) _tmp101_, _tmp102_);
-					_tmp104_ = (gdouble*) _tmp103_;
-					_tmp105_ = yScale;
-					cairo_move_to (_tmp98_, (*_tmp99_) * _tmp100_, (*_tmp104_) * _tmp105_);
-					_g_free0 (_tmp104_);
+				_tmp68_ = _t_list;
+				_tmp69_ = _t_index;
+				_tmp70_ = gee_abstract_list_get ((GeeAbstractList*) _tmp68_, _tmp69_);
+				t = (gdouble*) _tmp70_;
+				_tmp71_ = counter;
+				if (_tmp71_ == 0) {
+					cairo_t* _tmp72_ = NULL;
+					gdouble* _tmp73_ = NULL;
+					gdouble _tmp74_ = 0.0;
+					GeeArrayList* _tmp75_ = NULL;
+					gint _tmp76_ = 0;
+					gpointer _tmp77_ = NULL;
+					gdouble* _tmp78_ = NULL;
+					gdouble _tmp79_ = 0.0;
+					_tmp72_ = cr;
+					_tmp73_ = t;
+					_tmp74_ = scaleX;
+					_tmp75_ = self->priv->values;
+					_tmp76_ = counter;
+					_tmp77_ = gee_abstract_list_get ((GeeAbstractList*) _tmp75_, _tmp76_);
+					_tmp78_ = (gdouble*) _tmp77_;
+					_tmp79_ = scaleY;
+					cairo_move_to (_tmp72_, (*_tmp73_) * _tmp74_, ((-1) * (*_tmp78_)) * _tmp79_);
+					_g_free0 (_tmp78_);
 				} else {
-					cairo_t* _tmp106_ = NULL;
-					gdouble* _tmp107_ = NULL;
-					gdouble _tmp108_ = 0.0;
-					GeeArrayList* _tmp109_ = NULL;
-					gint _tmp110_ = 0;
-					gpointer _tmp111_ = NULL;
-					gdouble* _tmp112_ = NULL;
-					gdouble _tmp113_ = 0.0;
-					_tmp106_ = cr;
-					_tmp107_ = t;
-					_tmp108_ = xScale;
-					_tmp109_ = self->priv->values;
-					_tmp110_ = counter;
-					_tmp111_ = gee_abstract_list_get ((GeeAbstractList*) _tmp109_, _tmp110_);
-					_tmp112_ = (gdouble*) _tmp111_;
-					_tmp113_ = yScale;
-					cairo_line_to (_tmp106_, (*_tmp107_) * _tmp108_, (*_tmp112_) * _tmp113_);
-					_g_free0 (_tmp112_);
+					cairo_t* _tmp80_ = NULL;
+					gdouble* _tmp81_ = NULL;
+					gdouble _tmp82_ = 0.0;
+					GeeArrayList* _tmp83_ = NULL;
+					gint _tmp84_ = 0;
+					gpointer _tmp85_ = NULL;
+					gdouble* _tmp86_ = NULL;
+					gdouble _tmp87_ = 0.0;
+					_tmp80_ = cr;
+					_tmp81_ = t;
+					_tmp82_ = scaleX;
+					_tmp83_ = self->priv->values;
+					_tmp84_ = counter;
+					_tmp85_ = gee_abstract_list_get ((GeeAbstractList*) _tmp83_, _tmp84_);
+					_tmp86_ = (gdouble*) _tmp85_;
+					_tmp87_ = scaleY;
+					cairo_line_to (_tmp80_, (*_tmp81_) * _tmp82_, ((-1) * (*_tmp86_)) * _tmp87_);
+					_g_free0 (_tmp86_);
 				}
-				_tmp114_ = counter;
-				counter = _tmp114_ + 1;
+				_tmp88_ = counter;
+				counter = _tmp88_ + 1;
 				_g_free0 (t);
 			}
 			_g_object_unref0 (_t_list);
 		}
-		_tmp115_ = cr;
-		cairo_stroke (_tmp115_);
+		_tmp89_ = cr;
+		cairo_stroke (_tmp89_);
+		_g_free0 (test);
 	}
 	result = TRUE;
 	return result;
@@ -592,109 +521,151 @@ static gboolean elektro_sim_xy_graph_real_draw (GtkWidget* base, cairo_t* cr) {
 
 void elektro_sim_xy_graph_draw_label (ElektroSimXYGraph* self, cairo_t* cr, gint fontsize, const gchar* label, gdouble x, gdouble y, ElektroSimXYGraphLocation location) {
 	cairo_t* _tmp0_ = NULL;
-	gint _tmp1_ = 0;
-	gboolean _tmp2_ = FALSE;
-	ElektroSimXYGraphLocation _tmp3_ = 0;
-	cairo_t* _tmp19_ = NULL;
-	const gchar* _tmp20_ = NULL;
-	cairo_t* _tmp21_ = NULL;
+	cairo_t* _tmp1_ = NULL;
+	gint _tmp2_ = 0;
+	gboolean _tmp3_ = FALSE;
+	ElektroSimXYGraphLocation _tmp4_ = 0;
+	cairo_t* _tmp20_ = NULL;
+	const gchar* _tmp21_ = NULL;
+	cairo_t* _tmp22_ = NULL;
+	cairo_t* _tmp23_ = NULL;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (cr != NULL);
 	g_return_if_fail (label != NULL);
 	_tmp0_ = cr;
-	_tmp1_ = fontsize;
-	cairo_set_font_size (_tmp0_, (gdouble) _tmp1_);
-	_tmp3_ = location;
-	if (_tmp3_ == ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT) {
-		gdouble _tmp4_ = 0.0;
-		_tmp4_ = x;
-		_tmp2_ = _tmp4_ == ((gdouble) 0);
+	cairo_save (_tmp0_);
+	_tmp1_ = cr;
+	_tmp2_ = fontsize;
+	cairo_set_font_size (_tmp1_, (gdouble) _tmp2_);
+	_tmp4_ = location;
+	if (_tmp4_ == ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT) {
+		gdouble _tmp5_ = 0.0;
+		_tmp5_ = y;
+		_tmp3_ = _tmp5_ == ((gdouble) 0);
 	} else {
-		_tmp2_ = FALSE;
+		_tmp3_ = FALSE;
 	}
-	if (_tmp2_) {
-		cairo_t* _tmp5_ = NULL;
-		gdouble _tmp6_ = 0.0;
-		const gchar* _tmp7_ = NULL;
-		gint _tmp8_ = 0;
+	if (_tmp3_) {
+		cairo_t* _tmp6_ = NULL;
+		gdouble _tmp7_ = 0.0;
+		const gchar* _tmp8_ = NULL;
 		gint _tmp9_ = 0;
-		gdouble _tmp10_ = 0.0;
-		gint _tmp11_ = 0;
-		_tmp5_ = cr;
-		_tmp6_ = x;
-		_tmp7_ = label;
-		_tmp8_ = strlen (_tmp7_);
-		_tmp9_ = _tmp8_;
-		_tmp10_ = y;
-		_tmp11_ = fontsize;
-		cairo_move_to (_tmp5_, _tmp6_ - (10 * _tmp9_), _tmp10_ + _tmp11_);
+		gint _tmp10_ = 0;
+		gdouble _tmp11_ = 0.0;
+		gint _tmp12_ = 0;
+		_tmp6_ = cr;
+		_tmp7_ = x;
+		_tmp8_ = label;
+		_tmp9_ = strlen (_tmp8_);
+		_tmp10_ = _tmp9_;
+		_tmp11_ = y;
+		_tmp12_ = fontsize;
+		cairo_move_to (_tmp6_, _tmp7_ - (10 * _tmp10_), _tmp11_ - (_tmp12_ / 2));
 	} else {
-		ElektroSimXYGraphLocation _tmp12_ = 0;
-		_tmp12_ = location;
-		if (_tmp12_ == ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT) {
-			cairo_t* _tmp13_ = NULL;
-			gdouble _tmp14_ = 0.0;
-			const gchar* _tmp15_ = NULL;
-			gint _tmp16_ = 0;
+		ElektroSimXYGraphLocation _tmp13_ = 0;
+		_tmp13_ = location;
+		if (_tmp13_ == ELEKTRO_SIM_XY_GRAPH_LOCATION_LEFT) {
+			cairo_t* _tmp14_ = NULL;
+			gdouble _tmp15_ = 0.0;
+			const gchar* _tmp16_ = NULL;
 			gint _tmp17_ = 0;
-			gdouble _tmp18_ = 0.0;
-			_tmp13_ = cr;
-			_tmp14_ = x;
-			_tmp15_ = label;
-			_tmp16_ = strlen (_tmp15_);
-			_tmp17_ = _tmp16_;
-			_tmp18_ = y;
-			cairo_move_to (_tmp13_, _tmp14_ - (10 * _tmp17_), _tmp18_);
+			gint _tmp18_ = 0;
+			gdouble _tmp19_ = 0.0;
+			_tmp14_ = cr;
+			_tmp15_ = x;
+			_tmp16_ = label;
+			_tmp17_ = strlen (_tmp16_);
+			_tmp18_ = _tmp17_;
+			_tmp19_ = y;
+			cairo_move_to (_tmp14_, _tmp15_ - (10 * _tmp18_), _tmp19_);
 		}
 	}
-	_tmp19_ = cr;
-	_tmp20_ = label;
-	cairo_text_path (_tmp19_, _tmp20_);
-	_tmp21_ = cr;
-	cairo_fill (_tmp21_);
+	_tmp20_ = cr;
+	_tmp21_ = label;
+	cairo_text_path (_tmp20_, _tmp21_);
+	_tmp22_ = cr;
+	cairo_fill (_tmp22_);
+	_tmp23_ = cr;
+	cairo_restore (_tmp23_);
 }
 
 
 void elektro_sim_xy_graph_set_name (ElektroSimXYGraph* self, const gchar* name) {
 	const gchar* _tmp0_ = NULL;
 	gchar* _tmp1_ = NULL;
+	const gchar* _tmp2_ = NULL;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (name != NULL);
 	_tmp0_ = name;
 	_tmp1_ = g_strdup (_tmp0_);
 	_g_free0 (self->priv->name);
 	self->priv->name = _tmp1_;
+	_tmp2_ = name;
+	g_print ("setname %s\n", _tmp2_);
 }
 
 
 void elektro_sim_xy_graph_set_timepoints (ElektroSimXYGraph* self, GeeArrayList* timepoints) {
-	GeeArrayList* _tmp0_ = NULL;
+	gboolean _tmp0_ = FALSE;
 	GeeArrayList* _tmp1_ = NULL;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (timepoints != NULL);
-	_tmp0_ = timepoints;
-	_tmp1_ = _g_object_ref0 (_tmp0_);
-	_g_object_unref0 (self->priv->time);
-	self->priv->time = _tmp1_;
+	_tmp1_ = timepoints;
+	if (_tmp1_ != NULL) {
+		GeeArrayList* _tmp2_ = NULL;
+		gint _tmp3_ = 0;
+		gint _tmp4_ = 0;
+		_tmp2_ = timepoints;
+		_tmp3_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp2_);
+		_tmp4_ = _tmp3_;
+		_tmp0_ = _tmp4_ != 0;
+	} else {
+		_tmp0_ = FALSE;
+	}
+	if (_tmp0_) {
+		GeeArrayList* _tmp5_ = NULL;
+		GeeArrayList* _tmp6_ = NULL;
+		GeeArrayList* _tmp7_ = NULL;
+		GeeArrayList* _tmp8_ = NULL;
+		gint _tmp9_ = 0;
+		gint _tmp10_ = 0;
+		gpointer _tmp11_ = NULL;
+		gdouble* _tmp12_ = NULL;
+		_tmp5_ = timepoints;
+		_tmp6_ = _g_object_ref0 (_tmp5_);
+		_g_object_unref0 (self->priv->time);
+		self->priv->time = _tmp6_;
+		_tmp7_ = timepoints;
+		_tmp8_ = timepoints;
+		_tmp9_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp8_);
+		_tmp10_ = _tmp9_;
+		_tmp11_ = gee_abstract_list_get ((GeeAbstractList*) _tmp7_, _tmp10_ - 1);
+		_tmp12_ = (gdouble*) _tmp11_;
+		self->priv->rangeX = *_tmp12_;
+		_g_free0 (_tmp12_);
+	}
 }
 
 
 void elektro_sim_xy_graph_set_values (ElektroSimXYGraph* self, GeeArrayList* values) {
 	GeeArrayList* _tmp0_ = NULL;
-	GeeArrayList* _tmp1_ = NULL;
-	gdouble _tmp2_ = 0.0;
-	GeeArrayList* _tmp3_ = NULL;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (values != NULL);
 	_tmp0_ = values;
-	_tmp1_ = _g_object_ref0 (_tmp0_);
-	_g_object_unref0 (self->priv->values);
-	self->priv->values = _tmp1_;
-	_tmp2_ = DBL_MIN;
-	self->priv->maxValue = _tmp2_;
-	self->priv->minValue = (gdouble) 0;
-	_tmp3_ = values;
-	if (_tmp3_ != NULL) {
+	if (_tmp0_ != NULL) {
+		GeeArrayList* _tmp1_ = NULL;
+		GeeArrayList* _tmp2_ = NULL;
+		gdouble _tmp3_ = 0.0;
+		gboolean _tmp23_ = FALSE;
+		gdouble _tmp24_ = 0.0;
+		_tmp1_ = values;
+		_tmp2_ = _g_object_ref0 (_tmp1_);
+		_g_object_unref0 (self->priv->values);
+		self->priv->values = _tmp2_;
+		self->priv->offset = (gdouble) 0;
+		_tmp3_ = DBL_MIN;
+		self->priv->maxValue = _tmp3_;
+		self->priv->minValue = (gdouble) 0;
 		{
 			GeeArrayList* _p_list = NULL;
 			GeeArrayList* _tmp4_ = NULL;
@@ -756,6 +727,57 @@ void elektro_sim_xy_graph_set_values (ElektroSimXYGraph* self, GeeArrayList* val
 				}
 			}
 			_g_object_unref0 (_p_list);
+		}
+		_tmp24_ = self->priv->minValue;
+		if (_tmp24_ <= ((gdouble) 0)) {
+			gdouble _tmp25_ = 0.0;
+			_tmp25_ = self->priv->maxValue;
+			_tmp23_ = _tmp25_ >= ((gdouble) 0);
+		} else {
+			_tmp23_ = FALSE;
+		}
+		if (_tmp23_) {
+			gdouble _tmp26_ = 0.0;
+			gdouble _tmp27_ = 0.0;
+			gdouble _tmp28_ = 0.0;
+			gdouble _tmp29_ = 0.0;
+			gdouble _tmp30_ = 0.0;
+			gdouble _tmp31_ = 0.0;
+			_tmp26_ = self->priv->maxValue;
+			_tmp27_ = self->priv->minValue;
+			self->priv->rangeY = _tmp26_ - _tmp27_;
+			_tmp28_ = self->priv->rangeY;
+			_tmp29_ = self->priv->maxValue;
+			_tmp30_ = self->priv->minValue;
+			g_print ("setting rangeY %f from max %f and min %f\n", _tmp28_, _tmp29_, _tmp30_);
+			_tmp31_ = self->priv->minValue;
+			self->priv->offset = _tmp31_;
+		} else {
+			gboolean _tmp32_ = FALSE;
+			gdouble _tmp33_ = 0.0;
+			_tmp33_ = self->priv->minValue;
+			if (_tmp33_ <= ((gdouble) 0)) {
+				gdouble _tmp34_ = 0.0;
+				_tmp34_ = self->priv->maxValue;
+				_tmp32_ = _tmp34_ < ((gdouble) 0);
+			} else {
+				_tmp32_ = FALSE;
+			}
+			if (_tmp32_) {
+				gdouble _tmp35_ = 0.0;
+				gdouble _tmp36_ = 0.0;
+				gdouble _tmp37_ = 0.0;
+				gdouble _tmp38_ = 0.0;
+				gdouble _tmp39_ = 0.0;
+				_tmp35_ = self->priv->minValue;
+				self->priv->rangeY = -_tmp35_;
+				_tmp36_ = self->priv->rangeY;
+				_tmp37_ = self->priv->maxValue;
+				_tmp38_ = self->priv->minValue;
+				g_print ("setting rangeY %f from max %f and min %f\n", _tmp36_, _tmp37_, _tmp38_);
+				_tmp39_ = self->priv->rangeY;
+				self->priv->offset = _tmp39_;
+			}
 		}
 	}
 }

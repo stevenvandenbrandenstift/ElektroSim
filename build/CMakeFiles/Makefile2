@@ -47,10 +47,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/steven/projecten/elektrosim
+CMAKE_SOURCE_DIR = /home/steven/projecten/ElektroSim
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/steven/projecten/elektrosim/build
+CMAKE_BINARY_DIR = /home/steven/projecten/ElektroSim/build
 
 #=============================================================================
 # Target rules for target CMakeFiles/elektrosim.dir
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/steven/projecten/elektrosim/build
 CMakeFiles/elektrosim.dir/all: CMakeFiles/ui_copy_elektrosim.dir/all
 	$(MAKE) -f CMakeFiles/elektrosim.dir/build.make CMakeFiles/elektrosim.dir/depend
 	$(MAKE) -f CMakeFiles/elektrosim.dir/build.make CMakeFiles/elektrosim.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles  1 2 3 4 5 6 7 8 9 10 11 12 13 14
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles  1 2 3 4 5 6 7 8 9 10 11 12 13 14
 	@echo "Built target elektrosim"
 .PHONY : CMakeFiles/elektrosim.dir/all
 
@@ -69,9 +69,9 @@ all: CMakeFiles/elektrosim.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/elektrosim.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/elektrosim/build/CMakeFiles 14
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/ElektroSim/build/CMakeFiles 14
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/elektrosim.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/elektrosim/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/ElektroSim/build/CMakeFiles 0
 .PHONY : CMakeFiles/elektrosim.dir/rule
 
 # Convenience name for target.
@@ -94,15 +94,15 @@ clean: CMakeFiles/elektrosim.dir/clean
 CMakeFiles/ui_copy_elektrosim.dir/all:
 	$(MAKE) -f CMakeFiles/ui_copy_elektrosim.dir/build.make CMakeFiles/ui_copy_elektrosim.dir/depend
 	$(MAKE) -f CMakeFiles/ui_copy_elektrosim.dir/build.make CMakeFiles/ui_copy_elektrosim.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles 
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles 
 	@echo "Built target ui_copy_elektrosim"
 .PHONY : CMakeFiles/ui_copy_elektrosim.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ui_copy_elektrosim.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/elektrosim/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/ElektroSim/build/CMakeFiles 0
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ui_copy_elektrosim.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/elektrosim/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/ElektroSim/build/CMakeFiles 0
 .PHONY : CMakeFiles/ui_copy_elektrosim.dir/rule
 
 # Convenience name for target.
@@ -125,15 +125,15 @@ clean: CMakeFiles/ui_copy_elektrosim.dir/clean
 CMakeFiles/uninstall.dir/all:
 	$(MAKE) -f CMakeFiles/uninstall.dir/build.make CMakeFiles/uninstall.dir/depend
 	$(MAKE) -f CMakeFiles/uninstall.dir/build.make CMakeFiles/uninstall.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles 
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles 
 	@echo "Built target uninstall"
 .PHONY : CMakeFiles/uninstall.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/uninstall.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/elektrosim/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/ElektroSim/build/CMakeFiles 0
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/uninstall.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/elektrosim/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steven/projecten/ElektroSim/build/CMakeFiles 0
 .PHONY : CMakeFiles/uninstall.dir/rule
 
 # Convenience name for target.

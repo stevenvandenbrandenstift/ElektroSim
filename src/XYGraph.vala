@@ -33,7 +33,13 @@ public class XYGraph : Gtk.DrawingArea {
     private double maxValue;
     private double minValue;
     private ArrayList<double?> time;
-	private string name;
+    private string name;
+    private double rangeX;
+    private double rangeY;
+    private double offset;
+    private int height;
+    private int width;
+    
 	public signal ArrayList<double?> request_selected_component_values(bool next);
 	public signal ArrayList<double?> request_time_values();
 	
@@ -54,19 +60,20 @@ public class XYGraph : Gtk.DrawingArea {
 		redraw_canvas ();
 	}
 
-	public void draw_axes(Cairo.Context cr,int width,int height,int border,double offset){
+	public void draw_axes(Cairo.Context cr,double border,double offset){
 			
-			cr.set_line_width (3);
-			cr.set_source_rgb (0, 0, 0);
 			//x-axis
-			cr.move_to (-border/2, 0);
-			cr.line_to (width+border/2,0);
+			cr.save();
+			cr.set_line_width (3);
+			cr.set_source_rgb (0, 0,0);
+			cr.move_to (border/2, height-border+offset);
+			cr.line_to (width-border/2,height-border+offset);
 			cr.stroke ();
 			//y-axis
-			cr.move_to (0, -offset-border/2);
-			cr.line_to (0,height-offset+border/2);
+			cr.move_to (border,border/2);
+			cr.line_to (border,height-border/2);
 			cr.stroke ();
-			cr.close_path();
+			cr.restore();
 	}
 	
 
@@ -80,11 +87,10 @@ public class XYGraph : Gtk.DrawingArea {
 	public override bool draw (Cairo.Context cr) {
 		
 		//possible to paint the background
-		cr.new_path();
+		
 		cr.set_source_rgb( 0.6, 0.6, 0.6 );
-        cr.fill( );
-		cr.close_path ();
-		cr.paint();
+		cr.fill();
+                cr.paint( );
 		
 		cr.set_source_rgb (200, 200, 200);
 		cr.set_line_width (5);
@@ -92,87 +98,105 @@ public class XYGraph : Gtk.DrawingArea {
 		
 		
 		int border=50;
-		int width = get_allocated_width ();
-		
-		draw_label(cr,25,name,width/2,border/2,Location.LEFT);
-		
-
-    		if(time!=null&&time.size!=0&&values!=null&&values.size>=time.size){
-				int height = get_allocated_height ();
-				int width_graph= width-2*border;
-				int height_graph= height-2*border;
+		width = get_allocated_width ();
+		height = get_allocated_height ();
+		int width_graph= width-2*border;
+		int height_graph= height-2*border;
 				
-				double scaledOffset=minValue;
+                draw_label(cr,25,name,width/2,border/2,Location.LEFT);
+		
+		
+    		if(time!=null&&values!=null&&values.size>=time.size){
+    		               
+				double scaleX=width_graph/rangeX;
+				double scaleY=height_graph/rangeY;
 
-				double offset=height_graph*((-minValue)/(maxValue-minValue));
-				debug("offset: "+offset.to_string()+" - scaledOffset: "+scaledOffset.to_string());
-				cr.translate(0,height); // go to 0 0 for graph
-				cr.scale(1,-1);			//set y axis from bottom up
-				cr.translate(border,border+offset);	//add border
-				draw_axes(cr,width_graph,height_graph,border,offset);
-
-				double xScale=(width_graph)/(time[time.size-1]);
-				double yScale=height_graph/((maxValue-minValue));
-				//cr.scale(xScale,yScale) ;	//scaling
-				debug("xScale: "+xScale.to_string()+" - yScale: "+yScale.to_string());
+				print("offset: %f scale: x: %f y: %f\n\n",offset,scaleX,scaleY);
 				
+				cr.set_source_rgb (22, 22,22);
 
-				cr.set_line_width (1.0);
-				cr.set_source_rgb (300, 300, 300);
+				draw_axes(cr,border,offset*scaleY);
+				
+                                cr.translate(border,height-border+offset*scaleY);
+				//cr.scale(scaleX,scaleY); //problem: scales the lines also!
+				//does not scale 
+				string test="\n ---- %3.1f  ---- \n".printf(minValue);
+				print(test);
+				draw_label(cr,15,"%20lf".printf(minValue),0,minValue*scaleY,Location.LEFT);
+				draw_label(cr,15,"%20lf".printf(maxValue),0,maxValue*scaleY,Location.LEFT);
+				cr.set_line_width (2);
 				int counter=0;
 				foreach (var t in time) {
-					
-				    if (counter == 0){
-						//draw_label(cr,15,values[counter].to_string(),0,values[counter]*yScale,Location.LEFT);
-						cr.move_to (t*xScale, values[counter]*yScale);
+				 if (counter == 0){
+						
+						cr.move_to (t*scaleX, -1*values[counter]*scaleY);
 				    }else {
-				        cr.line_to (t*xScale, values[counter]*yScale);
-						/*if(values[counter]==maxValue||values[counter]==minValue){
-							draw_label(cr,15,values[counter].to_string(),0,values[counter]*yScale,Location.LEFT);*/
+				        cr.line_to (t*scaleX,-1*values[counter]*scaleY);
+						
 					}
-				    counter++;
+				   counter++;
 					//print("added point time: %f val: %f x: %f  y: %f\n",t,values[counter],t*xScale,values[counter]*yScale);
 				}
-				cr.stroke ();
+				 cr.stroke();
 			}
 
 		return true;
 	}
 
 	public void draw_label(Cairo.Context cr,int fontsize,string label,double x,double y, Location location){
+	                cr.save();
 			cr.set_font_size (fontsize);
-			if(location==Location.LEFT&&x==0)
-			cr.move_to (x-10*label.length,y+fontsize);
+			if(location==Location.LEFT&&y==0)
+			cr.move_to (x-(10*label.length),y-fontsize/2);
 			else if(location==Location.LEFT)
-			cr.move_to (x-10*label.length,y);
+			cr.move_to (x-(10*label.length),y);
 			cr.text_path (label);
-			cr.fill( );
+			cr.fill();
+			cr.restore();
 	}
 	
 	public void set_name(string name){
 			this.name=name;
+			print("setname %s\n",name);
 	}
 
-	public void set_timepoints(ArrayList<double?> timepoints){
+
+     public void set_timepoints(ArrayList<double?> timepoints){
+	if(timepoints!=null&&timepoints.size!=0){
         time=timepoints;
-    }
+        rangeX=timepoints[timepoints.size-1];
+        }
+     }
     
     public void set_values(ArrayList<double?> values){
+        if(values!=null){
         this.values=values;
+        offset=0;
         maxValue=double.MIN;
         minValue=0; //always keep relative to x-axis
-		if(values!=null){
+		
 		    foreach (double p in values) {
 		        if(p>maxValue)
 		          maxValue=p;
 		        if(p<minValue)
 		          minValue=p;
 		    }
-		}
+		
+        if(minValue<=0&&maxValue>=0){
+            rangeY=maxValue-minValue;
+            print("setting rangeY %f from max %f and min %f\n",rangeY,maxValue,minValue);
+            offset=minValue;
+        }
+        else if(minValue<=0&&maxValue<0){
+            rangeY=-minValue;
+            print("setting rangeY %f from max %f and min %f\n",rangeY,maxValue,minValue);
+            offset=rangeY;
+        }
+    }
     }
     
 	public void clear(){
-        time.clear();
+                time.clear();
 		values.clear();
 		redraw_canvas();
 	}

@@ -120,7 +120,7 @@ public class Simulation : Component {
 		get_parameter("type").val=option;
 		switch(option){
 			case(Type.TRAN):
-				Parameter step=add_parameter("step",double.parse("20e-3"),"s");
+				Parameter step=add_parameter("step",double.parse("200e-3"),"s");
 				Parameter stop=add_parameter("stop",1,"s");
 				Parameter start=add_parameter("start",0,"s");
 				optionsAdded.add(step);

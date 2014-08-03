@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/steven/projecten/elektrosim
+CMAKE_SOURCE_DIR = /home/steven/projecten/ElektroSim
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/steven/projecten/elektrosim/build
+CMAKE_BINARY_DIR = /home/steven/projecten/ElektroSim/build
 
 # Utility rule file for uninstall.
 
@@ -46,7 +46,7 @@ CMAKE_BINARY_DIR = /home/steven/projecten/elektrosim/build
 include CMakeFiles/uninstall.dir/progress.make
 
 CMakeFiles/uninstall:
-	/usr/bin/cmake -D CUSTOM_SOURCE_DIR:FILEPATH=/home/steven/projecten/elektrosim -D POSTREMOVE_HOOK:BOOL= -D GSETTINGSDIR:FILEPATH=/usr/local/share/glib-2.0/schemas -P /home/steven/projecten/elektrosim/cmake/SimpleUninstall.cmake
+	/usr/bin/cmake -D CUSTOM_SOURCE_DIR:FILEPATH=/home/steven/projecten/ElektroSim -D POSTREMOVE_HOOK:BOOL= -D GSETTINGSDIR:FILEPATH=/usr/local/share/glib-2.0/schemas -P /home/steven/projecten/ElektroSim/cmake/SimpleUninstall.cmake
 
 uninstall: CMakeFiles/uninstall
 uninstall: CMakeFiles/uninstall.dir/build.make
@@ -61,6 +61,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd /home/steven/projecten/elektrosim/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/steven/projecten/elektrosim /home/steven/projecten/elektrosim /home/steven/projecten/elektrosim/build /home/steven/projecten/elektrosim/build /home/steven/projecten/elektrosim/build/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/steven/projecten/ElektroSim/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/steven/projecten/ElektroSim /home/steven/projecten/ElektroSim /home/steven/projecten/ElektroSim/build /home/steven/projecten/ElektroSim/build /home/steven/projecten/ElektroSim/build/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/uninstall.dir/depend
 

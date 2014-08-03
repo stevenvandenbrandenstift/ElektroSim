@@ -61,7 +61,6 @@ public class PowerSource : Component {
 		int p1_x = connections[0].x;
 		int p1_y = connections[0].y;
 
-		cr.new_path ();
 		cr.move_to (p1_x, p1_y);
 		if(orientation==Component.Orientation.RIGHT){
 		cr.rel_line_to (width,0);
@@ -72,10 +71,8 @@ public class PowerSource : Component {
 		}else{
 		cr.rel_line_to (0,width);
 		}
-		cr.close_path ();
 		cr.stroke ();
 		
-		cr.new_path ();
 		cr.set_font_size (height*0.4);
 		
 		if(orientation==Component.Orientation.RIGHT){
@@ -90,8 +87,6 @@ public class PowerSource : Component {
 		
 		cr.text_path (name);
 		cr.fill();
-		cr.close_path ();
-	
 	}
 	
 	public void reset_options(){
@@ -261,7 +256,7 @@ public class PowerSource : Component {
 
 
 			foreach(Parameter par in parameters){
-				newc.get_parameter(par.name).val=par.val;
+				newc.get_parameter(par.name).set_value(par.val);
 						}
 			return newc;
 	}

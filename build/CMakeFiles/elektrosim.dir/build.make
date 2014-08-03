@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/steven/projecten/elektrosim
+CMAKE_SOURCE_DIR = /home/steven/projecten/ElektroSim
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/steven/projecten/elektrosim/build
+CMAKE_BINARY_DIR = /home/steven/projecten/ElektroSim/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/elektrosim.dir/depend.make
@@ -89,24 +89,24 @@ vala.stamp: ../src/resistor.vala
 vala.stamp: ../src/simulation.vala
 vala.stamp: ../src/simulationArea.vala
 vala.stamp: ../vapi/config.vapi
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating src/Line.c, src/NGSpiceSimulator.c, src/XYGraph.c, src/component.c, src/componentlist.c, src/elektrosim.c, src/ground.c, src/parameter.c, src/point.c, src/power-source.c, src/resistor.c, src/simulation.c, src/simulationArea.c"
-	/usr/bin/valac -C -b /home/steven/projecten/elektrosim -d /home/steven/projecten/elektrosim/build --pkg=atk --pkg=cairo --pkg=gdk-3.0 --pkg=gdk-pixbuf-2.0 --pkg=gee-0.8 --pkg=gio-2.0 --pkg=glib-2.0 --pkg=gobject-2.0 --pkg=gtk+-3.0 --pkg=librsvg-2.0 --pkg=ngspice --pkg=pango --pkg=pangocairo --pkg=x11 --thread --target-glib 2.40.0 /home/steven/projecten/elektrosim/src/Line.vala /home/steven/projecten/elektrosim/src/NGSpiceSimulator.vala /home/steven/projecten/elektrosim/src/XYGraph.vala /home/steven/projecten/elektrosim/src/component.vala /home/steven/projecten/elektrosim/src/componentlist.vala /home/steven/projecten/elektrosim/src/elektrosim.vala /home/steven/projecten/elektrosim/src/ground.vala /home/steven/projecten/elektrosim/src/parameter.vala /home/steven/projecten/elektrosim/src/point.vala /home/steven/projecten/elektrosim/src/power-source.vala /home/steven/projecten/elektrosim/src/resistor.vala /home/steven/projecten/elektrosim/src/simulation.vala /home/steven/projecten/elektrosim/src/simulationArea.vala /home/steven/projecten/elektrosim/vapi/config.vapi
+	/usr/bin/valac -C -b /home/steven/projecten/ElektroSim -d /home/steven/projecten/ElektroSim/build --pkg=atk --pkg=cairo --pkg=gdk-3.0 --pkg=gdk-pixbuf-2.0 --pkg=gee-0.8 --pkg=gio-2.0 --pkg=glib-2.0 --pkg=gobject-2.0 --pkg=gtk+-3.0 --pkg=librsvg-2.0 --pkg=ngspice --pkg=pango --pkg=pangocairo --pkg=x11 --thread --target-glib 2.40.0 /home/steven/projecten/ElektroSim/src/Line.vala /home/steven/projecten/ElektroSim/src/NGSpiceSimulator.vala /home/steven/projecten/ElektroSim/src/XYGraph.vala /home/steven/projecten/ElektroSim/src/component.vala /home/steven/projecten/ElektroSim/src/componentlist.vala /home/steven/projecten/ElektroSim/src/elektrosim.vala /home/steven/projecten/ElektroSim/src/ground.vala /home/steven/projecten/ElektroSim/src/parameter.vala /home/steven/projecten/ElektroSim/src/point.vala /home/steven/projecten/ElektroSim/src/power-source.vala /home/steven/projecten/ElektroSim/src/resistor.vala /home/steven/projecten/ElektroSim/src/simulation.vala /home/steven/projecten/ElektroSim/src/simulationArea.vala /home/steven/projecten/ElektroSim/vapi/config.vapi
 	/usr/bin/cmake -E touch vala.stamp
 
 CMakeFiles/elektrosim.dir/src/Line.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/Line.c.o: src/Line.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/Line.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/Line.c.o   -c /home/steven/projecten/elektrosim/build/src/Line.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/Line.c.o   -c /home/steven/projecten/ElektroSim/build/src/Line.c
 
 CMakeFiles/elektrosim.dir/src/Line.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/Line.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/Line.c > CMakeFiles/elektrosim.dir/src/Line.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/Line.c > CMakeFiles/elektrosim.dir/src/Line.c.i
 
 CMakeFiles/elektrosim.dir/src/Line.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/Line.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/Line.c -o CMakeFiles/elektrosim.dir/src/Line.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/Line.c -o CMakeFiles/elektrosim.dir/src/Line.c.s
 
 CMakeFiles/elektrosim.dir/src/Line.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/Line.c.o.requires
@@ -119,17 +119,17 @@ CMakeFiles/elektrosim.dir/src/Line.c.o.provides.build: CMakeFiles/elektrosim.dir
 
 CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o: src/NGSpiceSimulator.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o   -c /home/steven/projecten/elektrosim/build/src/NGSpiceSimulator.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o   -c /home/steven/projecten/ElektroSim/build/src/NGSpiceSimulator.c
 
 CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/NGSpiceSimulator.c > CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/NGSpiceSimulator.c > CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.i
 
 CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/NGSpiceSimulator.c -o CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/NGSpiceSimulator.c -o CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.s
 
 CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o.requires
@@ -142,17 +142,17 @@ CMakeFiles/elektrosim.dir/src/NGSpiceSimulator.c.o.provides.build: CMakeFiles/el
 
 CMakeFiles/elektrosim.dir/src/XYGraph.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/XYGraph.c.o: src/XYGraph.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/XYGraph.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/XYGraph.c.o   -c /home/steven/projecten/elektrosim/build/src/XYGraph.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/XYGraph.c.o   -c /home/steven/projecten/ElektroSim/build/src/XYGraph.c
 
 CMakeFiles/elektrosim.dir/src/XYGraph.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/XYGraph.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/XYGraph.c > CMakeFiles/elektrosim.dir/src/XYGraph.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/XYGraph.c > CMakeFiles/elektrosim.dir/src/XYGraph.c.i
 
 CMakeFiles/elektrosim.dir/src/XYGraph.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/XYGraph.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/XYGraph.c -o CMakeFiles/elektrosim.dir/src/XYGraph.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/XYGraph.c -o CMakeFiles/elektrosim.dir/src/XYGraph.c.s
 
 CMakeFiles/elektrosim.dir/src/XYGraph.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/XYGraph.c.o.requires
@@ -165,17 +165,17 @@ CMakeFiles/elektrosim.dir/src/XYGraph.c.o.provides.build: CMakeFiles/elektrosim.
 
 CMakeFiles/elektrosim.dir/src/component.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/component.c.o: src/component.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_5)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/component.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/component.c.o   -c /home/steven/projecten/elektrosim/build/src/component.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/component.c.o   -c /home/steven/projecten/ElektroSim/build/src/component.c
 
 CMakeFiles/elektrosim.dir/src/component.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/component.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/component.c > CMakeFiles/elektrosim.dir/src/component.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/component.c > CMakeFiles/elektrosim.dir/src/component.c.i
 
 CMakeFiles/elektrosim.dir/src/component.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/component.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/component.c -o CMakeFiles/elektrosim.dir/src/component.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/component.c -o CMakeFiles/elektrosim.dir/src/component.c.s
 
 CMakeFiles/elektrosim.dir/src/component.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/component.c.o.requires
@@ -188,17 +188,17 @@ CMakeFiles/elektrosim.dir/src/component.c.o.provides.build: CMakeFiles/elektrosi
 
 CMakeFiles/elektrosim.dir/src/componentlist.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/componentlist.c.o: src/componentlist.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/componentlist.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/componentlist.c.o   -c /home/steven/projecten/elektrosim/build/src/componentlist.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/componentlist.c.o   -c /home/steven/projecten/ElektroSim/build/src/componentlist.c
 
 CMakeFiles/elektrosim.dir/src/componentlist.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/componentlist.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/componentlist.c > CMakeFiles/elektrosim.dir/src/componentlist.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/componentlist.c > CMakeFiles/elektrosim.dir/src/componentlist.c.i
 
 CMakeFiles/elektrosim.dir/src/componentlist.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/componentlist.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/componentlist.c -o CMakeFiles/elektrosim.dir/src/componentlist.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/componentlist.c -o CMakeFiles/elektrosim.dir/src/componentlist.c.s
 
 CMakeFiles/elektrosim.dir/src/componentlist.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/componentlist.c.o.requires
@@ -211,17 +211,17 @@ CMakeFiles/elektrosim.dir/src/componentlist.c.o.provides.build: CMakeFiles/elekt
 
 CMakeFiles/elektrosim.dir/src/elektrosim.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/elektrosim.c.o: src/elektrosim.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/elektrosim.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/elektrosim.c.o   -c /home/steven/projecten/elektrosim/build/src/elektrosim.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/elektrosim.c.o   -c /home/steven/projecten/ElektroSim/build/src/elektrosim.c
 
 CMakeFiles/elektrosim.dir/src/elektrosim.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/elektrosim.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/elektrosim.c > CMakeFiles/elektrosim.dir/src/elektrosim.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/elektrosim.c > CMakeFiles/elektrosim.dir/src/elektrosim.c.i
 
 CMakeFiles/elektrosim.dir/src/elektrosim.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/elektrosim.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/elektrosim.c -o CMakeFiles/elektrosim.dir/src/elektrosim.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/elektrosim.c -o CMakeFiles/elektrosim.dir/src/elektrosim.c.s
 
 CMakeFiles/elektrosim.dir/src/elektrosim.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/elektrosim.c.o.requires
@@ -234,17 +234,17 @@ CMakeFiles/elektrosim.dir/src/elektrosim.c.o.provides.build: CMakeFiles/elektros
 
 CMakeFiles/elektrosim.dir/src/ground.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/ground.c.o: src/ground.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/ground.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/ground.c.o   -c /home/steven/projecten/elektrosim/build/src/ground.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/ground.c.o   -c /home/steven/projecten/ElektroSim/build/src/ground.c
 
 CMakeFiles/elektrosim.dir/src/ground.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/ground.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/ground.c > CMakeFiles/elektrosim.dir/src/ground.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/ground.c > CMakeFiles/elektrosim.dir/src/ground.c.i
 
 CMakeFiles/elektrosim.dir/src/ground.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/ground.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/ground.c -o CMakeFiles/elektrosim.dir/src/ground.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/ground.c -o CMakeFiles/elektrosim.dir/src/ground.c.s
 
 CMakeFiles/elektrosim.dir/src/ground.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/ground.c.o.requires
@@ -257,17 +257,17 @@ CMakeFiles/elektrosim.dir/src/ground.c.o.provides.build: CMakeFiles/elektrosim.d
 
 CMakeFiles/elektrosim.dir/src/parameter.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/parameter.c.o: src/parameter.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/parameter.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/parameter.c.o   -c /home/steven/projecten/elektrosim/build/src/parameter.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/parameter.c.o   -c /home/steven/projecten/ElektroSim/build/src/parameter.c
 
 CMakeFiles/elektrosim.dir/src/parameter.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/parameter.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/parameter.c > CMakeFiles/elektrosim.dir/src/parameter.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/parameter.c > CMakeFiles/elektrosim.dir/src/parameter.c.i
 
 CMakeFiles/elektrosim.dir/src/parameter.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/parameter.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/parameter.c -o CMakeFiles/elektrosim.dir/src/parameter.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/parameter.c -o CMakeFiles/elektrosim.dir/src/parameter.c.s
 
 CMakeFiles/elektrosim.dir/src/parameter.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/parameter.c.o.requires
@@ -280,17 +280,17 @@ CMakeFiles/elektrosim.dir/src/parameter.c.o.provides.build: CMakeFiles/elektrosi
 
 CMakeFiles/elektrosim.dir/src/point.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/point.c.o: src/point.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/point.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/point.c.o   -c /home/steven/projecten/elektrosim/build/src/point.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/point.c.o   -c /home/steven/projecten/ElektroSim/build/src/point.c
 
 CMakeFiles/elektrosim.dir/src/point.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/point.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/point.c > CMakeFiles/elektrosim.dir/src/point.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/point.c > CMakeFiles/elektrosim.dir/src/point.c.i
 
 CMakeFiles/elektrosim.dir/src/point.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/point.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/point.c -o CMakeFiles/elektrosim.dir/src/point.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/point.c -o CMakeFiles/elektrosim.dir/src/point.c.s
 
 CMakeFiles/elektrosim.dir/src/point.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/point.c.o.requires
@@ -303,17 +303,17 @@ CMakeFiles/elektrosim.dir/src/point.c.o.provides.build: CMakeFiles/elektrosim.di
 
 CMakeFiles/elektrosim.dir/src/power-source.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/power-source.c.o: src/power-source.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_11)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_11)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/power-source.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/power-source.c.o   -c /home/steven/projecten/elektrosim/build/src/power-source.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/power-source.c.o   -c /home/steven/projecten/ElektroSim/build/src/power-source.c
 
 CMakeFiles/elektrosim.dir/src/power-source.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/power-source.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/power-source.c > CMakeFiles/elektrosim.dir/src/power-source.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/power-source.c > CMakeFiles/elektrosim.dir/src/power-source.c.i
 
 CMakeFiles/elektrosim.dir/src/power-source.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/power-source.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/power-source.c -o CMakeFiles/elektrosim.dir/src/power-source.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/power-source.c -o CMakeFiles/elektrosim.dir/src/power-source.c.s
 
 CMakeFiles/elektrosim.dir/src/power-source.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/power-source.c.o.requires
@@ -326,17 +326,17 @@ CMakeFiles/elektrosim.dir/src/power-source.c.o.provides.build: CMakeFiles/elektr
 
 CMakeFiles/elektrosim.dir/src/resistor.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/resistor.c.o: src/resistor.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_12)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_12)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/resistor.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/resistor.c.o   -c /home/steven/projecten/elektrosim/build/src/resistor.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/resistor.c.o   -c /home/steven/projecten/ElektroSim/build/src/resistor.c
 
 CMakeFiles/elektrosim.dir/src/resistor.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/resistor.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/resistor.c > CMakeFiles/elektrosim.dir/src/resistor.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/resistor.c > CMakeFiles/elektrosim.dir/src/resistor.c.i
 
 CMakeFiles/elektrosim.dir/src/resistor.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/resistor.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/resistor.c -o CMakeFiles/elektrosim.dir/src/resistor.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/resistor.c -o CMakeFiles/elektrosim.dir/src/resistor.c.s
 
 CMakeFiles/elektrosim.dir/src/resistor.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/resistor.c.o.requires
@@ -349,17 +349,17 @@ CMakeFiles/elektrosim.dir/src/resistor.c.o.provides.build: CMakeFiles/elektrosim
 
 CMakeFiles/elektrosim.dir/src/simulation.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/simulation.c.o: src/simulation.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_13)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_13)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/simulation.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/simulation.c.o   -c /home/steven/projecten/elektrosim/build/src/simulation.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/simulation.c.o   -c /home/steven/projecten/ElektroSim/build/src/simulation.c
 
 CMakeFiles/elektrosim.dir/src/simulation.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/simulation.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/simulation.c > CMakeFiles/elektrosim.dir/src/simulation.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/simulation.c > CMakeFiles/elektrosim.dir/src/simulation.c.i
 
 CMakeFiles/elektrosim.dir/src/simulation.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/simulation.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/simulation.c -o CMakeFiles/elektrosim.dir/src/simulation.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/simulation.c -o CMakeFiles/elektrosim.dir/src/simulation.c.s
 
 CMakeFiles/elektrosim.dir/src/simulation.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/simulation.c.o.requires
@@ -372,17 +372,17 @@ CMakeFiles/elektrosim.dir/src/simulation.c.o.provides.build: CMakeFiles/elektros
 
 CMakeFiles/elektrosim.dir/src/simulationArea.c.o: CMakeFiles/elektrosim.dir/flags.make
 CMakeFiles/elektrosim.dir/src/simulationArea.c.o: src/simulationArea.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/elektrosim/build/CMakeFiles $(CMAKE_PROGRESS_14)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/steven/projecten/ElektroSim/build/CMakeFiles $(CMAKE_PROGRESS_14)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/elektrosim.dir/src/simulationArea.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/simulationArea.c.o   -c /home/steven/projecten/elektrosim/build/src/simulationArea.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/elektrosim.dir/src/simulationArea.c.o   -c /home/steven/projecten/ElektroSim/build/src/simulationArea.c
 
 CMakeFiles/elektrosim.dir/src/simulationArea.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/elektrosim.dir/src/simulationArea.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/elektrosim/build/src/simulationArea.c > CMakeFiles/elektrosim.dir/src/simulationArea.c.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/steven/projecten/ElektroSim/build/src/simulationArea.c > CMakeFiles/elektrosim.dir/src/simulationArea.c.i
 
 CMakeFiles/elektrosim.dir/src/simulationArea.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/elektrosim.dir/src/simulationArea.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/elektrosim/build/src/simulationArea.c -o CMakeFiles/elektrosim.dir/src/simulationArea.c.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/steven/projecten/ElektroSim/build/src/simulationArea.c -o CMakeFiles/elektrosim.dir/src/simulationArea.c.s
 
 CMakeFiles/elektrosim.dir/src/simulationArea.c.o.requires:
 .PHONY : CMakeFiles/elektrosim.dir/src/simulationArea.c.o.requires
@@ -467,6 +467,6 @@ CMakeFiles/elektrosim.dir/depend: src/resistor.c
 CMakeFiles/elektrosim.dir/depend: src/simulation.c
 CMakeFiles/elektrosim.dir/depend: src/simulationArea.c
 CMakeFiles/elektrosim.dir/depend: vala.stamp
-	cd /home/steven/projecten/elektrosim/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/steven/projecten/elektrosim /home/steven/projecten/elektrosim /home/steven/projecten/elektrosim/build /home/steven/projecten/elektrosim/build /home/steven/projecten/elektrosim/build/CMakeFiles/elektrosim.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/steven/projecten/ElektroSim/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/steven/projecten/ElektroSim /home/steven/projecten/ElektroSim /home/steven/projecten/ElektroSim/build /home/steven/projecten/ElektroSim/build /home/steven/projecten/ElektroSim/build/CMakeFiles/elektrosim.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/elektrosim.dir/depend
 

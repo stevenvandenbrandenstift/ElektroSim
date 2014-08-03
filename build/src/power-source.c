@@ -226,6 +226,7 @@ void elektro_sim_component_set_name (ElektroSimComponent* self, const gchar* new
 GType elektro_sim_component_component_type_get_type (void) G_GNUC_CONST;
 void elektro_sim_component_set_componentType (ElektroSimComponent* self, ElektroSimComponentComponentType value);
 const gchar* elektro_sim_parameter_get_name (ElektroSimParameter* self);
+void elektro_sim_parameter_set_value (ElektroSimParameter* self, gdouble temp);
 static void elektro_sim_power_source_real_snap (ElektroSimComponent* base, gint range, gint x, gint y);
 ElektroSimPoint* elektro_sim_point_new (gint x, gint y);
 ElektroSimPoint* elektro_sim_point_construct (GType object_type, gint x, gint y);
@@ -329,24 +330,20 @@ static void elektro_sim_power_source_real_draw_image (ElektroSimComponent* base,
 	gint _tmp10_ = 0;
 	gint _tmp11_ = 0;
 	cairo_t* _tmp12_ = NULL;
-	cairo_t* _tmp13_ = NULL;
+	gint _tmp13_ = 0;
 	gint _tmp14_ = 0;
-	gint _tmp15_ = 0;
+	ElektroSimComponentOrientation _tmp15_ = 0;
 	ElektroSimComponentOrientation _tmp16_ = 0;
-	ElektroSimComponentOrientation _tmp17_ = 0;
+	cairo_t* _tmp33_ = NULL;
 	cairo_t* _tmp34_ = NULL;
-	cairo_t* _tmp35_ = NULL;
-	cairo_t* _tmp36_ = NULL;
-	cairo_t* _tmp37_ = NULL;
-	gint _tmp38_ = 0;
-	gint _tmp39_ = 0;
-	ElektroSimComponentOrientation _tmp40_ = 0;
-	ElektroSimComponentOrientation _tmp41_ = 0;
+	gint _tmp35_ = 0;
+	gint _tmp36_ = 0;
+	ElektroSimComponentOrientation _tmp37_ = 0;
+	ElektroSimComponentOrientation _tmp38_ = 0;
+	cairo_t* _tmp65_ = NULL;
+	const gchar* _tmp66_ = NULL;
+	const gchar* _tmp67_ = NULL;
 	cairo_t* _tmp68_ = NULL;
-	const gchar* _tmp69_ = NULL;
-	const gchar* _tmp70_ = NULL;
-	cairo_t* _tmp71_ = NULL;
-	cairo_t* _tmp72_ = NULL;
 	self = (ElektroSimPowerSource*) base;
 	g_return_if_fail (cr != NULL);
 	_tmp0_ = ((ElektroSimComponent*) self)->connections;
@@ -366,145 +363,137 @@ static void elektro_sim_power_source_real_draw_image (ElektroSimComponent* base,
 	_elektro_sim_point_unref0 (_tmp8_);
 	p1_y = _tmp11_;
 	_tmp12_ = cr;
-	cairo_new_path (_tmp12_);
-	_tmp13_ = cr;
-	_tmp14_ = p1_x;
-	_tmp15_ = p1_y;
-	cairo_move_to (_tmp13_, (gdouble) _tmp14_, (gdouble) _tmp15_);
-	_tmp16_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
-	_tmp17_ = _tmp16_;
-	if (_tmp17_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_RIGHT) {
-		cairo_t* _tmp18_ = NULL;
+	_tmp13_ = p1_x;
+	_tmp14_ = p1_y;
+	cairo_move_to (_tmp12_, (gdouble) _tmp13_, (gdouble) _tmp14_);
+	_tmp15_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
+	_tmp16_ = _tmp15_;
+	if (_tmp16_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_RIGHT) {
+		cairo_t* _tmp17_ = NULL;
+		gint _tmp18_ = 0;
 		gint _tmp19_ = 0;
-		gint _tmp20_ = 0;
-		_tmp18_ = cr;
-		_tmp19_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-		_tmp20_ = _tmp19_;
-		cairo_rel_line_to (_tmp18_, (gdouble) _tmp20_, (gdouble) 0);
+		_tmp17_ = cr;
+		_tmp18_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+		_tmp19_ = _tmp18_;
+		cairo_rel_line_to (_tmp17_, (gdouble) _tmp19_, (gdouble) 0);
 	} else {
+		ElektroSimComponentOrientation _tmp20_ = 0;
 		ElektroSimComponentOrientation _tmp21_ = 0;
-		ElektroSimComponentOrientation _tmp22_ = 0;
-		_tmp21_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
-		_tmp22_ = _tmp21_;
-		if (_tmp22_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_LEFT) {
-			cairo_t* _tmp23_ = NULL;
+		_tmp20_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
+		_tmp21_ = _tmp20_;
+		if (_tmp21_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_LEFT) {
+			cairo_t* _tmp22_ = NULL;
+			gint _tmp23_ = 0;
 			gint _tmp24_ = 0;
-			gint _tmp25_ = 0;
-			_tmp23_ = cr;
-			_tmp24_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-			_tmp25_ = _tmp24_;
-			cairo_rel_line_to (_tmp23_, (gdouble) (-_tmp25_), (gdouble) 0);
+			_tmp22_ = cr;
+			_tmp23_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+			_tmp24_ = _tmp23_;
+			cairo_rel_line_to (_tmp22_, (gdouble) (-_tmp24_), (gdouble) 0);
 		} else {
+			ElektroSimComponentOrientation _tmp25_ = 0;
 			ElektroSimComponentOrientation _tmp26_ = 0;
-			ElektroSimComponentOrientation _tmp27_ = 0;
-			_tmp26_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
-			_tmp27_ = _tmp26_;
-			if (_tmp27_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_UP) {
-				cairo_t* _tmp28_ = NULL;
+			_tmp25_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
+			_tmp26_ = _tmp25_;
+			if (_tmp26_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_UP) {
+				cairo_t* _tmp27_ = NULL;
+				gint _tmp28_ = 0;
 				gint _tmp29_ = 0;
-				gint _tmp30_ = 0;
-				_tmp28_ = cr;
-				_tmp29_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-				_tmp30_ = _tmp29_;
-				cairo_rel_line_to (_tmp28_, (gdouble) 0, (gdouble) (-_tmp30_));
+				_tmp27_ = cr;
+				_tmp28_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+				_tmp29_ = _tmp28_;
+				cairo_rel_line_to (_tmp27_, (gdouble) 0, (gdouble) (-_tmp29_));
 			} else {
-				cairo_t* _tmp31_ = NULL;
+				cairo_t* _tmp30_ = NULL;
+				gint _tmp31_ = 0;
 				gint _tmp32_ = 0;
-				gint _tmp33_ = 0;
-				_tmp31_ = cr;
-				_tmp32_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-				_tmp33_ = _tmp32_;
-				cairo_rel_line_to (_tmp31_, (gdouble) 0, (gdouble) _tmp33_);
+				_tmp30_ = cr;
+				_tmp31_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+				_tmp32_ = _tmp31_;
+				cairo_rel_line_to (_tmp30_, (gdouble) 0, (gdouble) _tmp32_);
 			}
 		}
 	}
+	_tmp33_ = cr;
+	cairo_stroke (_tmp33_);
 	_tmp34_ = cr;
-	cairo_close_path (_tmp34_);
-	_tmp35_ = cr;
-	cairo_stroke (_tmp35_);
-	_tmp36_ = cr;
-	cairo_new_path (_tmp36_);
-	_tmp37_ = cr;
-	_tmp38_ = elektro_sim_component_get_height ((ElektroSimComponent*) self);
-	_tmp39_ = _tmp38_;
-	cairo_set_font_size (_tmp37_, _tmp39_ * 0.4);
-	_tmp40_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
-	_tmp41_ = _tmp40_;
-	if (_tmp41_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_RIGHT) {
-		cairo_t* _tmp42_ = NULL;
+	_tmp35_ = elektro_sim_component_get_height ((ElektroSimComponent*) self);
+	_tmp36_ = _tmp35_;
+	cairo_set_font_size (_tmp34_, _tmp36_ * 0.4);
+	_tmp37_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
+	_tmp38_ = _tmp37_;
+	if (_tmp38_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_RIGHT) {
+		cairo_t* _tmp39_ = NULL;
+		gint _tmp40_ = 0;
+		gint _tmp41_ = 0;
+		gint _tmp42_ = 0;
 		gint _tmp43_ = 0;
-		gint _tmp44_ = 0;
-		gint _tmp45_ = 0;
-		gint _tmp46_ = 0;
-		_tmp42_ = cr;
-		_tmp43_ = p1_x;
-		_tmp44_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-		_tmp45_ = _tmp44_;
-		_tmp46_ = p1_y;
-		cairo_move_to (_tmp42_, _tmp43_ + (_tmp45_ * 0.65), (gdouble) (_tmp46_ - 5));
+		_tmp39_ = cr;
+		_tmp40_ = p1_x;
+		_tmp41_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+		_tmp42_ = _tmp41_;
+		_tmp43_ = p1_y;
+		cairo_move_to (_tmp39_, _tmp40_ + (_tmp42_ * 0.65), (gdouble) (_tmp43_ - 5));
 	} else {
-		ElektroSimComponentOrientation _tmp47_ = 0;
-		ElektroSimComponentOrientation _tmp48_ = 0;
-		_tmp47_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
-		_tmp48_ = _tmp47_;
-		if (_tmp48_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_LEFT) {
-			cairo_t* _tmp49_ = NULL;
+		ElektroSimComponentOrientation _tmp44_ = 0;
+		ElektroSimComponentOrientation _tmp45_ = 0;
+		_tmp44_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
+		_tmp45_ = _tmp44_;
+		if (_tmp45_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_LEFT) {
+			cairo_t* _tmp46_ = NULL;
+			gint _tmp47_ = 0;
+			gint _tmp48_ = 0;
+			gint _tmp49_ = 0;
 			gint _tmp50_ = 0;
-			gint _tmp51_ = 0;
-			gint _tmp52_ = 0;
-			gint _tmp53_ = 0;
-			_tmp49_ = cr;
-			_tmp50_ = p1_x;
-			_tmp51_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-			_tmp52_ = _tmp51_;
-			_tmp53_ = p1_y;
-			cairo_move_to (_tmp49_, (gdouble) (_tmp50_ - _tmp52_), (gdouble) (_tmp53_ - 5));
+			_tmp46_ = cr;
+			_tmp47_ = p1_x;
+			_tmp48_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+			_tmp49_ = _tmp48_;
+			_tmp50_ = p1_y;
+			cairo_move_to (_tmp46_, (gdouble) (_tmp47_ - _tmp49_), (gdouble) (_tmp50_ - 5));
 		} else {
-			ElektroSimComponentOrientation _tmp54_ = 0;
-			ElektroSimComponentOrientation _tmp55_ = 0;
-			_tmp54_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
-			_tmp55_ = _tmp54_;
-			if (_tmp55_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_UP) {
-				cairo_t* _tmp56_ = NULL;
+			ElektroSimComponentOrientation _tmp51_ = 0;
+			ElektroSimComponentOrientation _tmp52_ = 0;
+			_tmp51_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
+			_tmp52_ = _tmp51_;
+			if (_tmp52_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_UP) {
+				cairo_t* _tmp53_ = NULL;
+				gint _tmp54_ = 0;
+				gint _tmp55_ = 0;
+				gint _tmp56_ = 0;
 				gint _tmp57_ = 0;
-				gint _tmp58_ = 0;
-				gint _tmp59_ = 0;
-				gint _tmp60_ = 0;
-				_tmp56_ = cr;
-				_tmp57_ = p1_x;
-				_tmp58_ = p1_y;
-				_tmp59_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-				_tmp60_ = _tmp59_;
-				cairo_move_to (_tmp56_, (gdouble) (_tmp57_ + 5), _tmp58_ - (_tmp60_ * 0.8));
+				_tmp53_ = cr;
+				_tmp54_ = p1_x;
+				_tmp55_ = p1_y;
+				_tmp56_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+				_tmp57_ = _tmp56_;
+				cairo_move_to (_tmp53_, (gdouble) (_tmp54_ + 5), _tmp55_ - (_tmp57_ * 0.8));
 			} else {
-				ElektroSimComponentOrientation _tmp61_ = 0;
-				ElektroSimComponentOrientation _tmp62_ = 0;
-				_tmp61_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
-				_tmp62_ = _tmp61_;
-				if (_tmp62_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_DOWN) {
-					cairo_t* _tmp63_ = NULL;
+				ElektroSimComponentOrientation _tmp58_ = 0;
+				ElektroSimComponentOrientation _tmp59_ = 0;
+				_tmp58_ = elektro_sim_component_get_orientation ((ElektroSimComponent*) self);
+				_tmp59_ = _tmp58_;
+				if (_tmp59_ == ELEKTRO_SIM_COMPONENT_ORIENTATION_DOWN) {
+					cairo_t* _tmp60_ = NULL;
+					gint _tmp61_ = 0;
+					gint _tmp62_ = 0;
+					gint _tmp63_ = 0;
 					gint _tmp64_ = 0;
-					gint _tmp65_ = 0;
-					gint _tmp66_ = 0;
-					gint _tmp67_ = 0;
-					_tmp63_ = cr;
-					_tmp64_ = p1_x;
-					_tmp65_ = p1_y;
-					_tmp66_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
-					_tmp67_ = _tmp66_;
-					cairo_move_to (_tmp63_, (gdouble) (_tmp64_ + 5), _tmp65_ + (_tmp67_ * 0.9));
+					_tmp60_ = cr;
+					_tmp61_ = p1_x;
+					_tmp62_ = p1_y;
+					_tmp63_ = elektro_sim_component_get_width ((ElektroSimComponent*) self);
+					_tmp64_ = _tmp63_;
+					cairo_move_to (_tmp60_, (gdouble) (_tmp61_ + 5), _tmp62_ + (_tmp64_ * 0.9));
 				}
 			}
 		}
 	}
+	_tmp65_ = cr;
+	_tmp66_ = gtk_widget_get_name ((GtkWidget*) self);
+	_tmp67_ = _tmp66_;
+	cairo_text_path (_tmp65_, _tmp67_);
 	_tmp68_ = cr;
-	_tmp69_ = gtk_widget_get_name ((GtkWidget*) self);
-	_tmp70_ = _tmp69_;
-	cairo_text_path (_tmp68_, _tmp70_);
-	_tmp71_ = cr;
-	cairo_fill (_tmp71_);
-	_tmp72_ = cr;
-	cairo_close_path (_tmp72_);
+	cairo_fill (_tmp68_);
 }
 
 
@@ -1629,7 +1618,7 @@ static ElektroSimComponent* elektro_sim_power_source_real_clone (ElektroSimCompo
 			_tmp31_ = par;
 			_tmp32_ = elektro_sim_parameter_get_val (_tmp31_);
 			_tmp33_ = _tmp32_;
-			elektro_sim_parameter_set_val (_tmp30_, _tmp33_);
+			elektro_sim_parameter_set_value (_tmp30_, _tmp33_);
 			_g_object_unref0 (_tmp30_);
 			_g_object_unref0 (par);
 		}

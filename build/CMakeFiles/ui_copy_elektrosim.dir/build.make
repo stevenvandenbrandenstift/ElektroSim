@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/steven/projecten/elektrosim
+CMAKE_SOURCE_DIR = /home/steven/projecten/ElektroSim
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/steven/projecten/elektrosim/build
+CMAKE_BINARY_DIR = /home/steven/projecten/ElektroSim/build
 
 # Utility rule file for ui_copy_elektrosim.
 
@@ -60,6 +60,6 @@ CMakeFiles/ui_copy_elektrosim.dir/clean:
 .PHONY : CMakeFiles/ui_copy_elektrosim.dir/clean
 
 CMakeFiles/ui_copy_elektrosim.dir/depend:
-	cd /home/steven/projecten/elektrosim/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/steven/projecten/elektrosim /home/steven/projecten/elektrosim /home/steven/projecten/elektrosim/build /home/steven/projecten/elektrosim/build /home/steven/projecten/elektrosim/build/CMakeFiles/ui_copy_elektrosim.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/steven/projecten/ElektroSim/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/steven/projecten/ElektroSim /home/steven/projecten/ElektroSim /home/steven/projecten/ElektroSim/build /home/steven/projecten/ElektroSim/build /home/steven/projecten/ElektroSim/build/CMakeFiles/ui_copy_elektrosim.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ui_copy_elektrosim.dir/depend
 

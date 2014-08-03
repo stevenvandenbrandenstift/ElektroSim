@@ -33,7 +33,6 @@ public class Ground : Component {
 		int p1_x = connections[0].x;
 		int p1_y = connections[0].y;
 
-		cr.new_path ();
 		cr.move_to (p1_x, p1_y);
 		if(orientation==Component.Orientation.RIGHT){
 		cr.rel_line_to (width,0);
@@ -44,12 +43,9 @@ public class Ground : Component {
 		}else{
 		cr.rel_line_to (0,width);
 		}
-		cr.close_path ();
 		cr.stroke ();
 		
-		cr.new_path ();
 		cr.set_font_size (height*0.4);
-		
 		if(orientation==Component.Orientation.RIGHT){
 		cr.move_to (p1_x+width*0.15,p1_y-5);
 		}else if(orientation==Component.Orientation.LEFT){
@@ -62,7 +58,6 @@ public class Ground : Component {
 		
 		cr.text_path (name);
 		cr.fill();
-		cr.close_path ();
 	
 	}
 	

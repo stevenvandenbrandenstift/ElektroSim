@@ -1,4 +1,4 @@
-# Install script for directory: /home/steven/projecten/elektrosim
+# Install script for directory: /home/steven/projecten/ElektroSim
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/elektrosim"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/steven/projecten/elektrosim/build/elektrosim")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/steven/projecten/ElektroSim/build/elektrosim")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/elektrosim" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/elektrosim")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -54,7 +54,7 @@ else()
   set(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 endif()
 
-file(WRITE "/home/steven/projecten/elektrosim/build/${CMAKE_INSTALL_MANIFEST}" "")
+file(WRITE "/home/steven/projecten/ElektroSim/build/${CMAKE_INSTALL_MANIFEST}" "")
 foreach(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  file(APPEND "/home/steven/projecten/elektrosim/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  file(APPEND "/home/steven/projecten/ElektroSim/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 endforeach()

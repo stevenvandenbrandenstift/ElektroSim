@@ -1,0 +1,4 @@
+netlist by ElektroSim2
+r1 1 0 5 
+v1 1 0 SIN ( 0 1 1 0 0 )
+.END

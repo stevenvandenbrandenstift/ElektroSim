@@ -32,15 +32,6 @@ public class Parameter : Box{
 	public enum WidgetStyle {
 		NONE,LABEL,ENTRY,OPTIONS,SLIDER;
 	}
-		
-	public enum Suffix {	
-		FEMTO=-15,PICO=-12,NANO=-9,MICRO=-6,MILLI=-3,BASE=0,KILO=3,MEGA=6,GIGA=9,TERA=12;
-		
-		public string get_string ()
-        {
-                return ((EnumClass)typeof (Suffix).class_ref ()).get_value(this).value.to_string();
-        }
-	}
 
 	public double val{get;set;}
 	private double valBase;
@@ -84,7 +75,7 @@ public class Parameter : Box{
 		label.set_can_focus(false);
 		label.width_chars=10;
 		label.selectable=false;
-		}
+	}
 	
 	public string to_string(){
 		string line;
@@ -105,19 +96,69 @@ public class Parameter : Box{
 	
 	}
 
+     private string suffix_to_string(double suffix){
+                    switch((int)suffix){
+                        case -15:
+                            return "f";
+
+                        case -12:
+                            return "p";
+
+                        case -9:
+                            return "n";
+
+                        case -6:
+                            return "u";
+
+                        case -3:
+                            return "m";
+
+                        case 0:
+                            return "";
+
+                        case 3:
+                            return "K";
+
+                        case 6:
+                            return "Meg";
+
+                         case 9:
+                            return "G";
+
+                          case 12:
+                            return "T";
+
+                         default:
+                            if(suffix<-15){
+                                return "e"+(suffix+15).to_string()+" f";  
+                            }else if (suffix>12){
+                                return "e"+(suffix-12).to_string()+" T";
+                            }  
+                            return "error";
+                            break;
+
+                }
+    }
 	private void convert_base_to_val(){
-		val=valBase*Math.pow10((double)suffix);
+		val=valBase*Math.pow10(suffix);
+	}
+	
+	public string get_value_string(){
+	    return "%.1f %s%s".printf(valBase,suffix_to_string(suffix),unit);
 	}
 	private void convert_val_to_base(){
-		debug("suffix:"+suffix.to_string());
-		debug("baseval:"+valBase.to_string());
-		debug("val:"+val.to_string());
+	    debug("\nval:"+val.to_string()+"\n");
 		double exponent=0;
 		double fraction=0;
-		if(val!=0){
-		exponent=Math.logb(val);
-		fraction=val/(Math.pow10(exponent));
-		}
+		string number;
+		number=val.to_string();
+		string[]numbers=number.split("e");
+        debug("splitted in "+numbers.length.to_string()+"parts");
+        if(numbers.length>1)
+		exponent=double.parse(numbers[1]);
+        else
+        exponent=0;	
+        fraction=double.parse(numbers[0]);
 		debug("fraction:"+fraction.to_string());
 		debug("exponent:"+exponent.to_string());
 		int residu=(int)Math.fmod(exponent,(double)3);
@@ -126,18 +167,19 @@ public class Parameter : Box{
 			//not dividable by 3
 			if(exponent>0){
 				exponent=exponent-residu;
-				fraction*=Math.pow10((double)residu);
+				fraction*=10;
 			}
 			else{
 				exponent+=residu;
-				fraction*=Math.pow10(-(double)residu);
+				fraction/=10;
 			}
 		}
+        debug("suffix orig:"+suffix.to_string());
 		suffix=(int)exponent;
 		valBase=fraction;
 		debug("suffix:"+suffix.to_string());
-			debug("baseval:"+valBase.to_string());
-			debug("val:"+val.to_string());
+		debug("baseval:"+valBase.to_string());
+		
 	}
 
 	public void set_mode(ComponentList.Mode mode){
@@ -173,9 +215,9 @@ public class Parameter : Box{
 			foreach(Widget widget in widgets){
 				if(widget is Label){
 					if(!(widget as Label).get_text().contains(name))
-						(widget as Label).set_label(val.to_string());
+						(widget as Label).set_label(get_value_string());
 				}else if(widget is Entry)
-					(widget as Entry).set_text(val.to_string());
+					(widget as Entry).set_text(get_value_string());
 				else if(widget is Scale){
 					(widget as Scale).set_value(valBase);
 				}
@@ -249,6 +291,7 @@ public class Parameter : Box{
 
 	public void set_value(double temp){
 		val=temp;
+		convert_val_to_base();
 		set_widgets_value();
 		updated();
 	}
@@ -265,7 +308,7 @@ public class Parameter : Box{
 
 
 	private Scale make_scale(){
-		sliderValue= new Adjustment (valBase,  0.1,  100,  0.1,  0.1, 0);
+		sliderValue= new Adjustment (valBase,  0,  100,  0.1,  0.1, 0);
 		Scale scale=new Scale (Gtk.Orientation.HORIZONTAL,sliderValue);
 		scale.set_has_origin (false);
 		scale.set_hexpand(true);
@@ -275,7 +318,6 @@ public class Parameter : Box{
 					mutex.lock();
 					valBase=scale.get_value();
 					convert_base_to_val();
-					sliderValue.set_step_increment (0.1);
 					debug("sliderchanged to value "+scale.get_value().to_string());
 					edited();
 					mutex.unlock();
@@ -287,7 +329,7 @@ public class Parameter : Box{
 		Entry entry=new Entry();
 		entry.set_width_chars(20);
 		entry.set_hexpand(true);
-		entry.set_text(val.to_string());
+		entry.set_text(get_value_string());
 		entry.key_release_event.connect (()=>{
 				val=double.parse(entry.get_text());
 				edited();
@@ -299,9 +341,11 @@ public class Parameter : Box{
 
 
 	private Label make_label(){
-		Label label= new Label (val.to_string());
+		Label label= new Label (get_value_string());
 		label.set_can_focus(false);
 		label.width_chars=15;
+		label.set_vexpand(true);
+		label.set_alignment(1,0);
 		label.selectable=false;
 		all.add(label);
 		return label;
@@ -312,20 +356,20 @@ public class Parameter : Box{
 		box.has_frame=false;
 		box.set_vexpand(false);
 		if(unit!="s"){
-		box.append(Suffix.GIGA.get_string(),"T"+unit);
-		box.append(Suffix.GIGA.get_string(),"G"+unit);
-		box.append(Suffix.MEGA.get_string(),"Meg"+unit);
-		box.append(Suffix.KILO.get_string(),"K"+unit);
+		box.append("12","T"+unit);
+		box.append("9","G"+unit);
+		box.append("6","Meg"+unit);
+		box.append("3","K"+unit);
 		}
-		box.append(Suffix.BASE.get_string(),unit);
-		box.append(Suffix.MILLI.get_string(),"m"+unit);
-		box.append(Suffix.MICRO.get_string(),"u"+unit);
-		box.append(Suffix.NANO.get_string(),"n"+unit);
-		box.append(Suffix.PICO.get_string(),"p"+unit);
-		box.append(Suffix.FEMTO.get_string(),"f"+unit);
+		box.append("0",unit);
+		box.append("-3","m"+unit);
+		box.append("-6","u"+unit);
+		box.append("-9","n"+unit);
+		box.append("-12","p"+unit);
+		box.append("-15","f"+unit);
 		box.set_active_id(suffix.to_string());
 		box.changed.connect (() => {
-			suffix = int.parse(box.get_active_id ());
+			suffix = (int)double.parse(box.get_active_id());
 			convert_base_to_val();
 			edited();		
 		});

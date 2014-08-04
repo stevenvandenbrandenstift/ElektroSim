@@ -91,7 +91,7 @@ public class MainWindow : Window  {
 
 }
 	private void debug(string line){
-		bool debug=true;
+		bool debug=false;
 		if(debug)	
 			print(line+"\n");
 	}

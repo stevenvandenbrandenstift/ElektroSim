@@ -22,10 +22,6 @@ using Gee;
 
 namespace ElektroSim{
 
-
-
-
-
 public abstract class Component : ListBoxRow {
 	
 	public enum Activity {

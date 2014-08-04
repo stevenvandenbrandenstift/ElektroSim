@@ -45,7 +45,7 @@ public class Simulation : Component {
 			base("Simulation");
 			clear_parameters();
 			optionsAdded=new ArrayList<Parameter>();
-			Parameter time=add_parameter("time",0,"s",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
+			Parameter time=add_parameter("time",0,"s",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
 			Parameter status=add_parameter("status",0,"",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
 			time.updated.connect (() => {
    					request_graph_redraw();
@@ -120,7 +120,7 @@ public class Simulation : Component {
 		get_parameter("type").val=option;
 		switch(option){
 			case(Type.TRAN):
-				Parameter step=add_parameter("step",double.parse("20e-3"),"s");
+				Parameter step=add_parameter("step",double.parse("1"),"s");
 				Parameter stop=add_parameter("stop",1,"s");
 				Parameter start=add_parameter("start",0,"s");
 				optionsAdded.add(step);
@@ -211,4 +211,3 @@ public class Simulation : Component {
 	}
 }
 }
-

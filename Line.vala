@@ -18,6 +18,7 @@
  */
 
 using Gee;
+using Gtk;
 namespace ElektroSim{
 	
 public class Line : Component {

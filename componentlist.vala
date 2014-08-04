@@ -162,6 +162,7 @@ public class ComponentList  {
 		Simulation sim=new Simulation(Simulation.Type.TRAN);
 		sim.componentType=Component.ComponentType.TEMPLATE;
 		add_component(sim);
+        
 	}
 
 	public void set_visable(Component.ComponentType type2){

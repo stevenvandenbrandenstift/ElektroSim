@@ -1,0 +1,15 @@
+src/Line.vala
+src/NGSpiceSimulator.vala
+src/XYGraph.vala
+src/capicitor.vala
+src/component.vala
+src/componentlist.vala
+src/elektrosim.vala
+src/ground.vala
+src/inductor.vala
+src/parameter.vala
+src/point.vala
+src/power-source.vala
+src/resistor.vala
+src/simulation.vala
+src/simulationArea.vala

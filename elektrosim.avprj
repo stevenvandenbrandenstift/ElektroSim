@@ -1,0 +1,43 @@
+### AutoVala Project ###
+autovala_version: 11
+project_name: elektrosim
+vala_version: 0.24
+
+
+vala_binary: src/elektrosim
+*vala_check_package: atk
+*vala_check_package: cairo
+*vala_check_package: gdk-3.0
+*vala_check_package: gdk-pixbuf-2.0
+*vala_check_package: gee-0.8
+*vala_check_package: gio-2.0
+*vala_check_package: glib-2.0
+*vala_check_package: gobject-2.0
+*vala_check_package: gtk+-3.0
+*vala_check_package: librsvg-2.0
+*vala_check_package: ngspice
+*vala_check_package: pango
+*vala_check_package: pangocairo
+*vala_check_package: x11
+*vala_source: Line.vala
+*vala_source: NGSpiceSimulator.vala
+*vala_source: XYGraph.vala
+*vala_source: capicitor.vala
+*vala_source: component.vala
+*vala_source: componentlist.vala
+*vala_source: elektrosim.vala
+*vala_source: ground.vala
+*vala_source: inductor.vala
+*vala_source: parameter.vala
+*vala_source: point.vala
+*vala_source: power-source.vala
+*vala_source: resistor.vala
+*vala_source: simulation.vala
+*vala_source: simulationArea.vala
+
+*po: po
+
+*data: data/local
+
+*doc: doc
+

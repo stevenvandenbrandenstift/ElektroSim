@@ -4,6 +4,9 @@ project_name: elektrosim
 vala_version: 0.24
 
 
+vala_binary: server/Server
+*vala_source: server.vala
+
 vala_binary: src/elektrosim
 *vala_check_package: atk
 *vala_check_package: cairo

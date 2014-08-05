@@ -27,7 +27,7 @@ public class Capacitor : Component {
 	// Constructor
 	public Capacitor (double capacitance) {
 		base("Capacitor");
-		this.width=250;
+		this.width=200;
 		this.height=50;
 		add_parameter("C",capacitance,"F");
 	}
@@ -46,19 +46,19 @@ public class Capacitor : Component {
 			}
 			cr.new_path ();	
 			cr.move_to (p1_x, p1_y);
-			cr.rel_line_to (width/2-width/5, 0);
-			cr.move_to(p1_x+width/2-width/5,p1_y-height/2);
+			cr.rel_line_to (width/2-width/20, 0);
+			cr.move_to(p1_x+width/2-width/20,p1_y-height/2);
             cr.rel_line_to (0, height);
-			cr.move_to(p1_x+width/2+width/5,p1_y-height/2);
+			cr.move_to(p1_x+width/2+width/20,p1_y-height/2);
             cr.rel_line_to (0, height);
 			cr.move_to (p2_x,p2_y);
-			cr.rel_line_to (+width/5-width/2, 0);
+			cr.rel_line_to (+width/20-width/2, 0);
 			cr.close_path ();
 			cr.stroke ();
 		
 			cr.new_path ();
-			cr.set_font_size (height*0.9);
-			cr.move_to (p1_x+width/4,p1_y-height/3);
+			cr.set_font_size (height*0.5);
+			cr.move_to (p1_x+width/2+width/10,p1_y-height/3);
 			cr.text_path (name);
 			cr.close_path();
 			cr.fill();
@@ -72,16 +72,20 @@ public class Capacitor : Component {
 			}
 			cr.new_path ();	
 			cr.move_to (p1_x, p1_y);
-			cr.rel_line_to (0,width/5);
-			cr.rectangle (p1_x-height/2,p1_y+width/5,height,width/5*3);
+			cr.rel_line_to (0,width/2-width/20);
+            cr.move_to(p1_x-height/2,p1_y+width/2-width/20);
+            cr.rel_line_to (height,0);
+            cr.move_to(p1_x-height/2,p1_y+width/2+width/20);
+            cr.rel_line_to (height,0);
+
 			cr.move_to (p2_x, p2_y);
-			cr.rel_line_to (0,-width/5);
+			cr.rel_line_to (0,+width/20-width/2);
 			cr.close_path ();
 			cr.stroke ();
 		
 			cr.new_path ();
-			cr.set_font_size (height*0.8);
-			cr.move_to (p1_x-height/2,p1_y+width/2);
+			cr.set_font_size (height*0.5);
+			cr.move_to (p1_x+height/3,p1_y+width/3);
 			cr.text_path (name);
 			cr.close_path();
 			cr.fill();
@@ -96,14 +100,12 @@ public class Capacitor : Component {
 	}
 	
 	public override Component clone(){
-		print("start cloning %s\n",name);
 		Capacitor newc=new Capacitor(get_parameter("C").val);
 		if(this.get_parameter("C")==null)
 			print("error no parameter to copy from!");
 		counter++;
 		newc.set_name("c"+counter.to_string());
 		newc.componentType=Component.ComponentType.COMPONENT;
-		print("end cloning %s\n",name);
 		return newc;
 	}
 

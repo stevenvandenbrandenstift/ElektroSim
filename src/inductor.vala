@@ -46,19 +46,21 @@ public class Inductor : Component {
 			}
 			cr.new_path ();	
 			cr.move_to (p1_x, p1_y);
-			cr.rel_line_to (width/2-width/5, 0);
-			cr.move_to(p1_x+width/2-width/5,p1_y-height/2);
-            cr.rel_line_to (0, height);
-			cr.move_to(p1_x+width/2+width/5,p1_y-height/2);
-            cr.rel_line_to (0, height);
-			cr.move_to (p2_x,p2_y);
-			cr.rel_line_to (+width/5-width/2, 0);
+			cr.rel_line_to (width/6, 0);
+
+            cr.arc ( p1_x+3*width/12, p1_y,width/12, 180.0 * (Math.PI/180.0),0);
+            cr.arc ( p1_x+5*width/12, p1_y,width/12, 180.0 * (Math.PI/180.0),0);
+            cr.arc ( p1_x+7*width/12, p1_y,width/12, 180.0 * (Math.PI/180.0),0);
+            cr.arc ( p1_x+9*width/12, p1_y,width/12, 180.0 * (Math.PI/180.0),0);
+
+			cr.move_to (p2_x-width/6-2,p2_y);
+			cr.rel_line_to (width/6+2, 0);
 			cr.close_path ();
 			cr.stroke ();
-		
+		    
 			cr.new_path ();
-			cr.set_font_size (height*0.9);
-			cr.move_to (p1_x+width/4,p1_y-height/3);
+			cr.set_font_size (height*0.5);
+			cr.move_to (p1_x+width/20,p1_y-height/3);
 			cr.text_path (name);
 			cr.close_path();
 			cr.fill();
@@ -72,23 +74,29 @@ public class Inductor : Component {
 			}
 			cr.new_path ();	
 			cr.move_to (p1_x, p1_y);
-			cr.rel_line_to (0,width/5);
-			cr.rectangle (p1_x-height/2,p1_y+width/5,height,width/5*3);
-			cr.move_to (p2_x, p2_y);
-			cr.rel_line_to (0,-width/5);
+			cr.rel_line_to (0,width/6);
+
+            cr.arc ( p1_x,p1_y+3*width/12,width/12, 270.0 * (Math.PI/180.0),90.0 * (Math.PI/180.0));
+            cr.arc ( p1_x,p1_y+5*width/12,width/12, 270.0 * (Math.PI/180.0),90.0 * (Math.PI/180.0));
+            cr.arc ( p1_x,p1_y+7*width/12,width/12, 270.0 * (Math.PI/180.0),90.0 * (Math.PI/180.0));
+            cr.arc ( p1_x,p1_y+9*width/12,width/12, 270.0 * (Math.PI/180.0),90.0 * (Math.PI/180.0));
+
+			cr.move_to (p2_x, p2_y-width/6-2);
+			cr.rel_line_to (0,width/6+2);
 			cr.close_path ();
 			cr.stroke ();
 		
 			cr.new_path ();
-			cr.set_font_size (height*0.8);
-			cr.move_to (p1_x-height/2,p1_y+width/2);
+			cr.set_font_size (height*0.5);
+			cr.move_to (p1_x+height/4,p1_y+width/10);
 			cr.text_path (name);
 			cr.close_path();
 			cr.fill();
 			y=p1_y+80;
 			x=p1_x+40;
 		}
-		draw_emoticon(cr,x,y);
+        
+		draw_emoticon(cr,100,-120);
 	}
 	
 	public override void clear_counter(){
@@ -96,14 +104,12 @@ public class Inductor : Component {
 	}
 	
 	public override Component clone(){
-		print("start cloning %s\n",name);
 		Inductor newc=new Inductor(get_parameter("L").val);
 		if(this.get_parameter("L")==null)
 			print("error no parameter to copy from!");
 		counter++;
 		newc.set_name("l"+counter.to_string());
 		newc.componentType=Component.ComponentType.COMPONENT;
-		print("end cloning %s\n",name);
 		return newc;
 	}
 

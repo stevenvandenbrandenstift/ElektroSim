@@ -208,7 +208,7 @@ public class NGSpiceSimulator : GLib.Object {
 	
 
 
-	public void	 run_simulation(){
+	public void run_simulation(){
 
 		string command=null;
 		foreach(Component component in request_components(Component.ComponentType.SIMULATION)){

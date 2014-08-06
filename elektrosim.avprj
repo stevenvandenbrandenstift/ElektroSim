@@ -5,6 +5,8 @@ vala_version: 0.24
 
 
 vala_binary: server/Server
+*vala_check_package: glib-2.0
+*vala_check_package: gobject-2.0
 *vala_source: server.vala
 
 vala_binary: src/elektrosim
@@ -43,4 +45,17 @@ vala_binary: src/elektrosim
 *data: data/local
 
 *doc: doc
+
+*pixmap: data/pixmaps/emoticons/ExcitedAlien.svg
+*pixmap: data/pixmaps/emoticons/FrustratedAlien.svg
+*pixmap: data/pixmaps/emoticons/HappyAlien.svg
+*pixmap: data/pixmaps/emoticons/NerveusAlien.svg
+*pixmap: data/pixmaps/emoticons/ScaredAlien.svg
+*pixmap: data/pixmaps/emoticons/anstigSleepyalien.svg
+*pixmap: data/pixmaps/emoticons/deepSleepAlien.svg
+*pixmap: data/pixmaps/emoticons/depresiveAlien.svg
+*pixmap: data/pixmaps/emoticons/sleepyAlien.svg
+*pixmap: data/pixmaps/emoticons/stressedAlien.svg
+*pixmap: data/pixmaps/emoticons/stressedSadAlien.svg
+*pixmap: data/pixmaps/emoticons/stressedSleepyAlien.svg
 

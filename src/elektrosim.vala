@@ -26,8 +26,8 @@ public class MainWindow : Window  {
 		clist= new ComponentList();
 		grid = new Grid();
 		border_width = 1;
+        this.set_default_size (1400, 800);
 		maximize();	
-		//this.set_default_size (1400, 800);
 		window_position = WindowPosition.CENTER;
 		this.destroy.connect(Gtk.main_quit);
 

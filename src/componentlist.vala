@@ -163,7 +163,7 @@ public class ComponentList  {
 		inductor.componentType=Component.ComponentType.TEMPLATE;
 		add_component(inductor);
         
-        Capacitor capacitor= new Capacitor(5);
+        Capacitor capacitor= new Capacitor(5,9);
 		capacitor.componentType=Component.ComponentType.TEMPLATE;
 		add_component(capacitor);
 

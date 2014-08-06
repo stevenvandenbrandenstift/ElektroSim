@@ -47,3 +47,5 @@ pkg_check_modules(DEPS REQUIRED ${MODULES_TO_CHECK})
 
 add_subdirectory(src)
 add_subdirectory(po)
+add_subdirectory(data/pixmaps/emoticons)
+add_subdirectory(server)

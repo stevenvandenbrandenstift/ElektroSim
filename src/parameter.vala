@@ -355,18 +355,20 @@ public class Parameter : Box{
 		ComboBoxText box = new ComboBoxText ();
 		box.has_frame=false;
 		box.set_vexpand(false);
-		if(unit!="s"){
+		if(unit!="s"&&unit!="Ws/g"){
 		box.append("12","T"+unit);
 		box.append("9","G"+unit);
 		box.append("6","Meg"+unit);
 		box.append("3","K"+unit);
 		}
 		box.append("0",unit);
+        if(unit!="Ws/g"){
 		box.append("-3","m"+unit);
 		box.append("-6","u"+unit);
 		box.append("-9","n"+unit);
 		box.append("-12","p"+unit);
 		box.append("-15","f"+unit);
+        }
 		box.set_active_id(suffix.to_string());
 		box.changed.connect (() => {
 			suffix = (int)double.parse(box.get_active_id());

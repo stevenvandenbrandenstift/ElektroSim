@@ -24,7 +24,7 @@ class Server {
 
 	public static int main (string[] args)
 	{
-		Server server = new Server (args[1]); //Create a window
+		Server server = new Server (args[1]); 
 		server.run();
 		return 0;
 	}
@@ -93,7 +93,7 @@ class Server {
 
 
 	private void start_elektroSim(){
-		string[] spawn_args = {"/home/steven/public_html/elektroSim"};
+		string[] spawn_args = {"/home/steven/public_html/elektrosim"};
 		string[] spawn_env=Environ.get ();
 		spawn_env+="GDK_BACKEND=broadway";
 		spawn_env+="BROADWAY_DISPLAY=:"+id;

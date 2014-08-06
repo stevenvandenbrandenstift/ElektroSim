@@ -88,7 +88,7 @@ public abstract class Component : ListBoxRow {
 		return line;
 	}
 	public void init(string name){
-		emoticons="./emoticons/";
+		emoticons="/usr/share/elektrosim/";
 		grid= new Box(Gtk.Orientation.VERTICAL,0);
 		label=new Label(name);
 		grid.add(label);
@@ -245,7 +245,7 @@ public abstract class Component : ListBoxRow {
 					break;
 				default:
 					print("found no zone subactive on %s",name);
-					emoticon=emoticons;
+					emoticon="";
 					break;
 			}
 		}
@@ -267,7 +267,7 @@ public abstract class Component : ListBoxRow {
 					break;
 				default:
 					print("found no zone active");
-					emoticon=emoticons;
+					emoticon="";
 					break;
 			}
 		}else if(activity==Activity.OVERACTIVE){
@@ -288,7 +288,7 @@ public abstract class Component : ListBoxRow {
 					break;
 				default:
 					print("found no zone overactive");
-					emoticon=emoticons;
+					emoticon="";
 					break;
 			}
 		}else{

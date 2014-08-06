@@ -1,3 +1,4 @@
+server/server.vala
 src/Line.vala
 src/NGSpiceSimulator.vala
 src/XYGraph.vala

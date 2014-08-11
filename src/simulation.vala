@@ -73,7 +73,7 @@ public class Simulation : Component {
 	}
 	
 	
-	public void reset_options(){
+	private void reset_options(){
 		foreach(Parameter par in optionsAdded){
 			grid.remove((par as Widget));
 			parameters.remove(par);
@@ -83,7 +83,7 @@ public class Simulation : Component {
 	}
 	
 
-	public void reset_dc_options(){
+	private void reset_dc_options(){
 		foreach(Parameter par in dcOptionsAdded){
 			grid.remove((par as Widget));
 			parameters.remove(par);
@@ -91,7 +91,7 @@ public class Simulation : Component {
 		dcOptionsAdded=new ArrayList<Parameter>();
 	}
 
-	public void change_dc_sources(int option){
+	private void change_dc_sources(int option){
 		print("change to subtype '%i'\n",option);
 		reset_dc_options();
 		get_parameter("# sources").val=option;

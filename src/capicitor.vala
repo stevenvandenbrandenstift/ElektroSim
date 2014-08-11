@@ -25,12 +25,12 @@ public class Capacitor : Component {
 	public static int counter=0;
 	
 	// Constructor
-	public Capacitor (double capacitance,double power) {
+	public Capacitor (double capacitance,double ratedVoltage) {
 		base("Capacitor");
 		this.width=200;
 		this.height=50;
 		add_parameter("C",capacitance,"F");
-        add_parameter("power density",power,"Ws/g");
+        add_parameter("rated voltage",ratedVoltage,"V");
 	}
 	
 	public override void draw_image(Cairo.Context cr){
@@ -101,7 +101,7 @@ public class Capacitor : Component {
 	}
 	
 	public override Component clone(){
-		Capacitor newc=new Capacitor(get_parameter("C").val,get_parameter("power density").val);
+		Capacitor newc=new Capacitor(get_parameter("C").val,get_parameter("rated voltage").val);
 		if(this.get_parameter("C")==null)
 			print("error no parameter to copy from!");
 		counter++;
@@ -135,7 +135,7 @@ public class Capacitor : Component {
 
 	public override string get_netlist_line(){
 		string line;
-		line=name+" "+connections[0].net.to_string()+" "+connections[1].net.to_string()+" "+get_parameter("C").val.to_string()+" energy="+get_parameter("power density").val.to_string()+"\n";
+		line=name+" "+connections[0].net.to_string()+" "+connections[1].net.to_string()+" "+get_parameter("C").val.to_string()+" rated_voltage="+get_parameter("rated voltage").val.to_string()+"\n";
 		return line;
 	}
 }

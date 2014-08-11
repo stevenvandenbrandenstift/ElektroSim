@@ -89,7 +89,7 @@ public class PowerSource : Component {
 		cr.fill();
 	}
 	
-	public void reset_options(){
+	private void reset_options(){
 		foreach(Parameter par in optionsAdded){
 			grid.remove((par as Widget));
 			parameters.remove(par);
@@ -98,7 +98,7 @@ public class PowerSource : Component {
 		reset_random_options();
 	}
 
-	public void reset_random_options(){
+	private void reset_random_options(){
 		foreach(Parameter par in randomOptionsAdded){
 			grid.remove((par as Widget));
 			parameters.remove(par);
@@ -106,7 +106,7 @@ public class PowerSource : Component {
 		randomOptionsAdded=new ArrayList<Parameter>();
 	}
 
-	public void change_random_type(int option){
+	private void change_random_type(int option){
 		print("change to subtype '%i'\n",option);
 		reset_random_options();
 		get_parameter("random type").val=option;

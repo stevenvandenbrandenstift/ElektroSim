@@ -40,7 +40,7 @@ public class ComponentList  {
 			}
 	}
 
-	public bool timer_delay(){
+	private bool timer_delay(){
 		Source.remove (timerID);
 		invalidate_values();
 		request_simulation();
@@ -82,7 +82,7 @@ public class ComponentList  {
 		return temp;
 	}
 	
-	public void print_list(){
+	private void print_list(){
 		GLib.List<weak Widget> templist=list.get_children();
 			foreach(weak Widget comp in templist){
 				print("list print component %s\n",(comp as Component).name);

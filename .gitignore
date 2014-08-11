@@ -2,3 +2,5 @@
 .c
 elektrosim
 install
+autom4te.cache
+Debug

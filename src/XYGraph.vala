@@ -57,7 +57,7 @@ public class XYGraph : Gtk.DrawingArea {
 		redraw_canvas ();
 	}
 
-	public void draw_axes(Cairo.Context cr,double border,double offset){
+	private void draw_axes(Cairo.Context cr,double border,double offset){
 			
 			//x-axis
 			cr.save();
@@ -139,7 +139,7 @@ public class XYGraph : Gtk.DrawingArea {
 		return true;
 	}
 
-	public void draw_label(Cairo.Context cr,int fontsize,string label,double x,double y){
+	private void draw_label(Cairo.Context cr,int fontsize,string label,double x,double y){
 	        cr.save();
 			cr.set_font_size (fontsize);
 			cr.move_to (x-label.length,y);

@@ -94,6 +94,7 @@ public class NGSpiceSimulator : GLib.Object {
 	
 	public static int receive_output(string stdout,int id, int data){
 		string[] dataList = stdout.split("\n");
+		//print(stdout+"\n");
 			foreach (string line in dataList) {
 				line=strip_std(line);
 				if(check_string(line)){

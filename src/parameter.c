@@ -1429,9 +1429,34 @@ void elektro_sim_parameter_set_edit_array (ElektroSimParameter* self, ElektroSim
 
 void elektro_sim_parameter_set_value (ElektroSimParameter* self, gdouble temp) {
 	gdouble _tmp0_ = 0.0;
+	const gchar* _tmp1_ = NULL;
+	gchar* _tmp2_ = NULL;
+	gchar* _tmp3_ = NULL;
+	gchar* _tmp4_ = NULL;
+	gchar* _tmp5_ = NULL;
+	gdouble _tmp6_ = 0.0;
+	gchar* _tmp7_ = NULL;
+	gchar* _tmp8_ = NULL;
+	gchar* _tmp9_ = NULL;
+	gchar* _tmp10_ = NULL;
 	g_return_if_fail (self != NULL);
 	_tmp0_ = temp;
 	elektro_sim_parameter_set_val (self, _tmp0_);
+	_tmp1_ = self->priv->_name;
+	_tmp2_ = g_strconcat ("Added ", _tmp1_, NULL);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = g_strconcat (_tmp3_, ": ", NULL);
+	_tmp5_ = _tmp4_;
+	_tmp6_ = self->priv->_val;
+	_tmp7_ = double_to_string (_tmp6_);
+	_tmp8_ = _tmp7_;
+	_tmp9_ = g_strconcat (_tmp5_, _tmp8_, NULL);
+	_tmp10_ = _tmp9_;
+	elektro_sim_debug (_tmp10_);
+	_g_free0 (_tmp10_);
+	_g_free0 (_tmp8_);
+	_g_free0 (_tmp5_);
+	_g_free0 (_tmp3_);
 	elektro_sim_parameter_convert_val_to_base (self);
 	elektro_sim_parameter_set_widgets_value (self);
 	g_signal_emit_by_name (self, "updated");
@@ -1528,7 +1553,7 @@ static GtkScale* elektro_sim_parameter_make_scale (ElektroSimParameter* self) {
 	_data1_->_ref_count_ = 1;
 	_data1_->self = g_object_ref (self);
 	_tmp0_ = self->priv->valBase;
-	_tmp1_ = gtk_adjustment_new (_tmp0_, (gdouble) 0, (gdouble) 100, 0.1, 0.1, (gdouble) 0);
+	_tmp1_ = gtk_adjustment_new (_tmp0_, (gdouble) 0, (gdouble) 1000, 0.1, 0.1, (gdouble) 0);
 	g_object_ref_sink (_tmp1_);
 	_g_object_unref0 (self->priv->sliderValue);
 	self->priv->sliderValue = _tmp1_;

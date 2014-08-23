@@ -291,6 +291,7 @@ public class Parameter : Box{
 
 	public void set_value(double temp){
 		val=temp;
+		debug("Added "+name+": "+val.to_string ());
 		convert_val_to_base();
 		set_widgets_value();
 		updated();
@@ -308,7 +309,7 @@ public class Parameter : Box{
 
 
 	private Scale make_scale(){
-		sliderValue= new Adjustment (valBase,  0,  100,  0.1,  0.1, 0);
+		sliderValue= new Adjustment (valBase,  0,  1000,  0.1,  0.1, 0);
 		Scale scale=new Scale (Gtk.Orientation.HORIZONTAL,sliderValue);
 		scale.set_has_origin (false);
 		scale.set_hexpand(true);

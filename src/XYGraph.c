@@ -78,11 +78,11 @@ enum  {
 };
 ElektroSimXYGraph* elektro_sim_xy_graph_new (void);
 ElektroSimXYGraph* elektro_sim_xy_graph_construct (GType object_type);
-static gboolean __lambda15_ (ElektroSimXYGraph* self);
+static gboolean __lambda13_ (ElektroSimXYGraph* self);
 void elektro_sim_xy_graph_set_values (ElektroSimXYGraph* self, GeeArrayList* values);
 void elektro_sim_xy_graph_set_timepoints (ElektroSimXYGraph* self, GeeArrayList* timepoints);
 static void elektro_sim_xy_graph_redraw_canvas (ElektroSimXYGraph* self);
-static gboolean ___lambda15__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self);
+static gboolean ___lambda13__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self);
 static void elektro_sim_xy_graph_draw_axes (ElektroSimXYGraph* self, cairo_t* cr, gdouble border, gdouble offset);
 void elektro_sim_xy_graph_redraw (ElektroSimXYGraph* self);
 static gboolean elektro_sim_xy_graph_real_draw (GtkWidget* base, cairo_t* cr);
@@ -95,7 +95,7 @@ static void g_cclosure_user_marshal_OBJECT__VOID (GClosure * closure, GValue * r
 static void elektro_sim_xy_graph_finalize (GObject* obj);
 
 
-static gboolean __lambda15_ (ElektroSimXYGraph* self) {
+static gboolean __lambda13_ (ElektroSimXYGraph* self) {
 	gboolean result = FALSE;
 	GeeArrayList* _tmp0_ = NULL;
 	GeeArrayList* _tmp1_ = NULL;
@@ -115,9 +115,9 @@ static gboolean __lambda15_ (ElektroSimXYGraph* self) {
 }
 
 
-static gboolean ___lambda15__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self) {
+static gboolean ___lambda13__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self) {
 	gboolean result;
-	result = __lambda15_ ((ElektroSimXYGraph*) self);
+	result = __lambda13_ ((ElektroSimXYGraph*) self);
 	return result;
 }
 
@@ -127,7 +127,7 @@ ElektroSimXYGraph* elektro_sim_xy_graph_construct (GType object_type) {
 	gchar* _tmp0_ = NULL;
 	self = (ElektroSimXYGraph*) g_object_new (object_type, NULL);
 	gtk_widget_add_events ((GtkWidget*) self, (gint) GDK_BUTTON_PRESS_MASK);
-	g_signal_connect_object ((GtkWidget*) self, "button-press-event", (GCallback) ___lambda15__gtk_widget_button_press_event, self, 0);
+	g_signal_connect_object ((GtkWidget*) self, "button-press-event", (GCallback) ___lambda13__gtk_widget_button_press_event, self, 0);
 	gtk_widget_set_vexpand ((GtkWidget*) self, TRUE);
 	gtk_widget_set_hexpand ((GtkWidget*) self, TRUE);
 	_tmp0_ = g_strdup ("select a component and click here");

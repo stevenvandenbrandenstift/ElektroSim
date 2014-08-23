@@ -47,8 +47,11 @@ public class Simulation : Component {
 			optionsAdded=new ArrayList<Parameter>();
 			Parameter time=add_parameter("time",0,"s",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
 			Parameter status=add_parameter("status",0,"",Parameter.WidgetStyle.NONE,Parameter.WidgetStyle.NONE);
-			time.updated.connect (() => {
-   					request_graph_redraw();
+			status.updated.connect (() => {
+					if(status.val==1){
+   						request_redraw();
+						request_graph_redraw();
+					}
 			});
 			ArrayList<string> temp=new ArrayList<string>();
 			temp.add("op");

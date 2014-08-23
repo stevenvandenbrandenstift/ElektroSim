@@ -128,7 +128,7 @@ public class NGSpiceSimulator : GLib.Object {
 		if(simulation_status.contains("--ready--")){
 			ready=true;
 			simulation.get_parameter("status").set_value(1);
-			debug("simulation status set to 1");
+			print("simulation status set to 1");
 		}
 		return 0;
 	}

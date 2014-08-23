@@ -1075,7 +1075,7 @@ gint elektro_sim_ng_spice_simulator_receive_simulation_data (const gchar* simula
 		_tmp4_ = _tmp3_;
 		elektro_sim_parameter_set_value (_tmp4_, (gdouble) 1);
 		_g_object_unref0 (_tmp4_);
-		elektro_sim_debug ("simulation status set to 1");
+		g_print ("simulation status set to 1");
 	}
 	result = 0;
 	return result;

@@ -41,7 +41,8 @@ public abstract class Component : ListBoxRow {
 	// Constructor
 	public signal void request_simulate();
 	public signal void request_redraw();
-	public signal void request_graph_redraw();
+
+	 public signal void request_graph_redraw();
 	public int height {get;set;default=0;}
 	public int width {get;set;default=0;}
 	public ComponentType componentType {get;set;default=ComponentType.COMPONENT;}
@@ -65,12 +66,6 @@ public abstract class Component : ListBoxRow {
 		add_parameter("p",0,"V",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
 		Parameter activity=add_parameter("activity",(double)Activity.UNKNOWN,"",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
 		Parameter work_zone=add_parameter("work_zone",(double)Zone.UNKNOWN,"",Parameter.WidgetStyle.LABEL,Parameter.WidgetStyle.NONE);
-		work_zone.updated.connect (() => {
-   					request_redraw();
-			});
-		activity.updated.connect (() => {
-   					request_redraw();
-			});
 		selected_parameter=-1;
 
 	}

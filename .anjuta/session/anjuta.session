@@ -8,7 +8,7 @@ Run in terminal=2
 Working directories=../../.
 
 [File Loader]
-Files=../../src/XYGraph.vala#33%%%../../src/capicitor.vala#138%%%../../src/NGSpiceSimulator.vala#97%%%../../src/component.vala#337%%%../../src/parameter.vala#312%%%../../src/elektrosim.vala#94%%%../../src/inductor.vala#1%%%../../src/power-source.vala#1%%%../../src/Line.vala#1%%%../../src/componentlist.vala#1%%%../../src/simulation.vala#50
+Files=../../src/XYGraph.vala#33%%%../../src/component.vala#68%%%../../src/parameter.vala#297%%%../../src/elektrosim.vala#94%%%../../src/inductor.vala#1%%%../../src/power-source.vala#1%%%../../src/Line.vala#1%%%../../src/componentlist.vala#1%%%../../src/simulation.vala#53%%%../../src/ground.vala#1%%%../../src/resistor.vala#122%%%../../src/capicitor.vala#1
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
@@ -17,6 +17,9 @@ bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
 Shortcut=elektrosim//src//elektrosim
 Expand=elektrosim%%%elektrosim//src%%%elektrosim//src//elektrosim
 
+[Debugger]
+Stop at beginning=2
+
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
 Selected Configuration=Debug
@@ -24,6 +27,3 @@ BuildArgs/Default=--enable-maintainer-mode
 BuildArgs/Debug=--enable-maintainer-mode 'CFLAGS=-g -O0' 'CXXFLAGS=-g -O0' 'JFLAGS=-g -O0' 'FFLAGS=-g -O0'
 BuildArgs/Profiling=--enable-maintainer-mode 'CFLAGS=-g -pg' 'CXXFLAGS=-g -pg' 'JFLAGS=-g -pg' 'FFLAGS=-g -pg'
 BuildArgs/Optimized=--enable-maintainer-mode 'CFLAGS=-O2' 'CXXFLAGS=-O2' 'JFLAGS=-O2' 'FFLAGS=-O2'
-
-[Debugger]
-Stop at beginning=2

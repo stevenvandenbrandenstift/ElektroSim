@@ -198,10 +198,6 @@ ElektroSimComponent* elektro_sim_component_construct (GType object_type, const g
 void elektro_sim_component_init (ElektroSimComponent* self, const gchar* name);
 GType elektro_sim_parameter_widget_style_get_type (void) G_GNUC_CONST;
 ElektroSimParameter* elektro_sim_component_add_parameter (ElektroSimComponent* self, const gchar* name, gdouble val, const gchar* unit, ElektroSimParameterWidgetStyle simulation, ElektroSimParameterWidgetStyle edit, GeeArrayList* options);
-static void __lambda12_ (ElektroSimComponent* self);
-static void ___lambda12__elektro_sim_parameter_updated (ElektroSimParameter* _sender, gpointer self);
-static void __lambda13_ (ElektroSimComponent* self);
-static void ___lambda13__elektro_sim_parameter_updated (ElektroSimParameter* _sender, gpointer self);
 gchar* elektro_sim_component_to_string (ElektroSimComponent* self);
 gchar* elektro_sim_parameter_to_string (ElektroSimParameter* self);
 GtkBox* elektro_sim_component_get_grid (ElektroSimComponent* self);
@@ -302,26 +298,6 @@ GType elektro_sim_component_component_type_get_type (void) {
 }
 
 
-static void __lambda12_ (ElektroSimComponent* self) {
-	g_signal_emit_by_name (self, "request-redraw");
-}
-
-
-static void ___lambda12__elektro_sim_parameter_updated (ElektroSimParameter* _sender, gpointer self) {
-	__lambda12_ ((ElektroSimComponent*) self);
-}
-
-
-static void __lambda13_ (ElektroSimComponent* self) {
-	g_signal_emit_by_name (self, "request-redraw");
-}
-
-
-static void ___lambda13__elektro_sim_parameter_updated (ElektroSimParameter* _sender, gpointer self) {
-	__lambda13_ ((ElektroSimComponent*) self);
-}
-
-
 ElektroSimComponent* elektro_sim_component_construct (GType object_type, const gchar* name) {
 	ElektroSimComponent * self = NULL;
 	const gchar* _tmp0_ = NULL;
@@ -371,8 +347,6 @@ ElektroSimComponent* elektro_sim_component_construct (GType object_type, const g
 	_tmp16_ = _tmp15_;
 	_g_object_unref0 (_tmp14_);
 	work_zone = _tmp16_;
-	g_signal_connect_object (work_zone, "updated", (GCallback) ___lambda12__elektro_sim_parameter_updated, self, 0);
-	g_signal_connect_object (activity, "updated", (GCallback) ___lambda13__elektro_sim_parameter_updated, self, 0);
 	self->priv->selected_parameter = -1;
 	_g_object_unref0 (work_zone);
 	_g_object_unref0 (activity);

@@ -89,10 +89,10 @@ enum  {
 };
 ElektroSimSimulationArea* elektro_sim_simulation_area_new (void);
 ElektroSimSimulationArea* elektro_sim_simulation_area_construct (GType object_type);
-static gboolean __lambda14_ (ElektroSimSimulationArea* self, GdkEventButton* event);
+static gboolean __lambda12_ (ElektroSimSimulationArea* self, GdkEventButton* event);
 GType elektro_sim_component_get_type (void) G_GNUC_CONST;
 static void elektro_sim_simulation_area_insert_component (ElektroSimSimulationArea* self, gint x, gint y, ElektroSimComponent* component);
-static gboolean ___lambda14__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self);
+static gboolean ___lambda12__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self);
 static void _gtk_main_quit_gtk_widget_destroy (GtkWidget* _sender, gpointer self);
 static gboolean elektro_sim_simulation_area_real_draw (GtkWidget* base, cairo_t* cr);
 GType elektro_sim_component_component_type_get_type (void) G_GNUC_CONST;
@@ -106,7 +106,7 @@ static void g_cclosure_user_marshal_OBJECT__ENUM (GClosure * closure, GValue * r
 static void g_cclosure_user_marshal_OBJECT__VOID (GClosure * closure, GValue * return_value, guint n_param_values, const GValue * param_values, gpointer invocation_hint, gpointer marshal_data);
 
 
-static gboolean __lambda14_ (ElektroSimSimulationArea* self, GdkEventButton* event) {
+static gboolean __lambda12_ (ElektroSimSimulationArea* self, GdkEventButton* event) {
 	gboolean result = FALSE;
 	GdkEventButton* _tmp0_ = NULL;
 	gdouble _tmp1_ = 0.0;
@@ -128,9 +128,9 @@ static gboolean __lambda14_ (ElektroSimSimulationArea* self, GdkEventButton* eve
 }
 
 
-static gboolean ___lambda14__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self) {
+static gboolean ___lambda12__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self) {
 	gboolean result;
-	result = __lambda14_ ((ElektroSimSimulationArea*) self, event);
+	result = __lambda12_ ((ElektroSimSimulationArea*) self, event);
 	return result;
 }
 
@@ -144,7 +144,7 @@ ElektroSimSimulationArea* elektro_sim_simulation_area_construct (GType object_ty
 	ElektroSimSimulationArea * self = NULL;
 	self = (ElektroSimSimulationArea*) g_object_new (object_type, NULL);
 	gtk_widget_add_events ((GtkWidget*) self, (gint) GDK_BUTTON_PRESS_MASK);
-	g_signal_connect_object ((GtkWidget*) self, "button-press-event", (GCallback) ___lambda14__gtk_widget_button_press_event, self, 0);
+	g_signal_connect_object ((GtkWidget*) self, "button-press-event", (GCallback) ___lambda12__gtk_widget_button_press_event, self, 0);
 	g_signal_connect ((GtkWidget*) self, "destroy", (GCallback) _gtk_main_quit_gtk_widget_destroy, NULL);
 	gtk_widget_set_vexpand ((GtkWidget*) self, TRUE);
 	gtk_widget_set_hexpand ((GtkWidget*) self, TRUE);

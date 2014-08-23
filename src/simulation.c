@@ -79,6 +79,7 @@ typedef struct _ElektroSimSimulationPrivate ElektroSimSimulationPrivate;
 
 #define ELEKTRO_SIM_SIMULATION_TYPE_NUMBER_OF_SOURCES (elektro_sim_simulation_number_of_sources_get_type ())
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+typedef struct _Block5Data Block5Data;
 
 #define ELEKTRO_SIM_PARAMETER_TYPE_WIDGET_STYLE (elektro_sim_parameter_widget_style_get_type ())
 
@@ -139,6 +140,12 @@ typedef enum  {
 	ELEKTRO_SIM_SIMULATION_NUMBER_OF_SOURCES_TWO
 } ElektroSimSimulationNumberOfSources;
 
+struct _Block5Data {
+	int _ref_count_;
+	ElektroSimSimulation* self;
+	ElektroSimParameter* status;
+};
+
 typedef enum  {
 	ELEKTRO_SIM_PARAMETER_WIDGET_STYLE_NONE,
 	ELEKTRO_SIM_PARAMETER_WIDGET_STYLE_LABEL,
@@ -182,11 +189,14 @@ GType elektro_sim_simulation_ac_variation_get_type (void) G_GNUC_CONST;
 GType elektro_sim_simulation_number_of_sources_get_type (void) G_GNUC_CONST;
 ElektroSimSimulation* elektro_sim_simulation_new (gint option);
 ElektroSimSimulation* elektro_sim_simulation_construct (GType object_type, gint option);
+static Block5Data* block5_data_ref (Block5Data* _data5_);
+static void block5_data_unref (void * _userdata_);
 ElektroSimComponent* elektro_sim_component_construct (GType object_type, const gchar* name);
 void elektro_sim_component_clear_parameters (ElektroSimComponent* self);
 GType elektro_sim_parameter_widget_style_get_type (void) G_GNUC_CONST;
 ElektroSimParameter* elektro_sim_component_add_parameter (ElektroSimComponent* self, const gchar* name, gdouble val, const gchar* unit, ElektroSimParameterWidgetStyle simulation, ElektroSimParameterWidgetStyle edit, GeeArrayList* options);
-static void __lambda11_ (ElektroSimSimulation* self);
+static void __lambda11_ (Block5Data* _data5_);
+gdouble elektro_sim_parameter_get_val (ElektroSimParameter* self);
 static void ___lambda11__elektro_sim_parameter_updated (ElektroSimParameter* _sender, gpointer self);
 void elektro_sim_simulation_change_type (ElektroSimSimulation* self, gint option);
 static void _elektro_sim_simulation_change_type_elektro_sim_parameter_options_method (gint option, gpointer self);
@@ -206,7 +216,6 @@ GType elektro_sim_component_list_mode_get_type (void) G_GNUC_CONST;
 void elektro_sim_component_set_mode (ElektroSimComponent* self, ElektroSimComponentListMode mode);
 static void _elektro_sim_simulation_change_dc_sources_elektro_sim_parameter_options_method (gint option, gpointer self);
 static ElektroSimComponent* elektro_sim_simulation_real_clone (ElektroSimComponent* base);
-gdouble elektro_sim_parameter_get_val (ElektroSimParameter* self);
 const gchar* elektro_sim_parameter_get_name (ElektroSimParameter* self);
 static void elektro_sim_simulation_real_snap (ElektroSimComponent* base, gint range, gint x, gint y);
 static gchar* elektro_sim_simulation_real_get_netlist_line (ElektroSimComponent* base);
@@ -249,13 +258,41 @@ GType elektro_sim_simulation_number_of_sources_get_type (void) {
 }
 
 
-static void __lambda11_ (ElektroSimSimulation* self) {
-	g_signal_emit_by_name ((ElektroSimComponent*) self, "request-graph-redraw");
+static Block5Data* block5_data_ref (Block5Data* _data5_) {
+	g_atomic_int_inc (&_data5_->_ref_count_);
+	return _data5_;
+}
+
+
+static void block5_data_unref (void * _userdata_) {
+	Block5Data* _data5_;
+	_data5_ = (Block5Data*) _userdata_;
+	if (g_atomic_int_dec_and_test (&_data5_->_ref_count_)) {
+		ElektroSimSimulation* self;
+		self = _data5_->self;
+		_g_object_unref0 (_data5_->status);
+		_g_object_unref0 (self);
+		g_slice_free (Block5Data, _data5_);
+	}
+}
+
+
+static void __lambda11_ (Block5Data* _data5_) {
+	ElektroSimSimulation* self;
+	gdouble _tmp0_ = 0.0;
+	gdouble _tmp1_ = 0.0;
+	self = _data5_->self;
+	_tmp0_ = elektro_sim_parameter_get_val (_data5_->status);
+	_tmp1_ = _tmp0_;
+	if (_tmp1_ == ((gdouble) 1)) {
+		g_signal_emit_by_name ((ElektroSimComponent*) self, "request-redraw");
+		g_signal_emit_by_name ((ElektroSimComponent*) self, "request-graph-redraw");
+	}
 }
 
 
 static void ___lambda11__elektro_sim_parameter_updated (ElektroSimParameter* _sender, gpointer self) {
-	__lambda11_ ((ElektroSimSimulation*) self);
+	__lambda11_ (self);
 }
 
 
@@ -266,13 +303,13 @@ static void _elektro_sim_simulation_change_type_elektro_sim_parameter_options_me
 
 ElektroSimSimulation* elektro_sim_simulation_construct (GType object_type, gint option) {
 	ElektroSimSimulation * self = NULL;
+	Block5Data* _data5_;
 	GeeArrayList* _tmp0_ = NULL;
 	ElektroSimParameter* time = NULL;
 	GeeArrayList* _tmp1_ = NULL;
 	GeeArrayList* _tmp2_ = NULL;
 	ElektroSimParameter* _tmp3_ = NULL;
 	ElektroSimParameter* _tmp4_ = NULL;
-	ElektroSimParameter* status = NULL;
 	GeeArrayList* _tmp5_ = NULL;
 	GeeArrayList* _tmp6_ = NULL;
 	ElektroSimParameter* _tmp7_ = NULL;
@@ -285,7 +322,10 @@ ElektroSimSimulation* elektro_sim_simulation_construct (GType object_type, gint 
 	gint _tmp12_ = 0;
 	GeeArrayList* _tmp13_ = NULL;
 	GeeArrayList* _tmp14_ = NULL;
+	_data5_ = g_slice_new0 (Block5Data);
+	_data5_->_ref_count_ = 1;
 	self = (ElektroSimSimulation*) elektro_sim_component_construct (object_type, "Simulation");
+	_data5_->self = g_object_ref (self);
 	elektro_sim_component_clear_parameters ((ElektroSimComponent*) self);
 	_tmp0_ = gee_array_list_new (ELEKTRO_SIM_TYPE_PARAMETER, (GBoxedCopyFunc) g_object_ref, g_object_unref, NULL, NULL, NULL);
 	_g_object_unref0 (self->priv->optionsAdded);
@@ -301,8 +341,8 @@ ElektroSimSimulation* elektro_sim_simulation_construct (GType object_type, gint 
 	_tmp7_ = elektro_sim_component_add_parameter ((ElektroSimComponent*) self, "status", (gdouble) 0, "", ELEKTRO_SIM_PARAMETER_WIDGET_STYLE_NONE, ELEKTRO_SIM_PARAMETER_WIDGET_STYLE_NONE, _tmp6_);
 	_tmp8_ = _tmp7_;
 	_g_object_unref0 (_tmp6_);
-	status = _tmp8_;
-	g_signal_connect_object (time, "updated", (GCallback) ___lambda11__elektro_sim_parameter_updated, self, 0);
+	_data5_->status = _tmp8_;
+	g_signal_connect_data (_data5_->status, "updated", (GCallback) ___lambda11__elektro_sim_parameter_updated, block5_data_ref (_data5_), (GClosureNotify) block5_data_unref, 0);
 	_tmp9_ = gee_array_list_new (G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, g_free, NULL, NULL, NULL);
 	temp = _tmp9_;
 	gee_abstract_collection_add ((GeeAbstractCollection*) temp, "op");
@@ -326,8 +366,9 @@ ElektroSimSimulation* elektro_sim_simulation_construct (GType object_type, gint 
 	self->priv->dcOptionsAdded = _tmp14_;
 	_g_object_unref0 (type);
 	_g_object_unref0 (temp);
-	_g_object_unref0 (status);
 	_g_object_unref0 (time);
+	block5_data_unref (_data5_);
+	_data5_ = NULL;
 	return self;
 }
 
